@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="HotelReservas.Views.ReservasPage"
+             Title="Reservas">
+    <ScrollView>
+        <VerticalStackLayout Padding="16,20" Spacing="12">
+            <Label Text="Reservas" FontSize="22" FontAttributes="Bold" TextColor="{StaticResource Primary}" />
+            <Label Text="Registro, modificación y cancelación de reservas con confirmación transaccional." TextColor="{StaticResource TextSecondary}" />
+            <Border Style="{StaticResource Tarjeta}">
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="Funciones previstas" FontAttributes="Bold" />
+                    <Label Text="• Nueva reserva: huésped, tipo de habitación, fechas de entrada y salida" />
+                    <Label Text="• Confirmación atómica: verificar disponibilidad, bloquear habitación y registrar pago" />
+                    <Label Text="• Generación de comprobante de reserva" />
+                    <Label Text="• Modificación y cancelación con registro en bitácora" />
+                </VerticalStackLayout>
+            </Border>
+            <Border Style="{StaticResource Tarjeta}" BackgroundColor="#FFF4E5" Stroke="#F5C48A">
+                <Label Text="Módulo en construcción. Esta pantalla forma parte de la primera propuesta visual del sistema; la funcionalidad se implementará en las siguientes entregas." FontSize="13" />
+            </Border>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

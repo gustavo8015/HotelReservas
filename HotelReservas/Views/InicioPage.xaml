@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="HotelReservas.Views.InicioPage"
+             Title="Inicio">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="0">
+
+            <!-- Encabezado: nombre del sistema y propósito general -->
+            <Grid BackgroundColor="{StaticResource Primary}" Padding="20,28,20,24" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="6">
+                <Label Grid.Row="0" Text="SISTEMA TRANSACCIONAL" FontSize="12" TextColor="#9FB3D1" CharacterSpacing="2" />
+                <Label Grid.Row="1" Text="Hotel Reservas" Style="{StaticResource Titulo}" FontSize="30" />
+                <Label Grid.Row="2" Style="{StaticResource Subtitulo}"
+                       Text="Gestión de reservas de habitaciones con integridad, consistencia y seguridad de la información." />
+                <HorizontalStackLayout Grid.Row="3" Spacing="8" Margin="0,10,0,0">
+                    <Border Style="{StaticResource Chip}" BackgroundColor="#1F6B3D">
+                        <Label Text="Versión 0.1 · Primera interfaz" FontSize="12" TextColor="White" />
+                    </Border>
+                    <Border Style="{StaticResource Chip}" BackgroundColor="#173A73">
+                        <Label Text="Android APK" FontSize="12" TextColor="White" />
+                    </Border>
+                </HorizontalStackLayout>
+            </Grid>
+
+            <VerticalStackLayout Padding="16,8,16,24" Spacing="12">
+
+                <!-- Propósito -->
+                <Label Text="Propósito del sistema" Style="{StaticResource TituloSeccion}" />
+                <Border Style="{StaticResource Tarjeta}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label LineHeight="1.3"
+                               Text="Permitir al personal del hotel registrar huéspedes y habitaciones, consultar disponibilidad en tiempo real, realizar reservas y generar comprobantes, garantizando que cada reserva se confirme como una transacción completa: si algo falla, no queda ningún cambio a medias." />
+                        <Label FontSize="13" TextColor="{StaticResource TextSecondary}"
+                               Text="Transacción crítica: confirmar reserva (verificar disponibilidad, bloquear habitación, registrar huésped y pago, emitir comprobante)." />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Estado de hoy (datos de ejemplo, sin conexión a base de datos) -->
+                <Label Text="Estado de hoy" Style="{StaticResource TituloSeccion}" />
+                <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10">
+                    <Border Grid.Column="0" Style="{StaticResource Tarjeta}" Padding="12">
+                        <VerticalStackLayout>
+                            <Label Text="18" FontSize="26" FontAttributes="Bold" TextColor="{StaticResource Primary}" />
+                            <Label Text="Ocupadas" FontSize="12" TextColor="{StaticResource TextSecondary}" />
+                        </VerticalStackLayout>
+                    </Border>
+                    <Border Grid.Column="1" Style="{StaticResource Tarjeta}" Padding="12">
+                        <VerticalStackLayout>
+                            <Label Text="7" FontSize="26" FontAttributes="Bold" TextColor="{StaticResource Secondary}" />
+                            <Label Text="Disponibles" FontSize="12" TextColor="{StaticResource TextSecondary}" />
+                        </VerticalStackLayout>
+                    </Border>
+                    <Border Grid.Column="2" Style="{StaticResource Tarjeta}" Padding="12">
+                        <VerticalStackLayout>
+                            <Label Text="5" FontSize="26" FontAttributes="Bold" TextColor="{StaticResource Accent}" />
+                            <Label Text="Llegadas hoy" FontSize="12" TextColor="{StaticResource TextSecondary}" />
+                        </VerticalStackLayout>
+                    </Border>
+                </Grid>
+
+                <!-- Elementos principales de la solución: módulos con navegación -->
+                <Label Text="Módulos del sistema" Style="{StaticResource TituloSeccion}" />
+                <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="10" RowSpacing="10">
+
+                    <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource TarjetaModulo}">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="IrAReservas" />
+                        </Border.GestureRecognizers>
+                        <VerticalStackLayout Spacing="4">
+                            <Image Source="ic_reservas.png" HeightRequest="28" WidthRequest="28" HorizontalOptions="Start" />
+                            <Label Text="Reservas" FontAttributes="Bold" />
+                            <Label Text="Crear, modificar y cancelar reservas. Comprobantes." FontSize="12" TextColor="{StaticResource TextSecondary}" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource TarjetaModulo}">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="IrAHabitaciones" />
+                        </Border.GestureRecognizers>
+                        <VerticalStackLayout Spacing="4">
+                            <Image Source="ic_habitaciones.png" HeightRequest="28" WidthRequest="28" HorizontalOptions="Start" />
+                            <Label Text="Habitaciones" FontAttributes="Bold" />
+                            <Label Text="Tipos, tarifas y disponibilidad por fechas." FontSize="12" TextColor="{StaticResource TextSecondary}" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource TarjetaModulo}">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="IrAHuespedes" />
+                        </Border.GestureRecognizers>
+                        <VerticalStackLayout Spacing="4">
+                            <Image Source="ic_huespedes.png" HeightRequest="28" WidthRequest="28" HorizontalOptions="Start" />
+                            <Label Text="Huéspedes" FontAttributes="Bold" />
+                            <Label Text="Registro y consulta de huéspedes." FontSize="12" TextColor="{StaticResource TextSecondary}" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource TarjetaModulo}">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="IrAReportes" />
+                        </Border.GestureRecognizers>
+                        <VerticalStackLayout Spacing="4">
+                            <Image Source="ic_reportes.png" HeightRequest="28" WidthRequest="28" HorizontalOptions="Start" />
+                            <Label Text="Reportes" FontAttributes="Bold" />
+                            <Label Text="Historial de reservas y ocupación." FontSize="12" TextColor="{StaticResource TextSecondary}" />
+                        </VerticalStackLayout>
+                    </Border>
+                </Grid>
+
+                <!-- Acción principal -->
+                <Button Text="Nueva reserva" Style="{StaticResource BotonPrimario}" Margin="0,12,0,0" Clicked="IrAReservas" />
+                <Button Text="Consultar disponibilidad" Style="{StaticResource BotonSecundario}" Clicked="IrAHabitaciones" />
+
+                <!-- Arquitectura (referencia) -->
+                <Label Text="Arquitectura en capas" Style="{StaticResource TituloSeccion}" />
+                <Border Style="{StaticResource Tarjeta}">
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="App móvil (C# · .NET MAUI)" FontSize="13" />
+                        <Label Text="↓" FontSize="13" TextColor="{StaticResource TextSecondary}" HorizontalOptions="Center" />
+                        <Label Text="Lógica de negocio y gestión de transacciones (C# · ASP.NET Core Web API)" FontSize="13" />
+                        <Label Text="↓" FontSize="13" TextColor="{StaticResource TextSecondary}" HorizontalOptions="Center" />
+                        <Label Text="Acceso a datos (Entity Framework Core) · Base de datos (SQL Server)" FontSize="13" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <Label Text="Universidad Manuela Beltrán · Ingeniería de Sistemas · Sistemas Transaccionales"
+                       FontSize="11" TextColor="{StaticResource TextSecondary}" HorizontalTextAlignment="Center" Margin="0,16,0,0" />
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+       xmlns:views="clr-namespace:HotelReservas.Views"
+       x:Class="HotelReservas.AppShell"
+       Title="Hotel Reservas"
+       Shell.BackgroundColor="{StaticResource Primary}"
+       Shell.ForegroundColor="White"
+       Shell.TitleColor="White">
+
+    <!-- Propuesta inicial de navegación: barra inferior con los módulos principales -->
+    <TabBar>
+        <Tab Title="Inicio" Icon="ic_inicio.png">
+            <ShellContent ContentTemplate="{DataTemplate views:InicioPage}" Route="inicio" />
+        </Tab>
+        <Tab Title="Reservas" Icon="ic_reservas.png">
+            <ShellContent ContentTemplate="{DataTemplate views:ReservasPage}" Route="reservas" />
+        </Tab>
+        <Tab Title="Habitaciones" Icon="ic_habitaciones.png">
+            <ShellContent ContentTemplate="{DataTemplate views:HabitacionesPage}" Route="habitaciones" />
+        </Tab>
+        <Tab Title="Huéspedes" Icon="ic_huespedes.png">
+            <ShellContent ContentTemplate="{DataTemplate views:HuespedesPage}" Route="huespedes" />
+        </Tab>
+        <Tab Title="Reportes" Icon="ic_reportes.png">
+            <ShellContent ContentTemplate="{DataTemplate views:ReportesPage}" Route="reportes" />
+        </Tab>
+    </TabBar>
+</Shell>

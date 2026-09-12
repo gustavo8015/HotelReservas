@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="HotelReservas.Views.HuespedesPage"
+             Title="Huéspedes">
+    <ScrollView>
+        <VerticalStackLayout Padding="16,20" Spacing="12">
+            <Label Text="Huéspedes" FontSize="22" FontAttributes="Bold" TextColor="{StaticResource Primary}" />
+            <Label Text="Registro y consulta de los huéspedes del hotel." TextColor="{StaticResource TextSecondary}" />
+            <Border Style="{StaticResource Tarjeta}">
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="Funciones previstas" FontAttributes="Bold" />
+                    <Label Text="• Registro de huéspedes con documento de identidad y contacto" />
+                    <Label Text="• Búsqueda por nombre o documento" />
+                    <Label Text="• Historial de reservas del huésped" />
+                </VerticalStackLayout>
+            </Border>
+            <Border Style="{StaticResource Tarjeta}" BackgroundColor="#FFF4E5" Stroke="#F5C48A">
+                <Label Text="Módulo en construcción. Esta pantalla forma parte de la primera propuesta visual del sistema; la funcionalidad se implementará en las siguientes entregas." FontSize="13" />
+            </Border>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

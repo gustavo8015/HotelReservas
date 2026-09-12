@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="HotelReservas.Views.HabitacionesPage"
+             Title="Habitaciones">
+    <ScrollView>
+        <VerticalStackLayout Padding="16,20" Spacing="12">
+            <Label Text="Habitaciones" FontSize="22" FontAttributes="Bold" TextColor="{StaticResource Primary}" />
+            <Label Text="Inventario de habitaciones, tipos, tarifas y consulta de disponibilidad por fechas." TextColor="{StaticResource TextSecondary}" />
+            <Border Style="{StaticResource Tarjeta}">
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="Funciones previstas" FontAttributes="Bold" />
+                    <Label Text="• Registro de habitaciones y tipos de habitación" />
+                    <Label Text="• Estados: disponible, reservada, ocupada, en mantenimiento" />
+                    <Label Text="• Consulta de disponibilidad por rango de fechas" />
+                    <Label Text="• Actualización automática del estado al reservar, hacer check-in y check-out" />
+                </VerticalStackLayout>
+            </Border>
+            <Border Style="{StaticResource Tarjeta}" BackgroundColor="#FFF4E5" Stroke="#F5C48A">
+                <Label Text="Módulo en construcción. Esta pantalla forma parte de la primera propuesta visual del sistema; la funcionalidad se implementará en las siguientes entregas." FontSize="13" />
+            </Border>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
