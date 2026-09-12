@@ -1,0 +1,13 @@
+## Visual Studio / .NET
+bin/
+obj/
+.vs/
+*.user
+*.suo
+*.swp
+*.DS_Store
+*.apk
+*.aab
+*.keystore
+TestResults/
+.idea/
