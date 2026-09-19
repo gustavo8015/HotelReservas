@@ -1,41 +1,41 @@
-# Guía para crear el repositorio en GitHub y subir esta entrega
+# Guía para subir y actualizar el repositorio en GitHub
 
-## 1. Crear el repositorio en GitHub
-1. Ingresar a https://github.com y hacer clic en **New repository**.
-2. Nombre: `HotelReservas` (o `sistema-transaccional-hotel-reservas`).
-3. Descripción: "Sistema Transaccional Móvil (APK) para la Gestión de Reservas de Habitaciones en un Hotel".
-4. Visibilidad: **Public** (para que el docente pueda acceder). Si se deja privado, agregar al docente como colaborador en Settings → Collaborators.
-5. NO marcar "Add a README" ni ".gitignore" (ya vienen en esta carpeta).
-6. Clic en **Create repository** y copiar la URL, por ejemplo `https://github.com/USUARIO/HotelReservas.git`.
+Repositorio: https://github.com/gustavo8015/HotelReservas
 
-## 2. Subir el proyecto desde el computador
-Abrir una terminal (Git Bash, PowerShell o CMD) dentro de la carpeta `HotelReservas` descomprimida y ejecutar:
+## Opción A: desde la página web (sin instalar nada)
 
-```bash
-git init
-git add .
-git commit -m "Entrega S7: repositorio y primera interfaz del sistema Hotel Reservas"
-git branch -M main
-git remote add origin https://github.com/USUARIO/HotelReservas.git
-git push -u origin main
-```
+1. Entrar al repositorio y hacer clic en **Add file → Upload files**.
+2. Arrastrar a la zona de carga las carpetas y archivos de la actualización
+   (por ejemplo `database`, `docs` y `README.md`). GitHub conserva la estructura
+   de carpetas y reemplaza los archivos que ya existían con el mismo nombre.
+3. En **Commit changes** escribir el mensaje, por ejemplo:
+   `Entrega S8: Fase II, diagramas y scripts SQL`.
+4. Dejar marcada la opción **Commit directly to the main branch** y hacer clic
+   en **Commit changes**.
 
-Si Git pide identidad la primera vez:
+## Opción B: desde la consola con Git
+
+Primera vez (clonar el repositorio en el computador):
 
 ```bash
-git config --global user.name "Gustavo Adolfo Cardona Bayona"
-git config --global user.email "correo@ejemplo.com"
+git clone https://github.com/gustavo8015/HotelReservas.git
+cd HotelReservas
 ```
 
-## 3. Registrar un segundo avance (opcional, recomendado)
-Abrir el proyecto en Visual Studio, hacer un cambio pequeño (por ejemplo el texto de un módulo) y:
+Cada actualización (después de copiar los archivos nuevos dentro de la carpeta):
 
 ```bash
 git add .
-git commit -m "Ajustes de la pantalla de inicio"
-git push
+git commit -m "Entrega S8: Fase II, diagramas y scripts SQL"
+git push origin main
 ```
 
-## 4. Entregar
-En la plataforma de la universidad pegar únicamente la URL del repositorio, por ejemplo:
-`https://github.com/USUARIO/HotelReservas`
+Si Git pide credenciales, usar el usuario de GitHub y un *personal access token*
+(Settings → Developer settings → Personal access tokens) en lugar de la contraseña.
+
+## Verificar
+
+Al terminar, en la página principal del repositorio debe verse el `README.md`
+actualizado con las imágenes de la arquitectura y del modelo relacional, la
+carpeta `database` con tres scripts y la carpeta `docs` con los documentos
+de la Fase I y la Fase II.
