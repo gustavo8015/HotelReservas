@@ -1,0 +1,137 @@
+@startuml
+!pragma layout smetana
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+skinparam class {
+  BorderColor #0B2A5B
+  BackgroundColor white
+  HeaderBackgroundColor #EEF3FA
+}
+skinparam ArrowColor #0B2A5B
+hide circle
+
+abstract class Usuario {
+  + idUsuario : int
+  + nombre : string
+  + correo : string
+  - claveHash : string
+  + activo : bool
+  + iniciarSesion(correo, clave) : bool
+}
+class Recepcionista {
+  + turno : string
+}
+class Administrador {
+  + gestionarUsuarios()
+  + generarReporteOcupacion(desde, hasta) : Reporte
+}
+class Huesped {
+  + idHuesped : int
+  + tipoDocumento : string
+  + numeroDocumento : string
+  + nombres : string
+  + apellidos : string
+  + telefono : string
+  + correo : string
+  + registrar()
+  + consultarHistorial() : List<Reserva>
+}
+class TipoHabitacion {
+  + idTipo : int
+  + nombre : string
+  + capacidad : int
+  + descripcion : string
+}
+class Habitacion {
+  + idHabitacion : int
+  + numero : string
+  + piso : int
+  + estado : EstadoHabitacion
+  + estaDisponible(fechaEntrada, fechaSalida) : bool
+  + cambiarEstado(nuevoEstado)
+}
+class Tarifa {
+  + idTarifa : int
+  + valorNoche : decimal
+  + vigenciaDesde : date
+  + vigenciaHasta : date
+  + calcularTotal(noches) : decimal
+}
+class Reserva {
+  + idReserva : int
+  + codigo : string
+  + fechaEntrada : date
+  + fechaSalida : date
+  + numeroPersonas : int
+  + valorTotal : decimal
+  + estado : EstadoReserva
+  + fechaCreacion : datetime
+  + version : int
+  + calcularNoches() : int
+  + confirmar()
+  + modificar(fechaEntrada, fechaSalida)
+  + cancelar(motivo)
+  + registrarCheckIn()
+  + registrarCheckOut()
+}
+class Pago {
+  + idPago : int
+  + valor : decimal
+  + medio : string
+  + fecha : datetime
+  + estado : EstadoPago
+  + registrar()
+  + revertir()
+}
+class Comprobante {
+  + idComprobante : int
+  + numero : string
+  + fechaEmision : datetime
+  + valor : decimal
+  + generar()
+}
+class BitacoraReserva {
+  + idBitacora : long
+  + fecha : datetime
+  + estadoAnterior : string
+  + estadoNuevo : string
+  + detalle : string
+}
+class ServicioReservas <<service>> {
+  + confirmarReserva(solicitud) : Reserva
+  + modificarReserva(idReserva, fechas) : Reserva
+  + cancelarReserva(idReserva, motivo)
+  + consultarDisponibilidad(tipo, entrada, salida) : List<Habitacion>
+}
+enum EstadoReserva {
+  PENDIENTE
+  CONFIRMADA
+  EN_CASA
+  CERRADA
+  CANCELADA
+}
+enum EstadoHabitacion {
+  DISPONIBLE
+  RESERVADA
+  OCUPADA
+  MANTENIMIENTO
+}
+
+Usuario <|-- Recepcionista
+Usuario <|-- Administrador
+TipoHabitacion "1" o-- "1..*" Habitacion : agrupa
+TipoHabitacion "1" -- "1..*" Tarifa : define
+Huesped "1" -- "0..*" Reserva : realiza
+Habitacion "1" -- "0..*" Reserva : se asigna a
+Usuario "1" -- "0..*" Reserva : registra
+Reserva "1" *-- "1..*" Pago : compone
+Reserva "1" *-- "0..1" Comprobante : emite
+Reserva "1" *-- "1..*" BitacoraReserva : audita
+ServicioReservas ..> Reserva : crea y modifica
+ServicioReservas ..> Habitacion : verifica y bloquea
+Reserva ..> EstadoReserva
+Habitacion ..> EstadoHabitacion
+@enduml

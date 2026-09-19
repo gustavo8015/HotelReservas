@@ -1,0 +1,58 @@
+@startuml
+!pragma layout smetana
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam shadowing false
+skinparam rectangle {
+  BorderColor #0B2A5B
+  BackgroundColor white
+  RoundCorner 8
+}
+skinparam package {
+  BorderColor #0B2A5B
+  FontStyle bold
+}
+skinparam database {
+  BorderColor #0B2A5B
+  BackgroundColor #F7F9FC
+}
+skinparam ArrowColor #0B2A5B
+skinparam actorBorderColor #0B2A5B
+top to bottom direction
+
+actor "Recepcionista /\nAdministrador" as U
+
+package "CAPA DE PRESENTACIÓN\nAplicación móvil Android (APK) · C# .NET MAUI" as C1 #EEF3FA {
+  rectangle "Vistas XAML\n(Inicio, Reservas, Habitaciones,\nHuéspedes, Reportes)" as V
+  rectangle "ViewModels\n(estado y validaciones\nde pantalla)" as VM
+  rectangle "Cliente HTTP\n(consumo de la API REST)" as CL
+}
+
+package "CAPA DE LÓGICA DE NEGOCIO\nServidor · C# ASP.NET Core Web API" as C2 #EAF4EE {
+  rectangle "Seguridad\n(autenticación JWT,\nautorización por roles)" as SG
+  rectangle "Controladores REST\n(/reservas, /habitaciones,\n/huespedes, /reportes)" as CT
+  rectangle "Servicios de negocio\n(reglas de disponibilidad,\ntarifas y estados)" as SV
+  rectangle "Gestor de transacciones\n(unidad de trabajo ACID,\ncontrol de concurrencia)" as TX
+}
+
+package "CAPA DE ACCESO A DATOS\nEntity Framework Core / ADO.NET" as C3 #FFF4E5 {
+  rectangle "Repositorios\n(Reservas, Habitaciones,\nHuéspedes, Pagos)" as RP
+  rectangle "DbContext\n(mapeo objeto-relacional)" as CX
+}
+
+package "CAPA DE DATOS\nMicrosoft SQL Server (SSMS)" as C4 #F2F2F2 {
+  database "Base de datos HotelReservas\ntablas, claves, restricciones,\nbitácora de auditoría" as DB
+}
+
+U --> V : interacción táctil
+V --> VM
+VM --> CL
+CL --> CT : HTTPS · JSON
+SG .> CT : valida token y rol
+CT --> SV
+SV --> TX
+TX --> RP : llamadas a repositorios
+RP --> CX
+CX --> DB : T-SQL · BEGIN TRAN / COMMIT / ROLLBACK
+@enduml

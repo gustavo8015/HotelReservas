@@ -1,0 +1,111 @@
+@startuml
+!pragma layout smetana
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+skinparam shadowing false
+skinparam linetype ortho
+skinparam class {
+  BorderColor #0B2A5B
+  BackgroundColor white
+  HeaderBackgroundColor #EAF4EE
+}
+skinparam ArrowColor #0B2A5B
+hide circle
+hide methods
+
+entity "USUARIO" as usuario {
+  * id_usuario : INT <<PK>>
+  --
+  nombre : NVARCHAR(100)
+  correo : NVARCHAR(120) <<UNIQUE>>
+  clave_hash : NVARCHAR(255)
+  rol : NVARCHAR(20)
+  activo : BIT
+}
+entity "HUESPED" as huesped {
+  * id_huesped : INT <<PK>>
+  --
+  tipo_documento : NVARCHAR(5)
+  numero_documento : NVARCHAR(20) <<UNIQUE>>
+  nombres : NVARCHAR(80)
+  apellidos : NVARCHAR(80)
+  telefono : NVARCHAR(20)
+  correo : NVARCHAR(120)
+}
+entity "TIPO_HABITACION" as tipo {
+  * id_tipo : INT <<PK>>
+  --
+  nombre : NVARCHAR(50)
+  capacidad : INT
+  descripcion : NVARCHAR(255)
+}
+entity "HABITACION" as hab {
+  * id_habitacion : INT <<PK>>
+  --
+  numero : NVARCHAR(10) <<UNIQUE>>
+  piso : INT
+  id_tipo : INT <<FK>>
+  estado : NVARCHAR(15)
+}
+entity "TARIFA" as tarifa {
+  * id_tarifa : INT <<PK>>
+  --
+  id_tipo : INT <<FK>>
+  valor_noche : DECIMAL(12,2)
+  vigencia_desde : DATE
+  vigencia_hasta : DATE
+}
+entity "RESERVA" as reserva {
+  * id_reserva : INT <<PK>>
+  --
+  codigo : NVARCHAR(12) <<UNIQUE>>
+  id_huesped : INT <<FK>>
+  id_habitacion : INT <<FK>>
+  id_usuario : INT <<FK>>
+  fecha_entrada : DATE
+  fecha_salida : DATE
+  numero_personas : INT
+  valor_total : DECIMAL(12,2)
+  estado : NVARCHAR(15)
+  fecha_creacion : DATETIME2
+  version_fila : ROWVERSION
+}
+entity "PAGO" as pago {
+  * id_pago : INT <<PK>>
+  --
+  id_reserva : INT <<FK>>
+  valor : DECIMAL(12,2)
+  medio : NVARCHAR(20)
+  fecha : DATETIME2
+  estado : NVARCHAR(15)
+}
+entity "COMPROBANTE" as comp {
+  * id_comprobante : INT <<PK>>
+  --
+  id_reserva : INT <<FK>>
+  numero : NVARCHAR(15) <<UNIQUE>>
+  fecha_emision : DATETIME2
+  valor : DECIMAL(12,2)
+}
+entity "BITACORA_RESERVA" as bit {
+  * id_bitacora : BIGINT <<PK>>
+  --
+  id_reserva : INT <<FK>>
+  id_usuario : INT <<FK>>
+  fecha : DATETIME2
+  estado_anterior : NVARCHAR(15)
+  estado_nuevo : NVARCHAR(15)
+  detalle : NVARCHAR(255)
+}
+
+tipo ||--|{ hab : "1:N clasifica"
+tipo ||--|{ tarifa : "1:N tiene"
+huesped ||--o{ reserva : "1:N realiza"
+hab ||--o{ reserva : "1:N se asigna en"
+usuario ||--o{ reserva : "1:N registra"
+reserva ||--|{ pago : "1:N recibe"
+reserva ||--o| comp : "1:1 genera"
+reserva ||--|{ bit : "1:N registra cambios"
+usuario ||--o{ bit : "1:N ejecuta"
+@enduml

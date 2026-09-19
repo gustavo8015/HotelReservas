@@ -1,0 +1,64 @@
+@startuml
+!pragma layout smetana
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam shadowing false
+skinparam usecase {
+  BorderColor #0B2A5B
+  BackgroundColor white
+}
+skinparam rectangle {
+  BorderColor #0B2A5B
+  BackgroundColor #F7F9FC
+  FontStyle bold
+}
+skinparam actor {
+  BorderColor #0B2A5B
+  BackgroundColor #EEF3FA
+}
+skinparam ArrowColor #0B2A5B
+left to right direction
+
+actor "Recepcionista" as R
+actor "Administrador" as A
+
+rectangle "Sistema Hotel Reservas" {
+  usecase "CU-01 Iniciar sesión" as CU1
+  usecase "CU-02 Registrar huésped" as CU2
+  usecase "CU-03 Consultar disponibilidad" as CU3
+  usecase "CU-04 Realizar reserva" as CU4
+  usecase "CU-07 Modificar reserva" as CU7
+  usecase "CU-08 Cancelar reserva" as CU8
+  usecase "CU-09 Registrar check-in" as CU9
+  usecase "CU-10 Registrar check-out" as CU10
+  usecase "CU-12 Consultar historial\nde reservas" as CU12
+  usecase "CU-11 Gestionar habitaciones\ny tarifas" as CU11
+  usecase "CU-13 Generar reporte\nde ocupación" as CU13
+  usecase "CU-14 Gestionar usuarios" as CU14
+  usecase "CU-05 Registrar pago o garantía" as CU5
+  usecase "CU-06 Generar comprobante" as CU6
+  usecase "CU-15 Aplicar penalidad\npor cancelación" as CU15
+
+  CU4 ..> CU3 : <<include>>
+  CU4 ..> CU5 : <<include>>
+  CU4 ..> CU6 : <<include>>
+  CU7 ..> CU3 : <<include>>
+  CU10 ..> CU6 : <<include>>
+  CU8 <.. CU15 : <<extend>>
+}
+
+R -- CU1
+R -- CU2
+R -- CU4
+R -- CU7
+R -- CU8
+R -- CU9
+R -- CU10
+R -- CU12
+A -- CU1
+A -- CU11
+A -- CU12
+A -- CU13
+A -- CU14
+@enduml
