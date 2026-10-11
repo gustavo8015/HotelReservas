@@ -1,0 +1,89 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><style>
+body{margin:0;background:#fff;font-family:Roboto,"Segoe UI",Arial,sans-serif;display:flex;gap:28px;padding:16px}
+.phone{width:390px;height:844px;background:#000;border-radius:44px;padding:12px;box-shadow:0 12px 30px rgba(0,0,0,.25)}
+.screen{width:100%;height:100%;background:#F2F5F8;border-radius:34px;overflow:hidden;display:flex;flex-direction:column}
+.status{height:34px;background:#0B2A5B;color:#fff;font-size:12px;display:flex;align-items:center;justify-content:space-between;padding:0 24px}
+.appbar{background:#0B2A5B;color:#fff;padding:10px 20px 14px;font-size:17px;font-weight:600;display:flex;align-items:center;gap:10px}
+.appbar small{font-weight:400;font-size:12px;color:#D6E0EE;display:block}
+.content{flex:1;overflow:hidden;padding:12px 16px}
+h3{color:#1F6B3D;font-size:14px;margin:10px 0 6px}
+.card{background:#fff;border:1px solid #DDE3EA;border-radius:14px;padding:12px;font-size:13px;color:#1C2B4A;line-height:1.35;margin-bottom:10px}
+.row{display:flex;gap:8px}.row .card{flex:1}
+.lbl{font-size:11px;color:#5B6B82;letter-spacing:.5px;text-transform:uppercase}
+.val{font-size:14px;font-weight:600;margin-top:2px}
+.btn{height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;margin-top:8px}
+.p{background:#1F6B3D;color:#fff}.s{border:1.5px solid #0B2A5B;color:#0B2A5B}.d{background:#eee;color:#999}
+.hab{display:flex;justify-content:space-between;align-items:center}
+.hab b{font-size:15px}.hab .pr{color:#1F6B3D;font-weight:700}
+.tag{font-size:11px;padding:3px 8px;border-radius:10px;color:#fff;background:#1F6B3D;display:inline-block}
+.tag.o{background:#E8821A}.tag.g{background:#5B6B82}
+.sum td{padding:3px 0;font-size:13px}.sum td:last-child{text-align:right;font-weight:600}
+.msg{max-width:86%;padding:10px 12px;border-radius:14px;font-size:13px;line-height:1.35;margin-bottom:8px}
+.me{background:#0B2A5B;color:#fff;margin-left:auto;border-bottom-right-radius:4px}
+.ia{background:#fff;border:1px solid #DDE3EA;border-bottom-left-radius:4px}
+.ia small{display:block;color:#5B6B82;font-size:11px;margin-top:6px}
+.input{display:flex;gap:8px;align-items:center;background:#fff;border:1px solid #DDE3EA;border-radius:24px;padding:8px 12px;font-size:13px;color:#8a97a8;margin-top:8px}
+.input span{flex:1}.input b{color:#1F6B3D}
+.tabs{height:64px;background:#fff;border-top:1px solid #DDE3EA;display:flex;justify-content:space-around;align-items:center;font-size:10.5px;color:#5B6B82}
+.tabs div{display:flex;flex-direction:column;align-items:center;gap:3px}.tabs .on{color:#0B2A5B;font-weight:700}
+.tabs i{width:22px;height:22px;border:2px solid currentColor;border-radius:6px;display:block}
+.warn{background:#FFF4E5;border:1px solid #F3C98B;border-radius:10px;padding:8px 10px;font-size:12px;color:#7A4B00}
+.ok{background:#E9F6EE;border:1px solid #A8D8B9;border-radius:10px;padding:8px 10px;font-size:12px;color:#1F6B3D}
+</style></head><body>
+
+<!-- 1. Consultar disponibilidad -->
+<div class="phone" id="s1"><div class="screen">
+<div class="status"><span>9:41</span><span>▲ ▮ ■</span></div>
+<div class="appbar">‹ <div>Consultar disponibilidad<small>CU-03 · RF-03</small></div></div>
+<div class="content">
+<div class="row"><div class="card"><div class="lbl">Tipo</div><div class="val">Doble ▾</div></div><div class="card"><div class="lbl">Personas</div><div class="val">2 ▾</div></div></div>
+<div class="row"><div class="card"><div class="lbl">Entrada</div><div class="val">10 oct 2026</div></div><div class="card"><div class="lbl">Salida</div><div class="val">12 oct 2026</div></div></div>
+<div class="btn s">Buscar habitaciones</div>
+<h3>Disponibles · 2 noches</h3>
+<div class="card hab"><div><b>Hab. 103 · Piso 1</b><br><span class="lbl">Doble · 2 personas</span></div><div style="text-align:right"><span class="tag">Disponible</span><br><span class="pr">$ 360.000</span></div></div>
+<div class="card hab"><div><b>Hab. 203 · Piso 2</b><br><span class="lbl">Doble · 2 personas</span></div><div style="text-align:right"><span class="tag">Disponible</span><br><span class="pr">$ 360.000</span></div></div>
+<div class="card hab"><div><b>Hab. 204 · Piso 2</b><br><span class="lbl">Doble · 2 personas</span></div><div style="text-align:right"><span class="tag o">Reservada</span><br><span class="lbl">11 y 12 oct</span></div></div>
+<div class="card hab"><div><b>Hab. 303 · Piso 3</b><br><span class="lbl">Doble · 2 personas</span></div><div style="text-align:right"><span class="tag g">Mantenimiento</span></div></div>
+<div class="ok">Tarifa vigente: $ 180.000 por noche. Resultado calculado en el servidor con las reservas confirmadas y en casa.</div>
+<div class="btn p">Reservar la 103</div>
+</div>
+<div class="tabs"><div><i></i>Inicio</div><div class="on"><i></i>Reservas</div><div><i></i>Habitaciones</div><div><i></i>Huéspedes</div><div><i></i>Reportes</div></div>
+</div></div>
+
+<!-- 2. Confirmar reserva -->
+<div class="phone" id="s2"><div class="screen">
+<div class="status"><span>9:41</span><span>▲ ▮ ■</span></div>
+<div class="appbar">‹ <div>Nueva reserva · Confirmación<small>CU-04, CU-05, CU-06 · RF-04, RF-05</small></div></div>
+<div class="content">
+<div class="card"><div class="lbl">Huésped</div><div class="val">Laura Martínez Pérez</div><span class="lbl">CC 1010101010 · 3001112233</span></div>
+<div class="card"><table class="sum" style="width:100%">
+<tr><td>Habitación</td><td>103 · Doble</td></tr>
+<tr><td>Entrada / salida</td><td>10 oct → 12 oct 2026</td></tr>
+<tr><td>Noches × tarifa</td><td>2 × $ 180.000</td></tr>
+<tr><td>Personas</td><td>2</td></tr>
+<tr><td style="font-weight:700">Valor total</td><td style="color:#1F6B3D">$ 360.000</td></tr></table></div>
+<div class="row"><div class="card"><div class="lbl">Medio de pago</div><div class="val">Tarjeta ▾</div></div><div class="card"><div class="lbl">Valor pagado</div><div class="val">$ 360.000</div></div></div>
+<div class="warn">Al confirmar, el servidor vuelve a verificar la disponibilidad con bloqueo y registra en una sola transacción la reserva, el pago, el comprobante y la bitácora. Si otra persona tomó la habitación, no se guarda nada.</div>
+<div class="btn p">Confirmar reserva</div>
+<div class="btn d">Cancelar</div>
+<div class="ok" style="margin-top:10px">✔ Reserva RSV000000045 confirmada · Comprobante CMP000000045 · Recepcionista: turno 1</div>
+</div>
+<div class="tabs"><div><i></i>Inicio</div><div class="on"><i></i>Reservas</div><div><i></i>Habitaciones</div><div><i></i>Huéspedes</div><div><i></i>Reportes</div></div>
+</div></div>
+
+<!-- 3. Asistente IA -->
+<div class="phone" id="s3"><div class="screen">
+<div class="status"><span>9:41</span><span>▲ ▮ ■</span></div>
+<div class="appbar">‹ <div>Asistente<small>Consultas en lenguaje natural · solo lectura</small></div></div>
+<div class="content">
+<div class="msg me">¿Qué habitaciones dobles hay libres del 10 al 12 de octubre?</div>
+<div class="msg ia">Para el 10 al 12 de octubre (2 noches) hay <b>dos habitaciones dobles disponibles</b>: la 103 (piso 1) y la 203 (piso 2). La tarifa vigente es de $ 180.000 por noche, es decir $ 360.000 por la estadía. La 204 está reservada y la 303 en mantenimiento.<small>Fuente: consultarDisponibilidad(Doble, 2026-10-10, 2026-10-12) · datos del repositorio central</small></div>
+<div class="msg me">¿Cuántas llegadas tenemos mañana?</div>
+<div class="msg ia">Mañana, 12 de octubre, hay <b>5 llegadas programadas</b>: 3 habitaciones sencillas, 1 doble y 1 suite. Todas tienen pago registrado.<small>Fuente: consultarLlegadas(2026-10-12)</small></div>
+<div class="msg me">Reserva la 103 para Laura Martínez</div>
+<div class="msg ia">No puedo crear reservas desde el asistente. Para confirmarla con verificación de disponibilidad y comprobante, usa el botón <b>Reservar la 103</b> en la pantalla de disponibilidad.<small>La confirmación es una transacción controlada por la API (CU-04)</small></div>
+<div class="input"><span>Escribe tu consulta…</span><b>Enviar</b></div>
+</div>
+<div class="tabs"><div><i></i>Inicio</div><div><i></i>Reservas</div><div><i></i>Habitaciones</div><div class="on"><i></i>Asistente</div><div><i></i>Reportes</div></div>
+</div></div>
+</body></html>
