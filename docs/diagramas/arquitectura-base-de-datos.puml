@@ -1,0 +1,46 @@
+@startuml
+!pragma layout smetana
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+skinparam shadowing false
+skinparam ArrowColor #0B2A5B
+skinparam rectangle {
+  BorderColor #0B2A5B
+  BackgroundColor white
+}
+skinparam database {
+  BorderColor #0B2A5B
+  BackgroundColor #EEF3FA
+}
+skinparam node {
+  BorderColor #0B2A5B
+  BackgroundColor #F6F9FD
+}
+
+node "Servidor de aplicaciones" as srv {
+  rectangle "API REST (ASP.NET Core)\nServicios del negocio y gestor transaccional" as api
+  rectangle "Capa de acceso a datos\nEntity Framework Core / ADO.NET" as dal
+}
+
+node "Servidor de base de datos\nMicrosoft SQL Server (Express / Developer)" as sql {
+  database "Base de datos HotelReservas" as db {
+    rectangle "Esquema de datos (9 tablas)\nUSUARIO, HUESPED, TIPO_HABITACION,\nHABITACION, TARIFA, RESERVA, PAGO,\nCOMPROBANTE, BITACORA_RESERVA" as tablas
+    rectangle "Reglas de integridad\nPK, FK, UNIQUE, CHECK\nROWVERSION en RESERVA" as reglas
+    rectangle "Índices\nIX_RESERVA_habitacion_fechas\nUNIQUE en codigo, numero, correo" as idx
+    rectangle "Lógica en el motor\nsp_ConfirmarReserva\n(SERIALIZABLE, UPDLOCK, HOLDLOCK)\nsecuencia seq_reserva" as sp
+    rectangle "Registro de transacciones (log)\ny copias de seguridad diarias" as log
+  }
+  rectangle "Seguridad del motor\nautenticación mixta, inicio de sesión\ndedicado para la API, permisos mínimos" as seg
+}
+
+rectangle "Herramienta de administración\nSQL Server Management Studio (SSMS)" as ssms
+
+api --> dal
+dal --> db : "TDS / T-SQL\nBEGIN TRAN · COMMIT · ROLLBACK"
+tablas -[hidden]- reglas
+reglas -[hidden]- idx
+sp -[hidden]- log
+ssms ..> db : "scripts 01, 02 y 03\nadministración"
+seg -[hidden]- db
+@enduml

@@ -1,0 +1,176 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1120" viewBox="0 0 1800 1120" font-family="Arial, Helvetica, sans-serif">
+<rect width="1800" height="1120" fill="white"/>
+<line x1="240.58823529411765" y1="132.0" x2="140" y2="75" stroke="#6B7A90" stroke-width="1.1"/>
+<ellipse cx="140" cy="75" rx="79.0" ry="20.0" fill="white" stroke="#6B7A90" stroke-width="1.2"/>
+<text x="140" y="79" text-anchor="middle" font-size="12.5" fill="#1a1a1a" text-decoration="underline">id_tipo</text>
+<line x1="290.0" y1="132.0" x2="290" y2="75" stroke="#6B7A90" stroke-width="1.1"/>
+<ellipse cx="290" cy="75" rx="79.0" ry="20.0" fill="white" stroke="#6B7A90" stroke-width="1.2"/>
+<text x="290" y="79" text-anchor="middle" font-size="12.5" fill="#1a1a1a">nombre</text>
+<line x1="339.4117647058824" y1="132.0" x2="440" y2="75" stroke="#6B7A90" stroke-width="1.1"/>
+<ellipse cx="440" cy="75" rx="79.0" ry="20.0" fill="white" stroke="#6B7A90" stroke-width="1.2"/>
+<text x="440" y="79" text-anchor="middle" font-size="12.5" fill="#1a1a1a">capacidad</text>
+<line x1="693.6470588235294" y1="132.0" x2="640" y2="75" stroke="#6B7A90" stroke-width="1.1"/>
+<ellipse cx="640" cy="75" rx="79.0" ry="20.0" fill="white" stroke="#6B7A90" stroke-width="1.2"/>
+<text x="640" y="79" text-anchor="middle" font-size="12.5" fill="#1a1a1a" text-decoration="underline">id_tarifa</text>
+<line x1="746.3529411764706" y1="132.0" x2="800" y2="75" stroke="#6B7A90" stroke-width="1.1"/>
+<ellipse cx="800" cy="75" rx="79.0" ry="20.0" fill="white" stroke="#6B7A90" stroke-width="1.2"/>
+<text x="800" y="79" text-anchor="middle" font-size="12.5" fill="#1a1a1a">valor_noche</text>
+<line x1="825.0" y1="160.0" x2="895" y2="160" stroke="#6B7A90" stroke-width="1.1"/>
+<ellipse cx="895" cy="160" rx="79.0" ry="20.0" fill="white" stroke="#6B7A90" stroke-width="1.2"/>
+<text x="895" y="164" text-anchor="middle" font-size="12.5" fill="#1a1a1a">vigencia</text>
+<line x1="1030.5882352941176" y1="132.0" x2="930" y2="75" stroke="#6B7A90" stroke-width="1.1"/>
+<ellipse cx="930" cy="75" rx="79.0" ry="20.0" fill="white" stroke="#6B7A90" stroke-width="1.2"/>
+<text x="930" y="79" text-anchor="middle" font-size="12.5" fill="#1a1a1a" text-decoration="underline">id_usuario</text>
+<line x1="1080.0" y1="132.0" x2="1080" y2="75" stroke="#6B7A90" stroke-width="1.1"/>
+<ellipse cx="1080" cy="75" rx="79.0" ry="20.0" fill="white" stroke="#6B7A90" stroke-width="1.2"/>
+<text x="1080" y="79" text-anchor="middle" font-size="12.5" fill="#1a1a1a">correo</text>
+<line x1="1129.4117647058824" y1="132.0" x2="1230" y2="75" stroke="#6B7A90" stroke-width="1.1"/>
+<ellipse cx="1230" cy="75" rx="79.0" ry="20.0" fill="white" stroke="#6B7A90" stroke-width="1.2"/>
+<text x="1230" y="79" text-anchor="middle" font-size="12.5" fill="#1a1a1a">rol</text>
+<line x1="1500.0" y1="342.0" x2="1500" y2="285" stroke="#6B7A90" stroke-width="1.1"/>
+<ellipse cx="1500" cy="285" rx="79.0" ry="20.0" fill="white" stroke="#6B7A90" stroke-width="1.2"/>
+<text x="1500" y="289" text-anchor="middle" font-size="12.5" fill="#1a1a1a" text-decoration="underline">id_bitacora</text>
+<line x1="1605.0" y1="349.5833333333333" x2="1680" y2="335" stroke="#6B7A90" stroke-width="1.1"/>
+<ellipse cx="1680" cy="335" rx="79.0" ry="20.0" fill="white" stroke="#6B7A90" stroke-width="1.2"/>
+<text x="1680" y="339" text-anchor="middle" font-size="12.5" fill="#1a1a1a">fecha</text>
+<line x1="1605.0" y1="390.4166666666667" x2="1680" y2="405" stroke="#6B7A90" stroke-width="1.1"/>
+<ellipse cx="1680" cy="405" rx="85.8" ry="20.0" fill="white" stroke="#6B7A90" stroke-width="1.2"/>
+<text x="1680" y="409" text-anchor="middle" font-size="12.5" fill="#1a1a1a">estado_anterior, nuevo</text>
+<line x1="230.0" y1="588.0" x2="140" y2="630" stroke="#6B7A90" stroke-width="1.1"/>
+<ellipse cx="140" cy="630" rx="79.0" ry="20.0" fill="white" stroke="#6B7A90" stroke-width="1.2"/>
+<text x="140" y="634" text-anchor="middle" font-size="12.5" fill="#1a1a1a" text-decoration="underline">id_habitacion</text>
+<line x1="290.0" y1="588.0" x2="290" y2="645" stroke="#6B7A90" stroke-width="1.1"/>
+<ellipse cx="290" cy="645" rx="79.0" ry="20.0" fill="white" stroke="#6B7A90" stroke-width="1.2"/>
+<text x="290" y="649" text-anchor="middle" font-size="12.5" fill="#1a1a1a">numero</text>
+<line x1="350.0" y1="588.0" x2="440" y2="630" stroke="#6B7A90" stroke-width="1.1"/>
+<ellipse cx="440" cy="630" rx="79.0" ry="20.0" fill="white" stroke="#6B7A90" stroke-width="1.2"/>
+<text x="440" y="634" text-anchor="middle" font-size="12.5" fill="#1a1a1a">estado</text>
+<line x1="1012.0" y1="532.0" x2="910" y2="490" stroke="#6B7A90" stroke-width="1.1"/>
+<ellipse cx="910" cy="490" rx="79.0" ry="20.0" fill="white" stroke="#6B7A90" stroke-width="1.2"/>
+<text x="910" y="494" text-anchor="middle" font-size="12.5" fill="#1a1a1a" text-decoration="underline">id_reserva</text>
+<line x1="1012.0" y1="588.0" x2="910" y2="630" stroke="#6B7A90" stroke-width="1.1"/>
+<ellipse cx="910" cy="630" rx="79.0" ry="20.0" fill="white" stroke="#6B7A90" stroke-width="1.2"/>
+<text x="910" y="634" text-anchor="middle" font-size="12.5" fill="#1a1a1a">estado</text>
+<line x1="1115.3684210526317" y1="588.0" x2="1200" y2="655" stroke="#6B7A90" stroke-width="1.1"/>
+<ellipse cx="1200" cy="655" rx="79.0" ry="20.0" fill="white" stroke="#6B7A90" stroke-width="1.2"/>
+<text x="1200" y="659" text-anchor="middle" font-size="12.5" fill="#1a1a1a">codigo</text>
+<line x1="1177.2631578947369" y1="588.0" x2="1410" y2="655" stroke="#6B7A90" stroke-width="1.1"/>
+<ellipse cx="1410" cy="655" rx="105.3" ry="20.0" fill="white" stroke="#6B7A90" stroke-width="1.2"/>
+<text x="1410" y="659" text-anchor="middle" font-size="12.5" fill="#1a1a1a">fecha_entrada, fecha_salida</text>
+<line x1="1589.090909090909" y1="532.0" x2="1675" y2="505" stroke="#6B7A90" stroke-width="1.1"/>
+<ellipse cx="1675" cy="505" rx="79.0" ry="20.0" fill="white" stroke="#6B7A90" stroke-width="1.2"/>
+<text x="1675" y="509" text-anchor="middle" font-size="12.5" fill="#1a1a1a" text-decoration="underline">id_huesped</text>
+<line x1="1589.090909090909" y1="588.0" x2="1675" y2="615" stroke="#6B7A90" stroke-width="1.1"/>
+<ellipse cx="1675" cy="615" rx="79.0" ry="20.0" fill="white" stroke="#6B7A90" stroke-width="1.2"/>
+<text x="1675" y="619" text-anchor="middle" font-size="12.5" fill="#1a1a1a">numero_documento</text>
+<line x1="1500.0" y1="532.0" x2="1500" y2="470" stroke="#6B7A90" stroke-width="1.1"/>
+<ellipse cx="1500" cy="470" rx="79.0" ry="20.0" fill="white" stroke="#6B7A90" stroke-width="1.2"/>
+<text x="1500" y="474" text-anchor="middle" font-size="12.5" fill="#1a1a1a">nombres, apellidos</text>
+<line x1="615.0" y1="890.0" x2="560" y2="890" stroke="#6B7A90" stroke-width="1.1"/>
+<ellipse cx="560" cy="890" rx="79.0" ry="20.0" fill="white" stroke="#6B7A90" stroke-width="1.2"/>
+<text x="560" y="894" text-anchor="middle" font-size="12.5" fill="#1a1a1a" text-decoration="underline">id_pago</text>
+<line x1="696.9411764705883" y1="918.0" x2="650" y2="975" stroke="#6B7A90" stroke-width="1.1"/>
+<ellipse cx="650" cy="975" rx="79.0" ry="20.0" fill="white" stroke="#6B7A90" stroke-width="1.2"/>
+<text x="650" y="979" text-anchor="middle" font-size="12.5" fill="#1a1a1a">valor</text>
+<line x1="749.6470588235294" y1="918.0" x2="810" y2="975" stroke="#6B7A90" stroke-width="1.1"/>
+<ellipse cx="810" cy="975" rx="79.0" ry="20.0" fill="white" stroke="#6B7A90" stroke-width="1.2"/>
+<text x="810" y="979" text-anchor="middle" font-size="12.5" fill="#1a1a1a">medio</text>
+<line x1="1185.0" y1="890.0" x2="1250" y2="890" stroke="#6B7A90" stroke-width="1.1"/>
+<ellipse cx="1250" cy="890" rx="79.0" ry="20.0" fill="white" stroke="#6B7A90" stroke-width="1.2"/>
+<text x="1250" y="894" text-anchor="middle" font-size="12.5" fill="#1a1a1a" text-decoration="underline">id_comprobante</text>
+<line x1="1060.235294117647" y1="918.0" x2="1020" y2="975" stroke="#6B7A90" stroke-width="1.1"/>
+<ellipse cx="1020" cy="975" rx="79.0" ry="20.0" fill="white" stroke="#6B7A90" stroke-width="1.2"/>
+<text x="1020" y="979" text-anchor="middle" font-size="12.5" fill="#1a1a1a">numero</text>
+<line x1="1112.9411764705883" y1="918.0" x2="1180" y2="975" stroke="#6B7A90" stroke-width="1.1"/>
+<ellipse cx="1180" cy="975" rx="79.0" ry="20.0" fill="white" stroke="#6B7A90" stroke-width="1.2"/>
+<text x="1180" y="979" text-anchor="middle" font-size="12.5" fill="#1a1a1a">fecha_emision</text>
+<line x1="395.0" y1="160.0" x2="430.0" y2="160.0" stroke="#0B2A5B" stroke-width="1.8"/>
+<line x1="615.0" y1="160.0" x2="580.0" y2="160.0" stroke="#0B2A5B" stroke-width="1.8"/>
+<polygon points="430.0,160 505,124.0 580.0,160 505,196.0" fill="#EAF4EE" stroke="#0B2A5B" stroke-width="1.8"/>
+<text x="505" y="164" text-anchor="middle" font-size="13" fill="#1a1a1a">tiene</text>
+<text x="409.7" y="177.0" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#0B2A5B">1</text>
+<text x="600.3" y="151.0" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#0B2A5B">1..N</text>
+<line x1="290.0" y1="188.0" x2="290.0" y2="324.0" stroke="#0B2A5B" stroke-width="1.8"/>
+<line x1="290.0" y1="532.0" x2="290.0" y2="396.0" stroke="#0B2A5B" stroke-width="1.8"/>
+<polygon points="215.0,360 290,324.0 365.0,360 290,396.0" fill="#EAF4EE" stroke="#0B2A5B" stroke-width="1.8"/>
+<text x="290" y="364" text-anchor="middle" font-size="13" fill="#1a1a1a">clasifica</text>
+<text x="277.0" y="249.12" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#0B2A5B">1</text>
+<text x="303.0" y="478.88" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#0B2A5B">1..N</text>
+<line x1="395.0" y1="560.0" x2="610.0" y2="560.0" stroke="#0B2A5B" stroke-width="1.8"/>
+<line x1="975.0" y1="560.0" x2="760.0" y2="560.0" stroke="#0B2A5B" stroke-width="1.8"/>
+<polygon points="610.0,560 685,524.0 760.0,560 685,596.0" fill="#EAF4EE" stroke="#0B2A5B" stroke-width="1.8"/>
+<text x="685" y="564" text-anchor="middle" font-size="13" fill="#1a1a1a">se asigna</text>
+<text x="485.3" y="577.0" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#0B2A5B">1</text>
+<text x="884.7" y="551.0" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#0B2A5B">0..N</text>
+<line x1="1080.0" y1="188.0" x2="1080.0" y2="324.0" stroke="#0B2A5B" stroke-width="1.8"/>
+<line x1="1080.0" y1="532.0" x2="1080.0" y2="396.0" stroke="#0B2A5B" stroke-width="1.8"/>
+<polygon points="1005.0,360 1080,324.0 1155.0,360 1080,396.0" fill="#EAF4EE" stroke="#0B2A5B" stroke-width="1.8"/>
+<text x="1080" y="364" text-anchor="middle" font-size="13" fill="#1a1a1a">registra</text>
+<text x="1067.0" y="249.12" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#0B2A5B">1</text>
+<text x="1093.0" y="478.88" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#0B2A5B">0..N</text>
+<line x1="1395.0" y1="560.0" x2="1365.0" y2="560.0" stroke="#0B2A5B" stroke-width="1.8"/>
+<line x1="1185.0" y1="560.0" x2="1215.0" y2="560.0" stroke="#0B2A5B" stroke-width="1.8"/>
+<polygon points="1215.0,560 1290,524.0 1365.0,560 1290,596.0" fill="#EAF4EE" stroke="#0B2A5B" stroke-width="1.8"/>
+<text x="1290" y="564" text-anchor="middle" font-size="13" fill="#1a1a1a">realiza</text>
+<text x="1382.4" y="551.0" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#0B2A5B">1</text>
+<text x="1197.6" y="577.0" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#0B2A5B">0..N</text>
+<line x1="1136.0" y1="188.0" x2="1218.0" y2="229.0" stroke="#0B2A5B" stroke-width="1.8"/>
+<line x1="1444.0" y1="342.0" x2="1362.0" y2="301.0" stroke="#0B2A5B" stroke-width="1.8"/>
+<polygon points="1215.0,265 1290,229.0 1365.0,265 1290,301.0" fill="#EAF4EE" stroke="#0B2A5B" stroke-width="1.8"/>
+<text x="1290" y="269" text-anchor="middle" font-size="13" fill="#1a1a1a">ejecuta</text>
+<text x="1164.6262232585007" y="220.8475534829989" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#0B2A5B">1</text>
+<text x="1415.3737767414993" y="317.15244651700107" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#0B2A5B">0..N</text>
+<line x1="1143.1312404516716" y1="534.7333237685151" x2="1216.2365036095664" y2="501.6618951970865" stroke="#0B2A5B" stroke-width="1.8"/>
+<line x1="1140.6582332325388" y1="529.2666762314849" x2="1213.7634963904336" y2="496.1952476600564" stroke="#0B2A5B" stroke-width="1.8"/>
+<line x1="1436.8687595483284" y1="395.26667623148495" x2="1363.7634963904336" y2="428.3381048029135" stroke="#0B2A5B" stroke-width="1.8"/>
+<line x1="1439.3417667674612" y1="400.73332376851505" x2="1366.2365036095664" y2="433.8047523399436" stroke="#0B2A5B" stroke-width="1.8"/>
+<polygon points="1215.0,465 1290,429.0 1365.0,465 1290,501.0" fill="#EAF4EE" stroke="#0B2A5B" stroke-width="1.8"/>
+<polygon points="1224.0,465 1290,434.0 1356.0,465 1290,496.0" fill="none" stroke="#0B2A5B" stroke-width="1.4"/>
+<text x="1290" y="469" text-anchor="middle" font-size="13" fill="#1a1a1a">audita</text>
+<text x="1177.9571296765419" y="533.9544029968987" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#0B2A5B">1</text>
+<text x="1402.0428703234581" y="404.04559700310136" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#0B2A5B">1..N</text>
+<line x1="1047.4273715689935" y1="585.7885375793978" x2="937.2455533871752" y2="686.7885375793978" stroke="#0B2A5B" stroke-width="1.8"/>
+<line x1="1051.4817193400975" y1="590.2114624206022" x2="941.2999011582793" y2="691.2114624206022" stroke="#0B2A5B" stroke-width="1.8"/>
+<line x1="752.5726284310066" y1="864.2114624206022" x2="862.7544466128248" y2="763.2114624206022" stroke="#0B2A5B" stroke-width="1.8"/>
+<line x1="748.5182806599024" y1="859.7885375793978" x2="858.7000988417207" y2="758.7885375793978" stroke="#0B2A5B" stroke-width="1.8"/>
+<polygon points="825.0,725 900,689.0 975.0,725 900,761.0" fill="#EAF4EE" stroke="#0B2A5B" stroke-width="1.8"/>
+<polygon points="834.0,725 900,694.0 966.0,725 900,756.0" fill="none" stroke="#0B2A5B" stroke-width="1.4"/>
+<text x="900" y="729" text-anchor="middle" font-size="13" fill="#1a1a1a">recibe</text>
+<text x="994.3937616474564" y="624.8369961773903" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#0B2A5B">1</text>
+<text x="805.6062383525436" y="833.1630038226097" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#0B2A5B">1..N</text>
+<line x1="1077.0" y1="588.0" x2="1077.0" y2="689.0" stroke="#0B2A5B" stroke-width="1.8"/>
+<line x1="1083.0" y1="588.0" x2="1083.0" y2="689.0" stroke="#0B2A5B" stroke-width="1.8"/>
+<line x1="1083.0" y1="862.0" x2="1083.0" y2="761.0" stroke="#0B2A5B" stroke-width="1.8"/>
+<line x1="1077.0" y1="862.0" x2="1077.0" y2="761.0" stroke="#0B2A5B" stroke-width="1.8"/>
+<polygon points="1005.0,725 1080,689.0 1155.0,725 1080,761.0" fill="#EAF4EE" stroke="#0B2A5B" stroke-width="1.8"/>
+<polygon points="1014.0,725 1080,694.0 1146.0,725 1080,756.0" fill="none" stroke="#0B2A5B" stroke-width="1.4"/>
+<text x="1080" y="729" text-anchor="middle" font-size="13" fill="#1a1a1a">genera</text>
+<text x="1067.0" y="634.42" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#0B2A5B">1</text>
+<text x="1093.0" y="823.58" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#0B2A5B">0..1</text>
+<rect x="185.0" y="132.0" width="210" height="56" fill="#EEF3FA" stroke="#0B2A5B" stroke-width="2"/>
+<text x="290" y="165" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a1a1a">TIPO_HABITACION</text>
+<rect x="615.0" y="132.0" width="210" height="56" fill="#EEF3FA" stroke="#0B2A5B" stroke-width="2"/>
+<text x="720" y="165" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a1a1a">TARIFA</text>
+<rect x="975.0" y="132.0" width="210" height="56" fill="#EEF3FA" stroke="#0B2A5B" stroke-width="2"/>
+<text x="1080" y="165" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a1a1a">USUARIO</text>
+<rect x="1395.0" y="342.0" width="210" height="56" fill="#EEF3FA" stroke="#0B2A5B" stroke-width="2"/>
+<rect x="1400.0" y="347.0" width="200" height="46" fill="none" stroke="#0B2A5B" stroke-width="1.4"/>
+<text x="1500" y="375" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a1a1a">BITACORA_RESERVA</text>
+<rect x="185.0" y="532.0" width="210" height="56" fill="#EEF3FA" stroke="#0B2A5B" stroke-width="2"/>
+<text x="290" y="565" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a1a1a">HABITACION</text>
+<rect x="975.0" y="532.0" width="210" height="56" fill="#EEF3FA" stroke="#0B2A5B" stroke-width="2"/>
+<text x="1080" y="565" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a1a1a">RESERVA</text>
+<rect x="1395.0" y="532.0" width="210" height="56" fill="#EEF3FA" stroke="#0B2A5B" stroke-width="2"/>
+<text x="1500" y="565" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a1a1a">HUESPED</text>
+<rect x="615.0" y="862.0" width="210" height="56" fill="#EEF3FA" stroke="#0B2A5B" stroke-width="2"/>
+<rect x="620.0" y="867.0" width="200" height="46" fill="none" stroke="#0B2A5B" stroke-width="1.4"/>
+<text x="720" y="895" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a1a1a">PAGO</text>
+<rect x="975.0" y="862.0" width="210" height="56" fill="#EEF3FA" stroke="#0B2A5B" stroke-width="2"/>
+<rect x="980.0" y="867.0" width="200" height="46" fill="none" stroke="#0B2A5B" stroke-width="1.4"/>
+<text x="1080" y="895" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a1a1a">COMPROBANTE</text>
+<rect x="60" y="1066" width="34" height="22" fill="#EEF3FA" stroke="#0B2A5B" stroke-width="1.5"/><text x="102" y="1082" font-size="12">Entidad</text>
+<rect x="180" y="1066" width="34" height="22" fill="#EEF3FA" stroke="#0B2A5B" stroke-width="1.5"/><rect x="184" y="1070" width="26" height="14" fill="none" stroke="#0B2A5B"/><text x="222" y="1082" font-size="12">Entidad débil (depende de RESERVA)</text>
+<polygon points="460,1077 477,1064 494,1077 477,1090" fill="#EAF4EE" stroke="#0B2A5B" stroke-width="1.5"/><text x="502" y="1082" font-size="12">Relación (doble borde: relación identificadora)</text>
+<ellipse cx="820" cy="1077" rx="17" ry="10" fill="white" stroke="#6B7A90"/><text x="845" y="1082" font-size="12">Atributo (subrayado: identificador)</text>
+<text x="1110" y="1082" font-size="12" font-weight="bold" fill="#0B2A5B">1, 0..N, 1..N, 0..1</text><text x="1230" y="1082" font-size="12">= cardinalidad mínima..máxima</text>
+</svg>

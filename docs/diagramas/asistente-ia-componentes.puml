@@ -1,0 +1,64 @@
+@startuml
+!pragma layout smetana
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+skinparam shadowing false
+skinparam ArrowColor #0B2A5B
+skinparam rectangle {
+  BorderColor #0B2A5B
+  BackgroundColor white
+}
+skinparam node {
+  BorderColor #0B2A5B
+  BackgroundColor #F6F9FD
+}
+skinparam database {
+  BorderColor #0B2A5B
+  BackgroundColor #EEF3FA
+}
+skinparam cloud {
+  BorderColor #1F6B3D
+  BackgroundColor #EAF4EE
+}
+
+node "Interfaz de usuario\nApp móvil Android (.NET MAUI)" as ui {
+  rectangle "Pantallas transaccionales existentes\n(reservas, habitaciones, huéspedes, reportes)" as pant
+  rectangle "<b>Nueva pantalla: Asistente</b>\ncampo de texto, historial de la\nconversación y resultados sugeridos" as chat
+}
+
+node "Lógica de integración\nAPI REST (ASP.NET Core)" as api {
+  rectangle "Controladores existentes\n(reservas, habitaciones, huéspedes...)" as ctl
+  rectangle "<b>Nuevo: controlador /asistente</b>\n+ orquestador de llamadas a funciones" as orq
+  rectangle "<b>Catálogo de funciones de solo lectura</b>\nconsultarDisponibilidad · consultarReserva\nconsultarLlegadas · consultarTarifa" as cat
+  rectangle "Servicios del negocio y\ngestor transaccional (CU-04)" as svc
+  rectangle "Filtro de datos personales\n(no se envían documentos ni contactos)" as filtro
+}
+
+cloud "Modelo de IA\nAzure OpenAI Service\n(GPT-4o, llamada a funciones)" as ia
+
+node "Modelo de datos\nSQL Server · base HotelReservas" as datos {
+  database "9 tablas del núcleo transaccional" as core
+  database "<b>Nueva: CONSULTA_ASISTENTE</b>\n(id, id_usuario, fecha, texto,\nfuncion, parametros, exito)" as ca
+}
+
+node "Infraestructura" as infra {
+  rectangle "HTTPS + JWT\nentre app y API" as https
+  rectangle "Clave y punto de conexión\nde Azure OpenAI en la\nconfiguración segura de la API" as key
+  rectangle "Región de Azure, límites de\nconsumo y registro de costos" as costo
+}
+
+chat --> orq : "HTTPS / JSON"
+pant --> ctl
+ctl --> svc
+orq --> filtro
+filtro --> ia : "pregunta + definición\nde funciones"
+ia --> orq : "función y parámetros"
+orq --> cat
+cat --> svc : "reutiliza"
+svc --> core
+orq --> ca : "registra cada consulta"
+orq ..> ia : "resultado → respuesta\nen lenguaje natural"
+https -[hidden]- key
+key -[hidden]- costo
+@enduml
