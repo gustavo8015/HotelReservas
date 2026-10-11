@@ -14,21 +14,34 @@ Diseñar y construir un sistema transaccional, implementado como aplicación mó
 
 La transacción crítica del sistema es **confirmar reserva**: verificar disponibilidad, bloquear la habitación para el rango de fechas, registrar el huésped y el pago, y emitir el comprobante, todo como una única unidad de trabajo con propiedades ACID. Si alguna parte falla, no queda ningún cambio a medias.
 
-## Estado actual: Entrega S8 (análisis y diseño)
+## Estado actual: Entrega S9 (Fase III: requerimientos, marcos y servicio de IA)
 
 | Entrega | Contenido | Estado |
 |---|---|---|
 | S7 | Repositorio, primera interfaz (.NET MAUI) y navegación inicial | Entregada |
-| **S8** | **Fase II: información general, objetivos, arquitectura, casos de uso, diagrama de clases y modelo relacional; scripts SQL del modelo y de la transacción** | **Actual** |
+| S8 | Fase II: información general, objetivos, arquitectura, casos de uso, diagrama de clases y modelo relacional; scripts SQL del modelo y de la transacción | Entregada |
+| **S9** | **Fase III: requerimientos funcionales (RF01 a RF15) y no funcionales (RNF01 a RNF08), marco conceptual, marco contextual y marco integrador con el servicio de IA propuesto** | **Actual** |
 | Siguiente | API REST en ASP.NET Core con transacciones (BEGIN TRAN / COMMIT / ROLLBACK) | Pendiente |
 | Siguiente | Conexión de la app a la API, CRUD de huéspedes, habitaciones y reservas | Pendiente |
 | Final | Demostración de concurrencia (dos usuarios, última habitación) y pruebas | Pendiente |
 
 ### Qué se agregó en esta entrega
 
-- `docs/FaseII_Documentacion_Proyecto_S8_Hotel_Reservas.pdf` (y `.docx`): documento de análisis y diseño con las diez secciones de la guía, en formato APA 7. Incorpora la retroalimentación del docente sobre la Fase I: la contextualización del problema (sección 1) se presenta sin decisiones técnicas, se delimita el alcance de cada fase (1.6) y las decisiones de arquitectura y tecnología se justifican en la sección 4.
-- `docs/diagramas/`: diagrama de arquitectura en capas, casos de uso UML, diagrama de clases UML y modelo relacional (PNG + fuente PlantUML).
-- `database/`: scripts T-SQL para SQL Server: creación de las 9 tablas, procedimiento almacenado de la transacción **confirmar reserva** y datos de prueba.
+- `docs/FaseII_y_III_Documentacion_Proyecto_Hotel_Reservas.pdf` (y `.docx`): documento maestro con las secciones de la Fase II corregidas según la retroalimentación del docente (cardinalidades alineadas entre el diagrama de clases y el modelo relacional, cierre de la sección de integración, revisión de formato) y las nuevas secciones de la Fase III:
+  - 9. Requerimientos funcionales: RF01 a RF15, uno por cada caso de uso, con actor y resultado esperado.
+  - 10. Requerimientos no funcionales: RNF01 a RNF08 (seguridad, integridad, rendimiento, disponibilidad, usabilidad, mantenibilidad, compatibilidad y trazabilidad), cada uno con criterio verificable.
+  - 11. Marco conceptual: conceptos del dominio hotelero, de sistemas transaccionales (ACID, concurrencia, aislamiento, bitácora) y de la pila tecnológica.
+  - 12. Marco contextual: contexto, problemática, usuarios, necesidad, descripción del producto y alcance.
+  - 13. Marco integrador: asistente de consultas en lenguaje natural con Azure OpenAI Service (solo documentado; no se implementa en esta fase).
+- `docs/diagramas/`: diagrama de clases y modelo relacional actualizados, y nuevo diagrama de secuencia del asistente de IA (`asistente-ia.png` + `.puml`).
+
+### Servicio de inteligencia artificial propuesto
+
+Asistente de consultas en lenguaje natural (Azure OpenAI Service con llamada a funciones), ubicado en la capa de lógica de negocio como componente de la API. Interpreta preguntas como "¿qué habitaciones dobles hay libres del 10 al 12?" y las traduce en llamadas a funciones de solo lectura (consultar disponibilidad, consultar reserva, llegadas del día). Nunca crea, modifica ni cancela reservas: la confirmación (CU-04) sigue siendo una transacción ejecutada por el recepcionista desde la pantalla habitual, con el bloqueo descrito en la sección 7.2.
+
+<p align="center">
+  <img src="docs/diagramas/asistente-ia.png" width="640" alt="Flujo del asistente de IA">
+</p>
 
 ## Arquitectura (en capas, cliente-servidor)
 
@@ -49,6 +62,7 @@ La app nunca accede a la base de datos directamente: toda operación pasa por la
 
 | Diagrama | Archivo | Descripción |
 |---|---|---|
+| Flujo del asistente de IA | [`docs/diagramas/asistente-ia.png`](docs/diagramas/asistente-ia.png) | Secuencia app, API, servicio de IA y base de datos (Fase III) |
 | Casos de uso UML | [`docs/diagramas/casos-de-uso.png`](docs/diagramas/casos-de-uso.png) | Actores Recepcionista y Administrador; casos CU-01 a CU-15 con relaciones `include`/`extend` |
 | Diagrama de clases UML | [`docs/diagramas/diagrama-clases.png`](docs/diagramas/diagrama-clases.png) | Usuario (Recepcionista, Administrador), Huesped, TipoHabitacion, Habitacion, Tarifa, Reserva, Pago, Comprobante, BitacoraReserva, ServicioReservas |
 | Modelo relacional | [`docs/diagramas/modelo-relacional.png`](docs/diagramas/modelo-relacional.png) | 9 tablas: USUARIO, HUESPED, TIPO_HABITACION, HABITACION, TARIFA, RESERVA, PAGO, COMPROBANTE, BITACORA_RESERVA |
@@ -107,6 +121,7 @@ HotelReservas/
 ├── docs/
 │   ├── FaseI_Documentacion_Proyecto_S7_Hotel_Reservas.pdf
 │   ├── FaseII_Documentacion_Proyecto_S8_Hotel_Reservas.pdf / .docx
+│   ├── FaseII_y_III_Documentacion_Proyecto_Hotel_Reservas.pdf / .docx   Documento maestro vigente
 │   ├── pantalla-inicio.png
 │   └── diagramas/                    PNG + fuente .puml (PlantUML)
 └── README.md
@@ -135,4 +150,5 @@ dotnet build -f net8.0-android -c Release
 
 - Ficha técnica del microproyecto (Sistemas Transaccionales).
 - `docs/FaseI_Documentacion_Proyecto_S7_Hotel_Reservas.pdf`: contexto, problemática, necesidad y pregunta problema.
-- `docs/FaseII_Documentacion_Proyecto_S8_Hotel_Reservas.pdf`: análisis y diseño (arquitectura, UML y modelo relacional).
+- `docs/FaseII_Documentacion_Proyecto_S8_Hotel_Reservas.pdf`: análisis y diseño (arquitectura, UML y modelo relacional), versión entregada en S8.
+- `docs/FaseII_y_III_Documentacion_Proyecto_Hotel_Reservas.pdf`: documento maestro vigente con la Fase II corregida y la Fase III (requerimientos, marcos conceptual y contextual, servicio de IA).
