@@ -99,13 +99,13 @@ entity "BITACORA_RESERVA" as bit {
   detalle : NVARCHAR(255)
 }
 
-tipo ||--|{ hab : "1:N clasifica"
-tipo ||--|{ tarifa : "1:N tiene"
-huesped ||--o{ reserva : "1:N realiza"
-hab ||--o{ reserva : "1:N se asigna en"
-usuario ||--o{ reserva : "1:N registra"
-reserva ||--|{ pago : "1:N recibe"
-reserva ||--o| comp : "1:1 genera"
-reserva ||--|{ bit : "1:N registra cambios"
-usuario ||--o{ bit : "1:N ejecuta"
+tipo ||--|{ hab : "1 : 1..N clasifica"
+tipo ||--|{ tarifa : "1 : 1..N tiene"
+huesped ||--o{ reserva : "1 : 0..N realiza"
+hab ||--o{ reserva : "1 : 0..N se asigna en"
+usuario ||--o{ reserva : "1 : 0..N registra"
+reserva ||--|{ pago : "1 : 1..N recibe"
+reserva ||--o| comp : "1 : 0..1 genera"
+reserva ||--|{ bit : "1 : 1..N registra cambios"
+usuario ||--o{ bit : "1 : 0..N ejecuta"
 @enduml

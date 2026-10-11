@@ -1,0 +1,32 @@
+@startuml
+!pragma layout smetana
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+skinparam shadowing false
+skinparam ArrowColor #0B2A5B
+skinparam sequence {
+  ParticipantBorderColor #0B2A5B
+  ParticipantBackgroundColor #EEF3FA
+  LifeLineBorderColor #0B2A5B
+  ActorBorderColor #0B2A5B
+}
+
+actor "Recepcionista" as R
+participant "App móvil\n(.NET MAUI)" as APP
+participant "API REST\n(ASP.NET Core)" as API
+participant "Servicio de IA\n(Azure OpenAI)" as IA
+participant "Servicios del negocio\ny base de datos" as BD
+
+R -> APP : Escribe la consulta en lenguaje natural
+APP -> API : POST /asistente (texto, token JWT)
+API -> IA : Pregunta + funciones disponibles\n(sin datos personales)
+IA --> API : Función sugerida y parámetros\n(p. ej. consultarDisponibilidad)
+API -> BD : Ejecuta la consulta de solo lectura\n(CU-03, CU-12)
+BD --> API : Resultado real del repositorio central
+API -> IA : Resultado estructurado
+IA --> API : Respuesta redactada en lenguaje natural
+API --> APP : Respuesta + datos estructurados
+APP --> R : Muestra la respuesta y las habitaciones sugeridas
+R -> APP : Decide y confirma la reserva (CU-04)\nmediante la pantalla transaccional habitual
+@enduml

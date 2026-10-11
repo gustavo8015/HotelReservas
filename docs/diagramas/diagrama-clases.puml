@@ -127,6 +127,7 @@ TipoHabitacion "1" -- "1..*" Tarifa : define
 Huesped "1" -- "0..*" Reserva : realiza
 Habitacion "1" -- "0..*" Reserva : se asigna a
 Usuario "1" -- "0..*" Reserva : registra
+Usuario "1" -- "0..*" BitacoraReserva : ejecuta
 Reserva "1" *-- "1..*" Pago : compone
 Reserva "1" *-- "0..1" Comprobante : emite
 Reserva "1" *-- "1..*" BitacoraReserva : audita
