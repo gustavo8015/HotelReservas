@@ -20,7 +20,7 @@ La transacción crítica del sistema es **confirmar reserva**: verificar disponi
 |---|---|---|
 | S7 | Repositorio, primera interfaz (.NET MAUI) y navegación inicial | Entregada |
 | S8 | Fase II: información general, objetivos, arquitectura, casos de uso, diagrama de clases y modelo relacional; scripts SQL del modelo y de la transacción | Entregada |
-| **S9** | **Fase III: requerimientos funcionales (RF01 a RF15) y no funcionales (RNF01 a RNF08), marco conceptual, marco contextual y marco integrador con el servicio de IA propuesto** | **Actual** |
+| **S9** | **Fase III: requerimientos funcionales (RF01 a RF15) y no funcionales (RNF01 a RNF05), MER y arquitectura de la base de datos, marco conceptual, marco contextual, marco integrador con el servicio de IA (modelo de datos, modelo de IA, lógica de integración, interfaz e infraestructura) y prototipo de pantallas** | **Actual** |
 | Siguiente | API REST en ASP.NET Core con transacciones (BEGIN TRAN / COMMIT / ROLLBACK) | Pendiente |
 | Siguiente | Conexión de la app a la API, CRUD de huéspedes, habitaciones y reservas | Pendiente |
 | Final | Demostración de concurrencia (dos usuarios, última habitación) y pruebas | Pendiente |
@@ -29,18 +29,29 @@ La transacción crítica del sistema es **confirmar reserva**: verificar disponi
 
 - `docs/FaseII_y_III_Documentacion_Proyecto_Hotel_Reservas.pdf` (y `.docx`): documento maestro con las secciones de la Fase II corregidas según la retroalimentación del docente (cardinalidades alineadas entre el diagrama de clases y el modelo relacional, cierre de la sección de integración, revisión de formato) y las nuevas secciones de la Fase III:
   - 9. Requerimientos funcionales: RF01 a RF15, uno por cada caso de uso, con actor y resultado esperado.
-  - 10. Requerimientos no funcionales: RNF01 a RNF08 (seguridad, integridad, rendimiento, disponibilidad, usabilidad, mantenibilidad, compatibilidad y trazabilidad), cada uno con criterio verificable.
+  - 7.1 Modelo entidad-relación (MER) y 7.5 Arquitectura de la base de datos.
+  - 10. Requerimientos no funcionales: RNF01 a RNF05 (seguridad, integridad, rendimiento, usabilidad y trazabilidad), cada uno con criterio verificable.
   - 11. Marco conceptual: conceptos del dominio hotelero, de sistemas transaccionales (ACID, concurrencia, aislamiento, bitácora) y de la pila tecnológica.
   - 12. Marco contextual: contexto, problemática, usuarios, necesidad, descripción del producto y alcance.
-  - 13. Marco integrador: asistente de consultas en lenguaje natural con Azure OpenAI Service (solo documentado; no se implementa en esta fase).
-- `docs/diagramas/`: diagrama de clases y modelo relacional actualizados, y nuevo diagrama de secuencia del asistente de IA (`asistente-ia.png` + `.puml`).
+  - 13. Marco integrador: asistente de consultas en lenguaje natural con Azure OpenAI Service, descrito por componentes (modelo de datos, modelo de IA, lógica de integración, interfaz de usuario e infraestructura); solo documentado, no se implementa en esta fase.
+  - 14. Prototipo: pantalla de inicio (.NET MAUI) y pantallas de alta fidelidad de disponibilidad, confirmación de reserva y asistente (`docs/prototipo/`).
+- `docs/diagramas/`: diagrama de clases y modelo relacional actualizados, MER (`modelo-entidad-relacion.png` + `.svg`), arquitectura de la base de datos (`arquitectura-base-de-datos.png` + `.puml`), componentes del asistente de IA (`asistente-ia-componentes.png` + `.puml`) y secuencia del asistente (`asistente-ia.png` + `.puml`).
+- `docs/fichas/`: ficha de requerimientos del sistema (RF-01 a RF-10, RNF-01 a RNF-05) y ficha de auditoría presencial con el encabezado diligenciado.
 
 ### Servicio de inteligencia artificial propuesto
 
 Asistente de consultas en lenguaje natural (Azure OpenAI Service con llamada a funciones), ubicado en la capa de lógica de negocio como componente de la API. Interpreta preguntas como "¿qué habitaciones dobles hay libres del 10 al 12?" y las traduce en llamadas a funciones de solo lectura (consultar disponibilidad, consultar reserva, llegadas del día). Nunca crea, modifica ni cancela reservas: la confirmación (CU-04) sigue siendo una transacción ejecutada por el recepcionista desde la pantalla habitual, con el bloqueo descrito en la sección 7.2.
 
 <p align="center">
-  <img src="docs/diagramas/asistente-ia.png" width="640" alt="Flujo del asistente de IA">
+  <img src="docs/diagramas/asistente-ia-componentes.png" width="640" alt="Componentes del asistente de IA">
+</p>
+
+### Prototipo de pantallas (Fase III)
+
+<p align="center">
+  <img src="docs/prototipo/consultar-disponibilidad.png" width="230" alt="Consultar disponibilidad">
+  <img src="docs/prototipo/confirmar-reserva.png" width="230" alt="Confirmar reserva">
+  <img src="docs/prototipo/asistente-ia.png" width="230" alt="Asistente IA">
 </p>
 
 ## Arquitectura (en capas, cliente-servidor)
@@ -62,6 +73,9 @@ La app nunca accede a la base de datos directamente: toda operación pasa por la
 
 | Diagrama | Archivo | Descripción |
 |---|---|---|
+| Modelo entidad-relación (MER) | [`docs/diagramas/modelo-entidad-relacion.png`](docs/diagramas/modelo-entidad-relacion.png) | Notación de Chen: 9 entidades, 3 entidades débiles, cardinalidades mínimo..máximo |
+| Arquitectura de la base de datos | [`docs/diagramas/arquitectura-base-de-datos.png`](docs/diagramas/arquitectura-base-de-datos.png) | Instancia SQL Server, esquema, reglas, índices, procedimiento, log y copias, acceso vía API |
+| Componentes del asistente de IA | [`docs/diagramas/asistente-ia-componentes.png`](docs/diagramas/asistente-ia-componentes.png) | Modelo de datos, modelo de IA, lógica de integración, interfaz e infraestructura (Fase III) |
 | Flujo del asistente de IA | [`docs/diagramas/asistente-ia.png`](docs/diagramas/asistente-ia.png) | Secuencia app, API, servicio de IA y base de datos (Fase III) |
 | Casos de uso UML | [`docs/diagramas/casos-de-uso.png`](docs/diagramas/casos-de-uso.png) | Actores Recepcionista y Administrador; casos CU-01 a CU-15 con relaciones `include`/`extend` |
 | Diagrama de clases UML | [`docs/diagramas/diagrama-clases.png`](docs/diagramas/diagrama-clases.png) | Usuario (Recepcionista, Administrador), Huesped, TipoHabitacion, Habitacion, Tarifa, Reserva, Pago, Comprobante, BitacoraReserva, ServicioReservas |
@@ -123,7 +137,9 @@ HotelReservas/
 │   ├── FaseII_Documentacion_Proyecto_S8_Hotel_Reservas.pdf / .docx
 │   ├── FaseII_y_III_Documentacion_Proyecto_Hotel_Reservas.pdf / .docx   Documento maestro vigente
 │   ├── pantalla-inicio.png
-│   └── diagramas/                    PNG + fuente .puml (PlantUML)
+│   ├── diagramas/                    PNG + fuente .puml (PlantUML) y .svg
+│   ├── prototipo/                    Pantallas de alta fidelidad (PNG + HTML)
+│   └── fichas/                       Fichas UMB de requerimientos y auditoría
 └── README.md
 ```
 
