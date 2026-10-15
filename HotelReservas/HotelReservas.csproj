@@ -12,8 +12,8 @@
     <!-- Identidad de la aplicación -->
     <ApplicationTitle>Hotel Reservas</ApplicationTitle>
     <ApplicationId>com.umb.hotelreservas</ApplicationId>
-    <ApplicationDisplayVersion>0.1</ApplicationDisplayVersion>
-    <ApplicationVersion>1</ApplicationVersion>
+    <ApplicationDisplayVersion>0.2</ApplicationDisplayVersion>
+    <ApplicationVersion>2</ApplicationVersion>
 
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">24.0</SupportedOSPlatformVersion>
   </PropertyGroup>
@@ -23,6 +23,8 @@
     <MauiIcon Include="Resources\AppIcon\appicon.svg" Color="#0B2A5B" />
     <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#0B2A5B" BaseSize="128,128" />
     <MauiImage Include="Resources\Images\*" />
+    <!-- Prototipo funcional (HTML) empaquetado como asset de Android -->
+    <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
   </ItemGroup>
 
   <ItemGroup>
