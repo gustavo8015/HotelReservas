@@ -1,4 +1,4 @@
-# Cómo generar e instalar el APK (versión 0.2, prototipo funcional)
+# Cómo generar e instalar el APK (versión 0.3, prototipo funcional con impuestos, comprobante por WhatsApp y reserva rápida)
 
 ## Requisitos
 - Visual Studio 2022 (17.8 o superior) con la carga de trabajo **Desarrollo de la interfaz de usuario de aplicaciones multiplataforma de .NET** (.NET MAUI) y el SDK de Android.
@@ -32,4 +32,4 @@ adb install -r com.umb.hotelreservas-Signed.apk
 - `Views/PrototipoPage.xaml(.cs)`: página con un WebView que carga `Resources/Raw/prototipo.html` (empaquetado como asset de Android) con el prototipo funcional: disponibilidad, confirmación transaccional con prueba de concurrencia, historial con bitácora y asistente de IA. El botón flotante "Ver servidor" muestra el registro de la API y de SQL Server simulados.
 - `AppShell.xaml.cs`: ruta `prototipo` registrada.
 - `Views/InicioPage.xaml.cs` y las páginas de módulo: navegan al prototipo con `prototipo?vista=disp|habs|hist|ia`.
-- `HotelReservas.csproj`: incluye `Resources\Raw\**` como MauiAsset; versión 0.2.
+- `HotelReservas.csproj`: incluye `Resources\Raw\**` como MauiAsset; versión 0.3. `PrototipoPage.xaml.cs` abre los enlaces externos (wa.me) con la app de WhatsApp del teléfono.

@@ -20,12 +20,27 @@ La transacción crítica del sistema es **confirmar reserva**: verificar disponi
 |---|---|---|
 | S7 | Repositorio, primera interfaz (.NET MAUI) y navegación inicial | Entregada |
 | S8 | Fase II: información general, objetivos, arquitectura, casos de uso, diagrama de clases y modelo relacional; scripts SQL del modelo y de la transacción | Entregada |
-| **S9** | **Fase III: requerimientos funcionales (RF01 a RF15) y no funcionales (RNF01 a RNF05), MER y arquitectura de la base de datos, marco conceptual, marco contextual, marco integrador con el servicio de IA (modelo de datos, modelo de IA, lógica de integración, interfaz e infraestructura) y prototipo de pantallas** | **Actual** |
+| S9 | Fase III: requerimientos funcionales (RF01 a RF15) y no funcionales (RNF01 a RNF05), MER y arquitectura de la base de datos, marco conceptual, marco contextual, marco integrador con el servicio de IA (modelo de datos, modelo de IA, lógica de integración, interfaz e infraestructura) y prototipo de pantallas | Entregada |
+| **S10** | **Cálculo de impuestos y precio neto (RF16), comprobante compartible por WhatsApp (RF17) y reserva rápida para huésped frecuente (RF18); prototipo funcional en la APK v0.3; script 05 con el desglose de impuestos en la transacción; auditoría presencial** | **Actual** |
 | Siguiente | API REST en ASP.NET Core con transacciones (BEGIN TRAN / COMMIT / ROLLBACK) | Pendiente |
 | Siguiente | Conexión de la app a la API, CRUD de huéspedes, habitaciones y reservas | Pendiente |
 | Final | Demostración de concurrencia (dos usuarios, última habitación) y pruebas | Pendiente |
 
-### Qué se agregó en esta entrega
+### Qué se agregó en esta entrega (S10)
+
+- **Impuestos y precio neto (RF16)**: la confirmación desglosa el valor en subtotal de alojamiento, IVA 19 % y precio neto; el huésped extranjero no residente queda exento de IVA (art. 481 E.T.). `database/05_impuestos_comprobante_huesped_frecuente.sql` agrega a `RESERVA` las columnas `subtotal`, `tasa_iva`, `impuesto` y `exento_iva` con la restricción `valor_total = subtotal + impuesto`, y actualiza `sp_ConfirmarReserva` para calcularlas dentro de la misma transacción.
+- **Comprobante compartible por WhatsApp (RF17)**: tras confirmar, la app genera el texto del comprobante (`sp_TextoComprobante`) y lo envía al teléfono del huésped con WhatsApp, o lo copia al portapapeles; disponible también desde el historial.
+- **Reserva rápida para huésped frecuente (RF18)**: con el número de documento la app reconoce al huésped con dos o más estadías (`sp_HuespedFrecuente`), muestra sus preferencias y precarga la consulta de disponibilidad y la confirmación: una reserva habitual en tres toques.
+- Documento maestro actualizado (RF16 a RF18 en la Tabla 2, ajuste del diseño de datos en 7.3, concepto de precio neto en 11.1, Figuras 10 a 14 del prototipo funcional) y ficha de requerimientos (RF-11 a RF-13).
+- APK v0.3: `Resources/Raw/prototipo.html` actualizado y `PrototipoPage` abre los enlaces externos (wa.me) con la app de WhatsApp del teléfono.
+
+<p align="center">
+  <img src="docs/prototipo/confirmar-reserva.png" width="230" alt="Confirmación con impuestos">
+  <img src="docs/prototipo/comprobante-whatsapp.png" width="230" alt="Comprobante por WhatsApp">
+  <img src="docs/prototipo/reserva-rapida-huesped-frecuente.png" width="230" alt="Reserva rápida huésped frecuente">
+</p>
+
+### Qué se agregó en la entrega S9
 
 - `docs/FaseII_y_III_Documentacion_Proyecto_Hotel_Reservas.pdf` (y `.docx`): documento maestro con las secciones de la Fase II corregidas según la retroalimentación del docente (cardinalidades alineadas entre el diagrama de clases y el modelo relacional, cierre de la sección de integración, revisión de formato) y las nuevas secciones de la Fase III:
   - 9. Requerimientos funcionales: RF01 a RF15, uno por cada caso de uso, con actor y resultado esperado.
@@ -36,7 +51,7 @@ La transacción crítica del sistema es **confirmar reserva**: verificar disponi
   - 13. Marco integrador: asistente de consultas en lenguaje natural con Azure OpenAI Service, descrito por componentes (modelo de datos, modelo de IA, lógica de integración, interfaz de usuario e infraestructura); solo documentado, no se implementa en esta fase.
   - 14. Prototipo: pantalla de inicio (.NET MAUI) y pantallas de alta fidelidad de disponibilidad, confirmación de reserva y asistente (`docs/prototipo/`).
 - `docs/diagramas/`: diagrama de clases y modelo relacional actualizados, MER (`modelo-entidad-relacion.png` + `.svg`), arquitectura de la base de datos (`arquitectura-base-de-datos.png` + `.puml`), componentes del asistente de IA (`asistente-ia-componentes.png` + `.puml`) y secuencia del asistente (`asistente-ia.png` + `.puml`).
-- `docs/fichas/`: ficha de requerimientos del sistema (RF-01 a RF-10, RNF-01 a RNF-05) y ficha de auditoría presencial con el encabezado diligenciado.
+- `docs/fichas/`: ficha de requerimientos del sistema (RF-01 a RF-13, RNF-01 a RNF-05) y ficha de auditoría presencial con el encabezado diligenciado.
 
 ### Servicio de inteligencia artificial propuesto
 
@@ -131,7 +146,8 @@ HotelReservas/
 ├── database/
 │   ├── 01_crear_base_de_datos.sql
 │   ├── 02_transaccion_confirmar_reserva.sql
-│   └── 03_datos_de_prueba.sql
+│   ├── 03_datos_de_prueba.sql
+│   └── 05_impuestos_comprobante_huesped_frecuente.sql   Impuestos, comprobante compartible, huésped frecuente
 ├── docs/
 │   ├── FaseI_Documentacion_Proyecto_S7_Hotel_Reservas.pdf
 │   ├── FaseII_Documentacion_Proyecto_S8_Hotel_Reservas.pdf / .docx
@@ -149,7 +165,7 @@ HotelReservas/
 
 1. Instalar SQL Server 2025 Express o Developer (gratuitos) y SQL Server Management Studio.
 2. Conectarse a la instancia (`localhost` o `.\SQLEXPRESS`).
-3. Abrir y ejecutar, en orden, `01_crear_base_de_datos.sql`, `02_transaccion_confirmar_reserva.sql` y `03_datos_de_prueba.sql`.
+3. Abrir y ejecutar, en orden, `01_crear_base_de_datos.sql`, `02_transaccion_confirmar_reserva.sql`, `03_datos_de_prueba.sql` y `05_impuestos_comprobante_huesped_frecuente.sql`.
 4. Probar la transacción con el ejemplo incluido al final del script 02. Para la prueba de concurrencia, ejecutar la misma llamada en dos ventanas de consulta al mismo tiempo: solo una confirma.
 
 **Aplicación móvil**
