@@ -12,8 +12,8 @@
     <!-- Identidad de la aplicación -->
     <ApplicationTitle>Hotel Reservas</ApplicationTitle>
     <ApplicationId>com.umb.hotelreservas</ApplicationId>
-    <ApplicationDisplayVersion>0.2</ApplicationDisplayVersion>
-    <ApplicationVersion>2</ApplicationVersion>
+    <ApplicationDisplayVersion>0.3</ApplicationDisplayVersion>
+    <ApplicationVersion>3</ApplicationVersion>
 
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">24.0</SupportedOSPlatformVersion>
   </PropertyGroup>
