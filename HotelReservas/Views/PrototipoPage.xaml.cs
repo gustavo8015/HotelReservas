@@ -14,7 +14,20 @@ public partial class PrototipoPage : ContentPage
     public PrototipoPage()
     {
         InitializeComponent();
+        Web.Navigating += Web_Navigating;
         Cargar();
+    }
+
+    private async void Web_Navigating(object? sender, WebNavigatingEventArgs e)
+    {
+        // Los enlaces externos (p. ej. wa.me para compartir el comprobante por WhatsApp)
+        // se abren con la app correspondiente del teléfono y no dentro del WebView.
+        if (e.Url.StartsWith("http://") || e.Url.StartsWith("https://"))
+        {
+            e.Cancel = true;
+            try { await Launcher.Default.OpenAsync(new Uri(e.Url)); }
+            catch { await DisplayAlert("Compartir", "No se pudo abrir WhatsApp en este dispositivo.", "OK"); }
+        }
     }
 
     private void Cargar()
