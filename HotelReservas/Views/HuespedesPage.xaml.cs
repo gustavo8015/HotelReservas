@@ -6,4 +6,6 @@ public partial class HuespedesPage : ContentPage
     {
         InitializeComponent();
     }
+
+    private async void AbrirPrototipo(object sender, EventArgs e) => await Shell.Current.GoToAsync("prototipo?vista=hist");
 }

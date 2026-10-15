@@ -19,6 +19,7 @@
             <Border Style="{StaticResource Tarjeta}" BackgroundColor="#FFF4E5" Stroke="#F5C48A">
                 <Label Text="Módulo en construcción. Esta pantalla forma parte de la primera propuesta visual del sistema; la funcionalidad se implementará en las siguientes entregas." FontSize="13" />
             </Border>
+            <Button Text="Abrir prototipo funcional" Style="{StaticResource BotonPrimario}" Clicked="AbrirPrototipo" />
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

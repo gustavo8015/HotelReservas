@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="HotelReservas.Views.PrototipoPage"
+             Title="Prototipo funcional"
+             Shell.TabBarIsVisible="False">
+    <!-- Prototipo funcional de las pantallas transaccionales y del asistente.
+         Se carga desde Resources/Raw/prototipo.html (MauiAsset) dentro de un WebView;
+         simula la API REST y SQL Server con los datos del script 03 del repositorio. -->
+    <Grid>
+        <WebView x:Name="Web" />
+    </Grid>
+</ContentPage>

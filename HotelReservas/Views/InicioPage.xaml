@@ -15,7 +15,7 @@
                        Text="Gestión de reservas de habitaciones con integridad, consistencia y seguridad de la información." />
                 <HorizontalStackLayout Grid.Row="3" Spacing="8" Margin="0,10,0,0">
                     <Border Style="{StaticResource Chip}" BackgroundColor="#1F6B3D">
-                        <Label Text="Versión 0.1 · Primera interfaz" FontSize="12" TextColor="White" />
+                        <Label Text="Versión 0.2 · Prototipo funcional" FontSize="12" TextColor="White" />
                     </Border>
                     <Border Style="{StaticResource Chip}" BackgroundColor="#173A73">
                         <Label Text="Android APK" FontSize="12" TextColor="White" />

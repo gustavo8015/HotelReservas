@@ -7,9 +7,9 @@ public partial class InicioPage : ContentPage
         InitializeComponent();
     }
 
-    // Propuesta inicial de navegación: cada módulo se abre por su ruta en el Shell.
-    private async void IrAReservas(object sender, EventArgs e) => await Shell.Current.GoToAsync("//reservas");
-    private async void IrAHabitaciones(object sender, EventArgs e) => await Shell.Current.GoToAsync("//habitaciones");
-    private async void IrAHuespedes(object sender, EventArgs e) => await Shell.Current.GoToAsync("//huespedes");
-    private async void IrAReportes(object sender, EventArgs e) => await Shell.Current.GoToAsync("//reportes");
+    // Los módulos abren el prototipo funcional (Views/PrototipoPage) en la pantalla correspondiente.
+    private async void IrAReservas(object sender, EventArgs e) => await Shell.Current.GoToAsync("prototipo?vista=disp");
+    private async void IrAHabitaciones(object sender, EventArgs e) => await Shell.Current.GoToAsync("prototipo?vista=habs");
+    private async void IrAHuespedes(object sender, EventArgs e) => await Shell.Current.GoToAsync("prototipo?vista=hist");
+    private async void IrAReportes(object sender, EventArgs e) => await Shell.Current.GoToAsync("prototipo?vista=ia");
 }
