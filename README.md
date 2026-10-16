@@ -21,12 +21,19 @@ La transacción crítica del sistema es **confirmar reserva**: verificar disponi
 | S7 | Repositorio, primera interfaz (.NET MAUI) y navegación inicial | Entregada |
 | S8 | Fase II: información general, objetivos, arquitectura, casos de uso, diagrama de clases y modelo relacional; scripts SQL del modelo y de la transacción | Entregada |
 | S9 | Fase III: requerimientos funcionales (RF01 a RF15) y no funcionales (RNF01 a RNF05), MER y arquitectura de la base de datos, marco conceptual, marco contextual, marco integrador con el servicio de IA (modelo de datos, modelo de IA, lógica de integración, interfaz e infraestructura) y prototipo de pantallas | Entregada |
-| **S10** | **Cálculo de impuestos y precio neto (RF16), comprobante compartible por WhatsApp (RF17) y reserva rápida para huésped frecuente (RF18); prototipo funcional en la APK v0.3; script 05 con el desglose de impuestos en la transacción; auditoría presencial** | **Actual** |
-| Siguiente | API REST en ASP.NET Core con transacciones (BEGIN TRAN / COMMIT / ROLLBACK) | Pendiente |
+| S10 | Cálculo de impuestos y precio neto (RF16), comprobante compartible por WhatsApp (RF17) y reserva rápida para huésped frecuente (RF18); prototipo funcional en la APK v0.3; script 05 con el desglose de impuestos en la transacción; auditoría presencial | Entregada |
+| **S11** | **API REST en ASP.NET Core (`HotelReservas.Api`): JWT, disponibilidad, confirmación transaccional vía `sp_ConfirmarReserva` (201/409), cambios de estado con ROWVERSION, huésped frecuente, comprobante compartible y el servicio de IA de la sección 13 (`/api/asistente`, Azure OpenAI con llamada a funciones de solo lectura + intérprete de reglas de respaldo, tabla `CONSULTA_ASISTENTE`)** | **Actual** |
 | Siguiente | Conexión de la app a la API, CRUD de huéspedes, habitaciones y reservas | Pendiente |
 | Final | Demostración de concurrencia (dos usuarios, última habitación) y pruebas | Pendiente |
 
-### Qué se agregó en esta entrega (S10)
+### Qué se agregó en esta entrega (S11): la API y el servicio de IA
+
+- **`HotelReservas.Api/`**: proyecto ASP.NET Core 8 + Entity Framework Core + SQL Server. Es la capa de lógica de negocio y de acceso a datos de la arquitectura en capas. Recursos: `POST /api/auth/login` (JWT), `GET /api/disponibilidad`, `POST /api/reservas` (ejecuta `sp_ConfirmarReserva`: 201 o **409** si la habitación ya no está disponible), `PUT /api/reservas/{codigo}/checkin|checkout|cancelar` (concurrencia optimista con `versionFila`), `GET /api/huespedes?documento=` (RF18), `GET /api/comprobantes/{numero}/compartir` (RF17) y `POST /api/asistente`.
+- **Servicio de IA (sección 13 del documento) implementado en `HotelReservas.Api/Asistente/`**: `OrquestadorAsistente` (lógica de integración: filtro de datos personales → intérprete → validación contra el catálogo de solo lectura → ejecución → registro en `CONSULTA_ASISTENTE`), `CatalogoFunciones` (consultarDisponibilidad, consultarTarifa, consultarReserva, consultarLlegadas, consultarReservasConfirmadas), `InterpreteAzureOpenAI` (GPT-4o por Azure OpenAI Service con `tools`/`tool_choice`, mensaje de sistema que lo limita a los resultados de las funciones) e `InterpreteReglas` (respaldo sin internet con las mismas funciones). El asistente nunca crea, modifica ni cancela reservas.
+- **`database/06_consulta_asistente.sql`**: tabla `CONSULTA_ASISTENTE` (modelo de datos del servicio de IA) y contraseñas de prueba (`Hotel2026*`) con PBKDF2 para los usuarios del script 03.
+- Guía de ejecución y pruebas en `HotelReservas.Api/README.md` y `HotelReservas.Api/HotelReservas.Api.http`.
+
+### Qué se agregó en la entrega S10
 
 - **Impuestos y precio neto (RF16)**: la confirmación desglosa el valor en subtotal de alojamiento, IVA 19 % y precio neto; el huésped extranjero no residente queda exento de IVA (art. 481 E.T.). `database/05_impuestos_comprobante_huesped_frecuente.sql` agrega a `RESERVA` las columnas `subtotal`, `tasa_iva`, `impuesto` y `exento_iva` con la restricción `valor_total = subtotal + impuesto`, y actualiza `sp_ConfirmarReserva` para calcularlas dentro de la misma transacción.
 - **Comprobante compartible por WhatsApp (RF17)**: tras confirmar, la app genera el texto del comprobante (`sp_TextoComprobante`) y lo envía al teléfono del huésped con WhatsApp, o lo copia al portapapeles; disponible también desde el historial.
@@ -147,7 +154,14 @@ HotelReservas/
 │   ├── 01_crear_base_de_datos.sql
 │   ├── 02_transaccion_confirmar_reserva.sql
 │   ├── 03_datos_de_prueba.sql
-│   └── 05_impuestos_comprobante_huesped_frecuente.sql   Impuestos, comprobante compartible, huésped frecuente
+│   ├── 05_impuestos_comprobante_huesped_frecuente.sql   Impuestos, comprobante compartible, huésped frecuente
+│   └── 06_consulta_asistente.sql     Tabla CONSULTA_ASISTENTE (IA) y contraseñas de prueba
+├── HotelReservas.Api/                API REST ASP.NET Core 8 (lógica de negocio, acceso a datos, servicio de IA)
+│   ├── Program.cs / appsettings.json JWT, EF Core, Swagger, configuración de Azure OpenAI
+│   ├── Controllers/                  auth, disponibilidad, reservas, huéspedes, comprobantes, asistente
+│   ├── Servicios/ServicioReservas.cs sp_ConfirmarReserva (409 en 50001), cambios de estado con ROWVERSION
+│   ├── Asistente/                    Orquestador, catálogo de funciones de lectura, intérpretes (Azure OpenAI y reglas)
+│   └── Data/                         DbContext y entidades (10 tablas)
 ├── docs/
 │   ├── FaseI_Documentacion_Proyecto_S7_Hotel_Reservas.pdf
 │   ├── FaseII_Documentacion_Proyecto_S8_Hotel_Reservas.pdf / .docx
@@ -165,8 +179,14 @@ HotelReservas/
 
 1. Instalar SQL Server 2025 Express o Developer (gratuitos) y SQL Server Management Studio.
 2. Conectarse a la instancia (`localhost` o `.\SQLEXPRESS`).
-3. Abrir y ejecutar, en orden, `01_crear_base_de_datos.sql`, `02_transaccion_confirmar_reserva.sql`, `03_datos_de_prueba.sql` y `05_impuestos_comprobante_huesped_frecuente.sql`.
+3. Abrir y ejecutar, en orden, `01_crear_base_de_datos.sql`, `02_transaccion_confirmar_reserva.sql`, `03_datos_de_prueba.sql`, `05_impuestos_comprobante_huesped_frecuente.sql` y `06_consulta_asistente.sql`.
 4. Probar la transacción con el ejemplo incluido al final del script 02. Para la prueba de concurrencia, ejecutar la misma llamada en dos ventanas de consulta al mismo tiempo: solo una confirma.
+
+**API REST**
+
+1. Con el SDK de .NET 8, en `HotelReservas.Api/` ejecutar `dotnet run` (o abrir el proyecto en Visual Studio y F5). Swagger queda en `http://localhost:5080/swagger`.
+2. Revisar `appsettings.json`: cadena de conexión, `Jwt:Key` y, si se dispone de un recurso de Azure OpenAI, `AzureOpenAI:Endpoint`, `ApiKey` y `Deployment`; sin credenciales el asistente funciona con el intérprete de reglas.
+3. Probar con `HotelReservas.Api.http`: login con `recepcion1@hotel.com` / `Hotel2026*` y luego `POST /api/asistente` con `{ "consulta": "¿qué dobles hay libres del 16 al 18 de octubre?" }`.
 
 **Aplicación móvil**
 
