@@ -61,6 +61,18 @@ body.apk .fab{display:flex}
 <div class="appbar"><span class="back" onclick="go('inicio')">‹</span><div><span id="title">Inicio</span><small id="subtitle">Hotel Reservas · prototipo</small></div></div>
 <div class="content">
 
+<!-- INICIO DE SESIÓN (CU-01 / RF01) -->
+<div class="view" id="v-login">
+<div class="hero"><div class="k">SISTEMA TRANSACCIONAL</div><h1>Hotel Reservas</h1><p>Inicie sesión con su usuario del hotel. La API valida la contraseña (hash PBKDF2) y emite un token JWT con su rol.</p></div>
+<div class="card"><span class="lbl">Correo</span><input id="lCorreo" value="recepcion1@hotel.com" autocomplete="username"></div>
+<div class="card"><span class="lbl">Contraseña</span><input id="lClave" type="password" value="Hotel2026*" autocomplete="current-password" onkeydown="if(event.key==='Enter')login()"></div>
+<div id="loginRes"></div>
+<button class="btn p" onclick="login()">Entrar</button>
+<div class="card" style="margin-top:12px;font-size:12px"><span class="lbl">Usuarios de prueba (script 06)</span><br>
+<b>recepcion1@hotel.com</b> · RECEPCIONISTA: reservas, check-in, check-out, historial, asistente.<br>
+<b>admin@hotel.com</b> · ADMINISTRADOR: todo lo anterior más el módulo Administración (usuarios y clientes) y la cancelación de reservas.<br>Contraseña de ambos: <b>Hotel2026*</b></div>
+</div>
+
 <!-- INICIO -->
 <div class="view on" id="v-inicio">
 <div class="hero"><div class="k">SISTEMA TRANSACCIONAL</div><h1>Hotel Reservas</h1><p>Gestión de reservas con integridad, consistencia y seguridad de la información.</p></div>
@@ -72,13 +84,37 @@ body.apk .fab{display:flex}
 <div class="card" onclick="go('habs')"><b>Habitaciones</b><span>Inventario, tipos y estados.</span></div>
 <div class="card" onclick="go('hist')"><b>Historial</b><span>Reservas, comprobantes y bitácora.</span></div>
 <div class="card" onclick="go('ia')"><b>Asistente</b><span>Consultas en lenguaje natural.</span></div>
+<div class="card" id="modAdmin" style="display:none;border-color:var(--azul)" onclick="go('admin')"><b>Administración</b><span>Usuarios y clientes: crear, editar y eliminar.</span></div>
 </div>
 <button class="btn p" onclick="go('disp')">Nueva reserva</button>
 <h3>Reserva rápida · huésped frecuente</h3>
 <div class="card" style="margin:0"><span class="lbl">Documento del huésped</span>
 <div class="input" style="margin-top:4px"><input id="qDoc" placeholder="Ej. 2020202020" onkeydown="if(event.key==='Enter')frecuente()"><button onclick="frecuente()">Buscar</button></div>
 <div id="freqRes"><span class="lbl" style="text-transform:none;letter-spacing:0">Con solo el número de documento la app reconoce al huésped frecuente, carga sus datos y le propone repetir su última estadía en un toque.</span></div></div>
-<div class="card" style="margin-top:10px"><span class="lbl">Sesión</span><br><b>Recepcionista turno 1</b> · token JWT válido · perfil RECEPCIONISTA</div>
+<div class="card" style="margin-top:10px"><span class="lbl">Sesión</span><br><span id="sesInfo"></span><button class="btn s" style="height:34px;font-size:12px" onclick="logout()">Cerrar sesión</button></div>
+</div>
+
+<!-- ADMINISTRACIÓN (CU-14 gestionar usuarios · CU-02 huéspedes) · solo ADMINISTRADOR -->
+<div class="view" id="v-admin">
+<div class="row" style="margin-bottom:8px"><button class="btn s" id="bAdmU" style="margin:0" onclick="admTab('usuarios')">Usuarios</button><button class="btn s" id="bAdmH" style="margin:0" onclick="admTab('clientes')">Clientes</button></div>
+<div id="admUsuarios">
+<h3>Usuarios del sistema</h3><div id="usuList"></div>
+<h3 id="usuFormT">Nuevo usuario</h3>
+<div class="card"><span class="lbl">Nombre completo</span><input id="uNombre" placeholder="Ej. Laura Gómez"></div>
+<div class="card"><span class="lbl">Correo</span><input id="uCorreo" placeholder="recepcion3@hotel.com"></div>
+<div class="row"><div class="card"><span class="lbl">Rol</span><select id="uRol"><option>RECEPCIONISTA</option><option>ADMINISTRADOR</option></select></div><div class="card"><span class="lbl">Contraseña</span><input id="uClave" type="password" placeholder="mínimo 8 caracteres"></div></div>
+<div id="usuRes"></div>
+<button class="btn p" id="uGuardar" onclick="guardarUsuario()">Crear usuario</button><button class="btn d" id="uCancel" style="display:none" onclick="limpiarUsuario()">Cancelar edición</button>
+</div>
+<div id="admClientes" style="display:none">
+<h3>Clientes (huéspedes)</h3><div id="cliList"></div>
+<h3 id="cliFormT">Nuevo cliente</h3>
+<div class="card"><span class="lbl">Nombre completo</span><input id="cNombre" placeholder="Nombres y apellidos"></div>
+<div class="row"><div class="card"><span class="lbl">Tipo doc.</span><select id="cTipo"><option>CC</option><option>CE</option><option>PA</option><option>TI</option></select></div><div class="card"><span class="lbl">Número</span><input id="cDoc" placeholder="1010101010"></div></div>
+<div class="row"><div class="card"><span class="lbl">Teléfono (WhatsApp)</span><input id="cTel" placeholder="3001234567"></div><div class="card" style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="cExt" style="width:20px;height:20px;margin:0"><label for="cExt" style="font-size:12px;line-height:1.2">Extranjero no residente (exento de IVA)</label></div></div>
+<div id="cliRes"></div>
+<button class="btn p" id="cGuardar" onclick="guardarCliente()">Crear cliente</button><button class="btn d" id="cCancel" style="display:none" onclick="limpiarCliente()">Cancelar edición</button>
+</div>
 </div>
 
 <!-- DISPONIBILIDAD -->
@@ -94,7 +130,7 @@ body.apk .fab{display:flex}
 <div class="card"><span class="lbl">Huésped</span><select id="fHuesped"></select><span class="lbl" id="huDoc"></span><div id="freqTag"></div></div>
 <div class="card" style="display:flex;gap:10px;align-items:center"><input type="checkbox" id="fExento" style="width:20px;height:20px;margin:0" onchange="recalc()"><label for="fExento" style="font-size:12.5px;line-height:1.3"><b>Huésped extranjero no residente</b><br><span class="lbl" style="text-transform:none;letter-spacing:0">Alojamiento exento de IVA (art. 481 E.T.) · requiere pasaporte y tarjeta migratoria</span></label></div>
 <div class="card"><table class="sum" style="width:100%" id="resumen"></table></div>
-<div class="row"><div class="card"><span class="lbl">Medio de pago</span><select id="fMedio"><option>TARJETA</option><option>EFECTIVO</option><option>TRANSFERENCIA</option></select></div><div class="card"><span class="lbl">Precio neto a pagar</span><input id="fPago" readonly></div></div>
+<div class="row"><div class="card"><span class="lbl">Medio de pago</span><select id="fMedio"><option>TARJETA</option><option>EFECTIVO</option><option>TRANSFERENCIA</option></select></div><div class="card"><span class="lbl">Total a pagar (IVA incluido)</span><input id="fPago" readonly></div></div>
 <div class="warn">Al confirmar, el servidor vuelve a verificar la disponibilidad con bloqueo y registra en una sola transacción la reserva, el pago, el comprobante y la bitácora. Si otra persona tomó la habitación, no se guarda nada.</div>
 <button class="btn p" onclick="confirmar()">Confirmar reserva</button>
 <button class="btn d" onclick="go('disp')">Cancelar</button>
@@ -116,7 +152,7 @@ body.apk .fab{display:flex}
 
 </div>
 <div class="tabs">
-<div id="t-inicio" class="on" onclick="go('inicio')"><i></i>Inicio</div><div id="t-disp" onclick="go('disp')"><i></i>Reservas</div><div id="t-habs" onclick="go('habs')"><i></i>Habitaciones</div><div id="t-hist" onclick="go('hist')"><i></i>Historial</div><div id="t-ia" onclick="go('ia')"><i></i>Asistente</div>
+<div id="t-inicio" class="on" onclick="go('inicio')"><i></i>Inicio</div><div id="t-disp" onclick="go('disp')"><i></i>Reservas</div><div id="t-habs" onclick="go('habs')"><i></i>Habitaciones</div><div id="t-hist" onclick="go('hist')"><i></i>Historial</div><div id="t-ia" onclick="go('ia')"><i></i>Asistente</div><div id="t-admin" style="display:none" onclick="go('admin')"><i></i>Admin</div>
 </div>
 </div></div>
 
@@ -143,6 +179,11 @@ const huespedes=[{id:1,nombre:'Laura Martínez Pérez',doc:'CC 1010101010',tel:'
  {id:2,nombre:'Carlos Gómez Rojas',doc:'CC 2020202020',tel:'573109876543',estadias:4,ultima:{tipo:2,pers:2,medio:'TARJETA',hab:'204',noches:1,fecha:'2026-09-26'}},
  {id:3,nombre:'Ana Silva Duarte',doc:'CE 3030303030',tel:'573157654321',estadias:2,ultima:{tipo:3,pers:2,medio:'TRANSFERENCIA',hab:'105',noches:4,fecha:'2026-10-15'}},
  {id:4,nombre:'John Walker Smith',doc:'PA AB123456',tel:'13055550147',estadias:0,extranjero:true}];
+// Usuarios del sistema (tabla USUARIO, script 06: contraseñas PBKDF2 · aquí en claro solo para el prototipo)
+const usuarios=[{id:1,nombre:'Administrador del hotel',correo:'admin@hotel.com',clave:'Hotel2026*',rol:'ADMINISTRADOR',activo:true},
+ {id:2,nombre:'Recepcionista turno 1',correo:'recepcion1@hotel.com',clave:'Hotel2026*',rol:'RECEPCIONISTA',activo:true},
+ {id:3,nombre:'Recepcionista turno 2',correo:'recepcion2@hotel.com',clave:'Hotel2026*',rol:'RECEPCIONISTA',activo:true}];
+let sesion=null;
 // Impuestos: IVA 19 % sobre el alojamiento; exento para extranjeros no residentes (art. 481 E.T.)
 const IVA=0.19;function calc(sub,exento){const iva=exento?0:Math.round(sub*IVA);return{sub,iva,neto:sub+iva,exento:!!exento}}
 let reservas=[],pagos=[],comprobantes=[],bitacora=[],seq=44,conflictos=0,conc=false,sel=null,version=1,pref=null;
@@ -157,8 +198,8 @@ const noches=(a,b)=>Math.round((new Date(b)-new Date(a))/86400000);
 function solapa(h,ent,sal){return reservas.some(r=>r.hab.id===h.id&&['CONFIRMADA','EN_CASA'].includes(r.estado)&&r.entrada<sal&&r.salida>ent)}
 function log(t,cls){const el=document.getElementById('log');if(el.textContent.startsWith('Esperando'))el.textContent='';el.textContent+=t+'\n';el.scrollTop=el.scrollHeight}
 // ---------- Navegación ----------
-const titles={inicio:['Inicio','Hotel Reservas · prototipo'],disp:['Consultar disponibilidad','CU-03 · RF03'],conf:['Nueva reserva · Confirmación','CU-04, CU-05, CU-06 · RF04, RF05, RF16 impuestos'],habs:['Habitaciones','CU-11 · inventario y estados'],hist:['Historial y bitácora','CU-12 · RNF05 trazabilidad'],ia:['Asistente','Consultas en lenguaje natural · solo lectura']};
-function go(v){document.querySelectorAll('.view').forEach(x=>x.classList.remove('on'));document.getElementById('v-'+v).classList.add('on');document.querySelectorAll('.tabs div').forEach(x=>x.classList.remove('on'));const t=document.getElementById('t-'+(v==='conf'?'disp':v));if(t)t.classList.add('on');document.getElementById('title').textContent=titles[v][0];document.getElementById('subtitle').textContent=titles[v][1];if(v==='habs')renderHabs();if(v==='hist')renderHist();if(v==='inicio')kpis();document.querySelector('.content').scrollTop=0}
+const titles={inicio:['Inicio','Hotel Reservas · prototipo'],disp:['Consultar disponibilidad','CU-03 · RF03'],conf:['Nueva reserva · Confirmación','CU-04, CU-05, CU-06 · RF04, RF05, RF16 impuestos'],habs:['Habitaciones','CU-11 · inventario y estados'],hist:['Historial y bitácora','CU-12 · RNF05 trazabilidad'],ia:['Asistente','Consultas en lenguaje natural · solo lectura'],login:['Iniciar sesión','CU-01 · RF01 autenticación JWT'],admin:['Administración','CU-14 usuarios · CU-02 clientes · solo ADMINISTRADOR']};
+function go(v){if(!sesion&&v!=='login')v='login';if(v==='admin'&&sesion.rol!=='ADMINISTRADOR'){v='inicio'}document.querySelector('.tabs').style.display=v==='login'?'none':'';document.querySelector('.appbar .back').style.visibility=v==='login'?'hidden':'';document.querySelectorAll('.view').forEach(x=>x.classList.remove('on'));document.getElementById('v-'+v).classList.add('on');document.querySelectorAll('.tabs div').forEach(x=>x.classList.remove('on'));const t=document.getElementById('t-'+(v==='conf'?'disp':v));if(t)t.classList.add('on');document.getElementById('title').textContent=titles[v][0];document.getElementById('subtitle').textContent=titles[v][1];if(v==='habs')renderHabs();if(v==='hist')renderHist();if(v==='inicio')kpis();if(v==='admin')renderAdmin();document.querySelector('.content').scrollTop=0}
 function kpis(){const hoy='2026-10-15';document.getElementById('kOcu').textContent=habs.filter(h=>h.estado==='OCUPADA').length;document.getElementById('kDis').textContent=habs.filter(h=>h.estado==='DISPONIBLE').length;document.getElementById('kRes').textContent=reservas.filter(r=>r.estado==='CONFIRMADA').length;
  document.getElementById('sRes').textContent=reservas.length;document.getElementById('sPag').textContent=pagos.length;document.getElementById('sCmp').textContent=comprobantes.length;document.getElementById('sBit').textContent=bitacora.length;document.getElementById('s409').textContent=conflictos;
  document.getElementById('tReserva').innerHTML=reservas.map(r=>`<tr><td>${r.id}</td><td>${r.codigo}</td><td>${r.hab.numero}</td><td>${huespedes.find(h=>h.id===r.huesped).nombre.split(' ')[0]}</td><td>${r.entrada}</td><td>${r.salida}</td><td>${fmt(r.sub)}</td><td>${fmt(r.iva)}</td><td>${fmt(r.valor)}</td><td>${r.estado}</td><td>0x${r.ver.toString(16).padStart(8,'0')}</td></tr>`).join('')}
@@ -170,8 +211,8 @@ function buscar(){const tipoN=document.getElementById('fTipo').value,pers=+docum
  log(`GET /api/disponibilidad?tipo=${tipoN}&entrada=${ent}&salida=${sal}  → SELECT HABITACION h JOIN TARIFA … WHERE NOT EXISTS (reservas solapadas)`);
  const lista=habs.filter(h=>h.tipo===tipoId);let html=`<h3>${tipoN} · ${n} noche${n>1?'s':''} · tarifa ${fmt(tipos[tipoId].tarifa)}/noche</h3>`;
  lista.forEach(h=>{let st='Disponible',cls='',ok=true;if(h.estado==='MANTENIMIENTO'){st='Mantenimiento';cls='g';ok=false}else if(solapa(h,ent,sal)){st='Reservada';cls='o';ok=false}
-  html+=`<div class="card hab" ${ok?`onclick="elegir(${h.id},'${ent}','${sal}',${pers})"`:''}><div><b>Hab. ${h.numero} · Piso ${h.piso}</b><br><span class="lbl">${tipoN} · ${tipos[tipoId].cap} personas</span></div><div style="text-align:right"><span class="tag ${cls}">${st}</span><br>${ok?`<span class="pr">${fmt(calc(n*tipos[tipoId].tarifa).neto)}</span><br><span class="lbl" style="font-size:10px">neto · IVA 19 % incl.</span>`:''}</div></div>`});
- html+='<div class="ok">Resultado calculado en el servidor con las reservas confirmadas y en casa. Los precios son netos (subtotal + IVA 19 %); el huésped extranjero no residente queda exento de IVA. Toque una habitación disponible para reservar.</div>';out.innerHTML=html;log(`  200 OK · ${lista.length} habitaciones evaluadas`)}
+  html+=`<div class="card hab" ${ok?`onclick="elegir(${h.id},'${ent}','${sal}',${pers})"`:''}><div><b>Hab. ${h.numero} · Piso ${h.piso}</b><br><span class="lbl">${tipoN} · ${tipos[tipoId].cap} personas</span></div><div style="text-align:right"><span class="tag ${cls}">${st}</span><br>${ok?`<span class="pr">${fmt(calc(n*tipos[tipoId].tarifa).neto)}</span><br><span class="lbl" style="font-size:10px">total con IVA 19 %</span>`:''}</div></div>`});
+ html+='<div class="ok">Resultado calculado en el servidor con las reservas confirmadas y en casa. Los precios mostrados son el total con IVA (subtotal + IVA 19 %); el huésped extranjero no residente queda exento de IVA. Toque una habitación disponible para reservar.</div>';out.innerHTML=html;log(`  200 OK · ${lista.length} habitaciones evaluadas`)}
 function elegir(id,ent,sal,pers){const h=habs.find(x=>x.id===id);sel={hab:h,ent,sal,pers,n:noches(ent,sal),sub:noches(ent,sal)*tipos[h.tipo].tarifa};
  document.getElementById('fHuesped').innerHTML=huespedes.map(x=>`<option value="${x.id}">${x.nombre}</option>`).join('');
  if(pref){document.getElementById('fHuesped').value=pref.huesped;document.getElementById('fMedio').value=pref.medio}
@@ -182,10 +223,10 @@ function huChange(){const h=huespedes.find(x=>x.id==document.getElementById('fHu
  document.getElementById('freqTag').innerHTML=h.estadias>=2?`<span class="tag" style="margin-top:6px">★ Huésped frecuente · ${h.estadias} estadías</span>`:'';recalc()}
 // Desglose de impuestos (RF16): subtotal → IVA 19 % → precio neto
 function recalc(){if(!sel)return;const ex=document.getElementById('fExento').checked;const t=calc(sel.sub,ex);sel.iva=t.iva;sel.valor=t.neto;sel.exento=ex;const h=sel.hab;
- document.getElementById('resumen').innerHTML=`<tr><td>Habitación</td><td>${h.numero} · ${tipos[h.tipo].nombre}</td></tr><tr><td>Entrada / salida</td><td>${sel.ent} → ${sel.sal}</td></tr><tr><td>Noches × tarifa</td><td>${sel.n} × ${fmt(tipos[h.tipo].tarifa)}</td></tr><tr><td>Personas</td><td>${sel.pers}</td></tr><tr><td>Subtotal alojamiento</td><td>${fmt(sel.sub)}</td></tr><tr><td>IVA 19 %${ex?' <span class="tag g" style="font-size:10px">EXENTO</span>':''}</td><td>${fmt(sel.iva)}</td></tr><tr><td style="font-weight:700">Precio neto</td><td style="color:var(--verde);font-size:15px">${fmt(sel.valor)}</td></tr>`;
+ document.getElementById('resumen').innerHTML=`<tr><td>Habitación</td><td>${h.numero} · ${tipos[h.tipo].nombre}</td></tr><tr><td>Entrada / salida</td><td>${sel.ent} → ${sel.sal}</td></tr><tr><td>Noches × tarifa</td><td>${sel.n} × ${fmt(tipos[h.tipo].tarifa)}</td></tr><tr><td>Personas</td><td>${sel.pers}</td></tr><tr><td>Subtotal alojamiento</td><td>${fmt(sel.sub)}</td></tr><tr><td>IVA 19 %${ex?' <span class="tag g" style="font-size:10px">EXENTO</span>':''}</td><td>${fmt(sel.iva)}</td></tr><tr><td style="font-weight:700">Total con IVA</td><td style="color:var(--verde);font-size:16px;font-weight:700">${fmt(sel.valor)}</td></tr>`;
  document.getElementById('fPago').value=fmt(sel.valor)}
 // Texto del comprobante compartible (RF17)
-function textoCmp(r){const h=huespedes.find(x=>x.id===r.huesped);return `🏨 *Hotel Reservas* · Comprobante ${r.cmp}\nReserva: ${r.codigo}\nHuésped: ${h.nombre} (${h.doc})\nHabitación: ${r.hab.numero} · ${tipos[r.hab.tipo].nombre} · ${r.pers} persona${r.pers>1?'s':''}\nEntrada: ${r.entrada} · Salida: ${r.salida} (${noches(r.entrada,r.salida)} noche${noches(r.entrada,r.salida)>1?'s':''})\nSubtotal: ${fmt(r.sub)}\nIVA 19 %: ${r.exento?'exento (extranjero no residente)':fmt(r.iva)}\n*Precio neto: ${fmt(r.valor)}*\nPago: ${r.medio} · Estado: ${r.estado}\nPresente este comprobante en recepción. ¡Lo esperamos!`}
+function textoCmp(r){const h=huespedes.find(x=>x.id===r.huesped);return `🏨 *Hotel Reservas* · Comprobante ${r.cmp}\nReserva: ${r.codigo}\nHuésped: ${h.nombre} (${h.doc})\nHabitación: ${r.hab.numero} · ${tipos[r.hab.tipo].nombre} · ${r.pers} persona${r.pers>1?'s':''}\nEntrada: ${r.entrada} · Salida: ${r.salida} (${noches(r.entrada,r.salida)} noche${noches(r.entrada,r.salida)>1?'s':''})\nSubtotal: ${fmt(r.sub)}\nIVA 19 %: ${r.exento?'exento (extranjero no residente)':fmt(r.iva)}\n*Total con IVA: ${fmt(r.valor)}*\nPago: ${r.medio} · Estado: ${r.estado}\nPresente este comprobante en recepción. ¡Lo esperamos!`}
 function cardCmp(r){const h=huespedes.find(x=>x.id===r.huesped);const txt=textoCmp(r);const wa='https://wa.me/'+h.tel+'?text='+encodeURIComponent(txt);
  return `<div class="card" style="margin-top:10px;border-color:var(--verde)"><span class="lbl">Comprobante ${r.cmp}</span><pre style="white-space:pre-wrap;font-family:inherit;font-size:12px;margin:6px 0 0;line-height:1.4">${txt.replace(/\*/g,'')}</pre>
  <a class="btn p" style="text-decoration:none;background:#25D366" href="${wa}" target="_blank" rel="noopener" onclick="log('GET /api/comprobantes/${r.cmp}/compartir → texto generado · abre WhatsApp (+${h.tel})')">Enviar comprobante por WhatsApp</a>
@@ -211,19 +252,19 @@ function confirmar(){const out=document.getElementById('confRes');const hu=+docu
  if(solapa(sel.hab,sel.ent,sel.sal)){conflictos++;log('  → existe solapamiento: ROLLBACK TRANSACTION; THROW 50001 "Habitación no disponible"');log('  409 Conflict · ninguna fila insertada en RESERVA, PAGO, COMPROBANTE ni BITACORA');
   out.innerHTML=`<div class="err">✖ HTTP 409 · La habitación ${sel.hab.numero} ya no está disponible para esas fechas: otra recepcionista la confirmó un instante antes. No se guardó ningún dato. Vuelva a consultar la disponibilidad.</div>`;kpis();return}
  const cmp='CMP'+String(reservas.length+1).padStart(9,'0');const r={id:reservas.length+1,codigo:'RSV'+String(++seq).padStart(9,'0'),hab:sel.hab,huesped:hu,entrada:sel.ent,salida:sel.sal,pers:sel.pers,sub:sel.sub,iva:sel.iva,valor:sel.valor,exento:sel.exento,medio,cmp,estado:'CONFIRMADA',ver:version++};reservas.push(r);
- pagos.push({res:r.id,valor:r.valor,medio});comprobantes.push({res:r.id,num:cmp});bitacora.push({res:r.codigo,usuario:'recepcion1',de:'-',a:'CONFIRMADA',fecha:'15/10 '+hora()});
+ pagos.push({res:r.id,valor:r.valor,medio});comprobantes.push({res:r.id,num:cmp});bitacora.push({res:r.codigo,usuario:sesion.usuario,de:'-',a:'CONFIRMADA',fecha:'15/10 '+hora()});
  const hh=huespedes.find(x=>x.id===hu);hh.estadias++;hh.ultima={tipo:sel.hab.tipo,pers:sel.pers,medio,hab:sel.hab.numero,noches:sel.n,fecha:sel.ent};pref=null;
- log(`  INSERT RESERVA(${r.codigo}, subtotal=${r.sub}, impuesto=${r.iva}${r.exento?' [exento IVA]':''}, valor_total=${r.valor}) · INSERT PAGO(${medio}, ${fmt(r.valor)}) · INSERT COMPROBANTE(${cmp}) · INSERT BITACORA_RESERVA(recepcion1, - → CONFIRMADA)`);log('  COMMIT TRANSACTION · 201 Created');
- out.innerHTML=`<div class="ok">✔ Reserva <b>${r.codigo}</b> confirmada · Comprobante <b>${cmp}</b> · precio neto ${fmt(r.valor)} · Registrada por recepcionista turno 1</div>${cardCmp(r)}<button class="btn s" onclick="go('hist')">Ver en el historial</button>`;kpis()}
+ log(`  INSERT RESERVA(${r.codigo}, subtotal=${r.sub}, impuesto=${r.iva}${r.exento?' [exento IVA]':''}, valor_total=${r.valor}) · INSERT PAGO(${medio}, ${fmt(r.valor)}) · INSERT COMPROBANTE(${cmp}) · INSERT BITACORA_RESERVA(${sesion.usuario}, - → CONFIRMADA)`);log('  COMMIT TRANSACTION · 201 Created');
+ out.innerHTML=`<div class="ok">✔ Reserva <b>${r.codigo}</b> confirmada · Comprobante <b>${cmp}</b><br>Subtotal ${fmt(r.sub)} + IVA 19 % ${r.exento?'exento':fmt(r.iva)} = <b>Total con IVA ${fmt(r.valor)}</b><br>Registrada por ${sesion.nombre} (${sesion.rol})</div>${cardCmp(r)}<button class="btn s" onclick="go('hist')">Ver en el historial</button>`;kpis()}
 function toggleConc(){conc=!conc;document.getElementById('bConc').textContent=conc?'Activada ✓':'Activar';log(conc?'[prueba] Otra sesión intentará la misma habitación en la próxima confirmación':'[prueba] Concurrencia desactivada')}
 function hora(){const d=new Date();return d.getHours().toString().padStart(2,'0')+':'+d.getMinutes().toString().padStart(2,'0')}
 // ---------- Habitaciones / historial ----------
 function renderHabs(){document.getElementById('habsList').innerHTML=[1,2,3,4,5].map(p=>`<h3>Piso ${p}</h3>`+habs.filter(h=>h.piso===p).map(h=>`<div class="card hab"><div><b>Hab. ${h.numero}</b><br><span class="lbl">${tipos[h.tipo].nombre} · ${tipos[h.tipo].cap} pers. · ${fmt(tipos[h.tipo].tarifa)}/noche</span></div><span class="tag ${h.estado==='OCUPADA'?'o':h.estado==='MANTENIMIENTO'?'g':''}">${h.estado}</span></div>`).join('')).join('')}
-function renderHist(){document.getElementById('histList').innerHTML=reservas.slice().reverse().map(r=>`<div class="card"><b>${r.codigo}</b> · Hab. ${r.hab.numero} · ${huespedes.find(h=>h.id===r.huesped).nombre}<br><span class="lbl">${r.entrada} → ${r.salida} · neto ${fmt(r.valor)} (IVA ${r.exento?'exento':fmt(r.iva)})</span> <span class="tag ${r.estado==='EN_CASA'?'o':''}">${r.estado}</span>${['CONFIRMADA','EN_CASA'].includes(r.estado)?`<button class="btn s" style="height:34px;font-size:12px" onclick="verCmp(${r.id})">Comprobante ${r.cmp} · compartir</button>`:''}${r.estado==='CONFIRMADA'?`<button class="btn s" style="height:34px;font-size:12px" onclick="checkin(${r.id})">Registrar check-in</button><button class="btn w" style="height:34px;font-size:12px" onclick="cancelar(${r.id})">Cancelar reserva</button>`:''}<div id="cmp${r.id}"></div></div>`).join('')||'<div class="card">Sin reservas.</div>';
+function renderHist(){document.getElementById('histList').innerHTML=reservas.slice().reverse().map(r=>`<div class="card"><b>${r.codigo}</b> · Hab. ${r.hab.numero} · ${huespedes.find(h=>h.id===r.huesped).nombre}<br><span class="lbl">${r.entrada} → ${r.salida} · total ${fmt(r.valor)} (IVA ${r.exento?'exento':fmt(r.iva)})</span> <span class="tag ${r.estado==='EN_CASA'?'o':''}">${r.estado}</span>${['CONFIRMADA','EN_CASA'].includes(r.estado)?`<button class="btn s" style="height:34px;font-size:12px" onclick="verCmp(${r.id})">Comprobante ${r.cmp} · compartir</button>`:''}${r.estado==='CONFIRMADA'?`<button class="btn s" style="height:34px;font-size:12px" onclick="checkin(${r.id})">Registrar check-in</button>${sesion.rol==='ADMINISTRADOR'?`<button class="btn w" style="height:34px;font-size:12px" onclick="cancelar(${r.id})">Cancelar reserva</button>`:''}`:''}<div id="cmp${r.id}"></div></div>`).join('')||'<div class="card">Sin reservas.</div>';
  document.getElementById('bitList').innerHTML='<table class="lst" style="width:100%">'+bitacora.slice().reverse().map(b=>`<tr><td>${b.fecha}</td><td>${b.res}</td><td>${b.de} → <b>${b.a}</b></td><td>${b.usuario}</td></tr>`).join('')+'</table>'}
 function verCmp(id){const el=document.getElementById('cmp'+id);el.innerHTML=el.innerHTML?'':cardCmp(reservas.find(x=>x.id===id))}
-function checkin(id){const r=reservas.find(x=>x.id===id);log(`PUT /api/reservas/${r.codigo}/checkin → BEGIN TRAN; UPDATE RESERVA SET estado='EN_CASA' WHERE id=${id} AND version_fila=0x${r.ver.toString(16).padStart(8,'0')}; UPDATE HABITACION SET estado='OCUPADA'; INSERT BITACORA; COMMIT`);r.estado='EN_CASA';r.ver=version++;r.hab.estado='OCUPADA';bitacora.push({res:r.codigo,usuario:'recepcion1',de:'CONFIRMADA',a:'EN_CASA',fecha:'15/10 '+hora()});renderHist();kpis()}
-function cancelar(id){const r=reservas.find(x=>x.id===id);log(`PUT /api/reservas/${r.codigo}/cancelar → BEGIN TRAN; UPDATE RESERVA SET estado='CANCELADA'; UPDATE PAGO SET estado='ANULADO'; INSERT BITACORA; COMMIT`);r.estado='CANCELADA';r.ver=version++;bitacora.push({res:r.codigo,usuario:'recepcion1',de:'CONFIRMADA',a:'CANCELADA',fecha:'15/10 '+hora()});renderHist();kpis()}
+function checkin(id){const r=reservas.find(x=>x.id===id);log(`PUT /api/reservas/${r.codigo}/checkin → BEGIN TRAN; UPDATE RESERVA SET estado='EN_CASA' WHERE id=${id} AND version_fila=0x${r.ver.toString(16).padStart(8,'0')}; UPDATE HABITACION SET estado='OCUPADA'; INSERT BITACORA; COMMIT`);r.estado='EN_CASA';r.ver=version++;r.hab.estado='OCUPADA';bitacora.push({res:r.codigo,usuario:sesion.usuario,de:'CONFIRMADA',a:'EN_CASA',fecha:'15/10 '+hora()});renderHist();kpis()}
+function cancelar(id){const r=reservas.find(x=>x.id===id);log(`PUT /api/reservas/${r.codigo}/cancelar → BEGIN TRAN; UPDATE RESERVA SET estado='CANCELADA'; UPDATE PAGO SET estado='ANULADO'; INSERT BITACORA; COMMIT`);r.estado='CANCELADA';r.ver=version++;bitacora.push({res:r.codigo,usuario:sesion.usuario,de:'CONFIRMADA',a:'CANCELADA',fecha:'15/10 '+hora()});renderHist();kpis()}
 // ---------- Asistente (lógica de integración simulada: interpreta → función → respuesta) ----------
 function ask(t){const q=t||document.getElementById('q').value.trim();if(!q)return;document.getElementById('q').value='';const chat=document.getElementById('chat');chat.innerHTML+=`<div class="msg me">${q}</div>`;
  const s=q.toLowerCase();let fn='',ans='';
@@ -236,9 +277,66 @@ function ask(t){const q=t||document.getElementById('q').value.trim();if(!q)retur
  else{fn='(aclaración)';ans='¿Podría indicarme el tipo de habitación y las fechas? Por ejemplo: "¿qué dobles hay libres del 16 al 18?"'}
  log(`POST /api/asistente "${q}" → modelo IA devuelve función: ${fn} → la API la ejecuta y registra en CONSULTA_ASISTENTE`);
  setTimeout(()=>{chat.innerHTML+=`<div class="msg ia">${ans}<small>Fuente: ${fn} · datos del repositorio central</small></div>`;document.querySelector('.content').scrollTop=1e6},350)}
+// ---------- CU-01 Inicio de sesión / roles ----------
+let vistaInicial='inicio',admEdU=null,admEdC=null;
+function login(){const c=document.getElementById('lCorreo').value.trim().toLowerCase(),k=document.getElementById('lClave').value;const out=document.getElementById('loginRes');
+ log(`POST /api/auth/login {correo:${c}} → SELECT USUARIO WHERE correo=@correo AND activo=1 · PBKDF2.Verificar(clave)`);
+ const u=usuarios.find(x=>x.correo===c&&x.activo);
+ if(!u||u.clave!==k){log('  401 Unauthorized · correo o contraseña incorrectos');out.innerHTML='<div class="err">Correo o contraseña incorrectos.</div>';return}
+ sesion={id:u.id,nombre:u.nombre,rol:u.rol,usuario:u.correo.split('@')[0]};log(`  200 OK · token JWT emitido · rol ${u.rol} · vigencia 480 min`);out.innerHTML='';
+ document.getElementById('sesInfo').innerHTML=`<b>${u.nombre}</b> · token JWT válido · perfil <b>${u.rol}</b>`;
+ const adm=u.rol==='ADMINISTRADOR';document.getElementById('modAdmin').style.display=adm?'':'none';document.getElementById('t-admin').style.display=adm?'':'none';
+ go(vistaInicial);vistaInicial='inicio'}
+function logout(){log(`[app] sesión de ${sesion.usuario} cerrada · token descartado`);sesion=null;document.getElementById('lClave').value='';go('login')}
+// ---------- Administración: CRUD de usuarios (CU-15) y de clientes (CU-02) · solo ADMINISTRADOR ----------
+function admTab(t){document.getElementById('admUsuarios').style.display=t==='usuarios'?'':'none';document.getElementById('admClientes').style.display=t==='clientes'?'':'none';
+ document.getElementById('bAdmU').className='btn '+(t==='usuarios'?'p':'s');document.getElementById('bAdmH').className='btn '+(t==='clientes'?'p':'s')}
+function renderAdmin(){admTab(document.getElementById('admClientes').style.display==='none'?'usuarios':'clientes');renderUsuarios();renderClientes()}
+function renderUsuarios(){log('GET /api/usuarios → SELECT USUARIO + COUNT(RESERVA), COUNT(BITACORA_RESERVA)');
+ document.getElementById('usuList').innerHTML=usuarios.map(u=>{const mov=bitacora.filter(b=>b.usuario===u.correo.split('@')[0]).length;
+  return `<div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><div><b>${u.nombre}</b>${sesion.id===u.id?' <span class="lbl">(usted)</span>':''}<br><span class="lbl" style="text-transform:none;letter-spacing:0">${u.correo} · ${mov} movimiento${mov!==1?'s':''} en bitácora</span></div><div style="text-align:right"><span class="tag ${u.rol==='ADMINISTRADOR'?'':'g'}">${u.rol}</span><br><span class="tag ${u.activo?'':'o'}" style="margin-top:4px">${u.activo?'ACTIVO':'INACTIVO'}</span></div></div>
+  <div class="row"><button class="btn s" style="height:34px;font-size:12px" onclick="editarUsuario(${u.id})">Editar</button>${u.rol==='ADMINISTRADOR'?`<button class="btn d" style="height:34px;font-size:12px" disabled>Cuenta protegida · no se elimina</button>`:u.activo?`<button class="btn w" style="height:34px;font-size:12px" onclick="eliminarUsuario(${u.id})">Eliminar</button>`:`<button class="btn s" style="height:34px;font-size:12px" onclick="reactivarUsuario(${u.id})">Reactivar</button>`}</div></div>`}).join('')}
+function limpiarUsuario(){admEdU=null;['uNombre','uCorreo','uClave'].forEach(i=>document.getElementById(i).value='');document.getElementById('uRol').value='RECEPCIONISTA';document.getElementById('usuFormT').textContent='Nuevo usuario';document.getElementById('uGuardar').textContent='Crear usuario';document.getElementById('uCancel').style.display='none';document.getElementById('usuRes').innerHTML=''}
+function editarUsuario(id){const u=usuarios.find(x=>x.id===id);admEdU=id;document.getElementById('uNombre').value=u.nombre;document.getElementById('uCorreo').value=u.correo;document.getElementById('uRol').value=u.rol;document.getElementById('uClave').value='';
+ document.getElementById('usuFormT').textContent='Editar usuario · '+u.correo;document.getElementById('uGuardar').textContent='Guardar cambios';document.getElementById('uCancel').style.display='';document.getElementById('usuRes').innerHTML='<div class="warn">Deje la contraseña en blanco para conservar la actual.</div>';document.getElementById('usuFormT').scrollIntoView({behavior:'smooth'})}
+function guardarUsuario(){const n=document.getElementById('uNombre').value.trim(),c=document.getElementById('uCorreo').value.trim().toLowerCase(),rol=document.getElementById('uRol').value,k=document.getElementById('uClave').value;const out=document.getElementById('usuRes');
+ if(!n||!c.includes('@')){out.innerHTML='<div class="err">Nombre y correo válido son obligatorios.</div>';return}
+ if(!admEdU&&k.length<8||admEdU&&k&&k.length<8){out.innerHTML='<div class="err">La contraseña debe tener al menos 8 caracteres.</div>';return}
+ if(usuarios.some(u=>u.correo===c&&u.id!==admEdU)){log(`${admEdU?'PUT':'POST'} /api/usuarios → 409 Conflict (UQ_USUARIO_correo)`);out.innerHTML='<div class="err">409 · Ya existe un usuario con ese correo.</div>';return}
+ if(admEdU){const u=usuarios.find(x=>x.id===admEdU);if(u.rol==='ADMINISTRADOR'&&rol!=='ADMINISTRADOR'){out.innerHTML='<div class="err">La cuenta de administrador está protegida: no se le puede cambiar el rol.</div>';return}
+  u.nombre=n;u.correo=c;u.rol=rol;if(k)u.clave=k;log(`PUT /api/usuarios/${u.id} → UPDATE USUARIO SET nombre, correo, rol${k?', clave_hash=PBKDF2(...)':''} WHERE id_usuario=${u.id} · 200 OK`);out.innerHTML=`<div class="ok">✔ Usuario ${u.correo} actualizado.</div>`}
+ else{const u={id:Math.max(...usuarios.map(x=>x.id))+1,nombre:n,correo:c,clave:k,rol,activo:true};usuarios.push(u);log(`POST /api/usuarios {${c}, ${rol}} → INSERT USUARIO (clave_hash = PBKDF2-SHA256, 100.000 iteraciones) · 201 Created`);out.innerHTML=`<div class="ok">✔ Usuario ${u.correo} creado con rol ${rol}.</div>`}
+ const msg=out.innerHTML;limpiarUsuario();out.innerHTML=msg;renderUsuarios()}
+function eliminarUsuario(id,ok){const u=usuarios.find(x=>x.id===id);const out=document.getElementById('usuRes');
+ if(u.rol==='ADMINISTRADOR'){log(`DELETE /api/usuarios/${u.id} → 400 Bad Request · la cuenta ADMINISTRADOR está protegida`);out.innerHTML='<div class="err">La cuenta de administrador está protegida: no se puede eliminar ni desactivar. Solo se pueden eliminar usuarios con rol RECEPCIONISTA.</div>';return}
+ if(u.id===sesion.id){out.innerHTML='<div class="err">No puede eliminar su propia cuenta.</div>';return}
+ if(!ok){out.innerHTML=`<div class="warn">¿Eliminar al usuario <b>${u.nombre}</b> (${u.correo})?<div class="row"><button class="btn w" style="height:34px;font-size:12px" onclick="eliminarUsuario(${id},true)">Sí, eliminar</button><button class="btn s" style="height:34px;font-size:12px" onclick="document.getElementById('usuRes').innerHTML=''">No</button></div></div>`;out.scrollIntoView({behavior:'smooth'});return}
+ const mov=bitacora.filter(b=>b.usuario===u.correo.split('@')[0]).length;
+ if(mov>0){u.activo=false;log(`DELETE /api/usuarios/${u.id} → tiene ${mov} fila(s) en BITACORA_RESERVA (FK_BITACORA_USUARIO): UPDATE USUARIO SET activo=0 · 200 OK`);out.innerHTML=`<div class="warn">${u.nombre} tiene movimientos registrados: se desactivó para conservar la trazabilidad (RNF05) y ya no puede iniciar sesión.</div>`}
+ else{usuarios.splice(usuarios.indexOf(u),1);log(`DELETE /api/usuarios/${u.id} → DELETE FROM USUARIO WHERE id_usuario=${u.id} · 200 OK`);out.innerHTML=`<div class="ok">✔ ${u.nombre} eliminado definitivamente.</div>`}
+ if(admEdU===id)limpiarUsuario();renderUsuarios()}
+function reactivarUsuario(id){const u=usuarios.find(x=>x.id===id);u.activo=true;log(`PUT /api/usuarios/${u.id}/reactivar → UPDATE USUARIO SET activo=1 · 200 OK`);document.getElementById('usuRes').innerHTML=`<div class="ok">✔ ${u.nombre} reactivado.</div>`;renderUsuarios()}
+function renderClientes(){log('GET /api/huespedes → SELECT HUESPED + COUNT(RESERVA)');
+ document.getElementById('cliList').innerHTML=huespedes.map(h=>{const act=reservas.filter(r=>r.huesped===h.id&&['CONFIRMADA','EN_CASA'].includes(r.estado)).length;
+  return `<div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><div><b>${h.nombre}</b><br><span class="lbl" style="text-transform:none;letter-spacing:0">${h.doc} · tel. ${h.tel||'-'} · ${h.estadias} estadía${h.estadias!==1?'s':''}${act?` · ${act} reserva${act>1?'s':''} activa${act>1?'s':''}`:''}</span></div><div style="text-align:right">${h.estadias>=2?'<span class="tag">★ frecuente</span><br>':''}${h.extranjero?'<span class="tag g" style="margin-top:4px">exento IVA</span>':''}</div></div>
+  <div class="row"><button class="btn s" style="height:34px;font-size:12px" onclick="editarCliente(${h.id})">Editar</button><button class="btn w" style="height:34px;font-size:12px" onclick="eliminarCliente(${h.id})">Eliminar</button></div></div>`}).join('')}
+function limpiarCliente(){admEdC=null;['cNombre','cDoc','cTel'].forEach(i=>document.getElementById(i).value='');document.getElementById('cTipo').value='CC';document.getElementById('cExt').checked=false;document.getElementById('cliFormT').textContent='Nuevo cliente';document.getElementById('cGuardar').textContent='Crear cliente';document.getElementById('cCancel').style.display='none';document.getElementById('cliRes').innerHTML=''}
+function editarCliente(id){const h=huespedes.find(x=>x.id===id);admEdC=id;const [t,...d]=h.doc.split(' ');document.getElementById('cNombre').value=h.nombre;document.getElementById('cTipo').value=t;document.getElementById('cDoc').value=d.join(' ');document.getElementById('cTel').value=(h.tel||'').replace(/^57(?=3\d{9}$)/,'');document.getElementById('cExt').checked=!!h.extranjero;
+ document.getElementById('cliFormT').textContent='Editar cliente · '+h.nombre;document.getElementById('cGuardar').textContent='Guardar cambios';document.getElementById('cCancel').style.display='';document.getElementById('cliRes').innerHTML='';document.getElementById('cliFormT').scrollIntoView({behavior:'smooth'})}
+function guardarCliente(){const n=document.getElementById('cNombre').value.trim(),t=document.getElementById('cTipo').value,d=document.getElementById('cDoc').value.trim(),ext=document.getElementById('cExt').checked;let tel=document.getElementById('cTel').value.replace(/\D/g,'');if(tel.length===10&&tel.startsWith('3'))tel='57'+tel;const out=document.getElementById('cliRes');
+ if(!n||!d){out.innerHTML='<div class="err">Nombre y número de documento son obligatorios.</div>';return}
+ const doc=t+' '+d;if(huespedes.some(h=>h.doc===doc&&h.id!==admEdC)){log(`${admEdC?'PUT':'POST'} /api/huespedes → 409 Conflict (UQ_HUESPED_documento)`);out.innerHTML='<div class="err">409 · Ya existe un cliente con ese documento.</div>';return}
+ if(admEdC){const h=huespedes.find(x=>x.id===admEdC);h.nombre=n;h.doc=doc;h.tel=tel;h.extranjero=ext;log(`PUT /api/huespedes/${h.id} → UPDATE HUESPED SET nombres, apellidos, tipo_documento, numero_documento, telefono, extranjero_no_residente=${ext?1:0} · 200 OK`);out.innerHTML=`<div class="ok">✔ Cliente ${h.nombre} actualizado.</div>`}
+ else{const h={id:Math.max(...huespedes.map(x=>x.id))+1,nombre:n,doc,tel,estadias:0,extranjero:ext};huespedes.push(h);log(`POST /api/huespedes {${doc}} → INSERT HUESPED · 201 Created`);out.innerHTML=`<div class="ok">✔ Cliente ${h.nombre} registrado.</div>`}
+ const msg=out.innerHTML;limpiarCliente();out.innerHTML=msg;renderClientes()}
+function eliminarCliente(id,ok){const h=huespedes.find(x=>x.id===id);const out=document.getElementById('cliRes');
+ const total=reservas.filter(r=>r.huesped===h.id).length;
+ if(total>0){log(`DELETE /api/huespedes/${h.id} → ${total} reserva(s) referencian al huésped (FK_RESERVA_HUESPED) · 409 Conflict`);out.innerHTML=`<div class="err">409 · ${h.nombre} tiene ${total} reserva${total>1?'s':''} registrada${total>1?'s':''}; no se puede eliminar sin perder el historial. Puede editar sus datos.</div>`;return}
+ if(!ok){out.innerHTML=`<div class="warn">¿Eliminar al cliente <b>${h.nombre}</b> (${h.doc})?<div class="row"><button class="btn w" style="height:34px;font-size:12px" onclick="eliminarCliente(${id},true)">Sí, eliminar</button><button class="btn s" style="height:34px;font-size:12px" onclick="document.getElementById('cliRes').innerHTML=''">No</button></div></div>`;out.scrollIntoView({behavior:'smooth'});return}
+ huespedes.splice(huespedes.indexOf(h),1);log(`DELETE /api/huespedes/${h.id} → DELETE FROM HUESPED WHERE id_huesped=${h.id} · 200 OK`);out.innerHTML=`<div class="ok">✔ Cliente ${h.nombre} eliminado.</div>`;if(admEdC===id)limpiarCliente();renderClientes()}
 // ---------- init ----------
-seed();kpis();document.getElementById('clock').textContent=hora();
+seed();kpis();document.getElementById('clock').textContent=hora();go('login');
 function toggleSrv(){const o=document.getElementById('srv').classList.toggle('on');document.getElementById('fabSrv').style.display=o?'none':''}
-(function(){const q=new URLSearchParams(location.search);if(q.get('apk')==='1'){document.body.classList.add('apk');const v=q.get('vista');if(v&&document.getElementById('v-'+v))go(v)}})();
+(function(){const q=new URLSearchParams(location.search);if(q.get('apk')==='1'){document.body.classList.add('apk');const v=q.get('vista');if(v&&document.getElementById('v-'+v))vistaInicial=v}})();
 </script>
 </body></html>
