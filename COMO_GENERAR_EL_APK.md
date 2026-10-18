@@ -1,4 +1,6 @@
-# Cómo generar e instalar el APK (versión 0.3, prototipo funcional con impuestos, comprobante por WhatsApp y reserva rápida)
+# Cómo generar e instalar el APK (versión 0.4: inicio de sesión con roles, total con IVA, módulo de administración, comprobante por WhatsApp y reserva rápida)
+
+> Alternativa sin Visual Studio: abrir la carpeta `HotelReservasDemo_AndroidStudio/` en Android Studio y usar **Build > Build APK(s)** (ver su `LEEME_ANDROID_STUDIO.md`). Usuarios de prueba: `admin@hotel.com` y `recepcion1@hotel.com`, contraseña `Hotel2026*`.
 
 ## Requisitos
 - Visual Studio 2022 (17.8 o superior) con la carga de trabajo **Desarrollo de la interfaz de usuario de aplicaciones multiplataforma de .NET** (.NET MAUI) y el SDK de Android.

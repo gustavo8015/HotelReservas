@@ -14,7 +14,7 @@ Diseñar y construir un sistema transaccional, implementado como aplicación mó
 
 La transacción crítica del sistema es **confirmar reserva**: verificar disponibilidad, bloquear la habitación para el rango de fechas, registrar el huésped y el pago, y emitir el comprobante, todo como una única unidad de trabajo con propiedades ACID. Si alguna parte falla, no queda ningún cambio a medias.
 
-## Estado actual: Entrega S9 (Fase III: requerimientos, marcos y servicio de IA)
+## Estado actual: Entrega S12 (APK v0.4: inicio de sesión, roles, total con IVA y módulo de administración)
 
 | Entrega | Contenido | Estado |
 |---|---|---|
@@ -22,11 +22,26 @@ La transacción crítica del sistema es **confirmar reserva**: verificar disponi
 | S8 | Fase II: información general, objetivos, arquitectura, casos de uso, diagrama de clases y modelo relacional; scripts SQL del modelo y de la transacción | Entregada |
 | S9 | Fase III: requerimientos funcionales (RF01 a RF15) y no funcionales (RNF01 a RNF05), MER y arquitectura de la base de datos, marco conceptual, marco contextual, marco integrador con el servicio de IA (modelo de datos, modelo de IA, lógica de integración, interfaz e infraestructura) y prototipo de pantallas | Entregada |
 | S10 | Cálculo de impuestos y precio neto (RF16), comprobante compartible por WhatsApp (RF17) y reserva rápida para huésped frecuente (RF18); prototipo funcional en la APK v0.3; script 05 con el desglose de impuestos en la transacción; auditoría presencial | Entregada |
-| **S11** | **API REST en ASP.NET Core (`HotelReservas.Api`): JWT, disponibilidad, confirmación transaccional vía `sp_ConfirmarReserva` (201/409), cambios de estado con ROWVERSION, huésped frecuente, comprobante compartible y el servicio de IA de la sección 13 (`/api/asistente`, Azure OpenAI con llamada a funciones de solo lectura + intérprete de reglas de respaldo, tabla `CONSULTA_ASISTENTE`)** | **Actual** |
-| Siguiente | Conexión de la app a la API, CRUD de huéspedes, habitaciones y reservas | Pendiente |
+| S11 | API REST en ASP.NET Core (`HotelReservas.Api`): JWT, disponibilidad, confirmación transaccional vía `sp_ConfirmarReserva` (201/409), cambios de estado con ROWVERSION, huésped frecuente, comprobante compartible y el servicio de IA de la sección 13 (`/api/asistente`, Azure OpenAI con llamada a funciones de solo lectura + intérprete de reglas de respaldo, tabla `CONSULTA_ASISTENTE`) | Entregada |
+| **S12** | **APK v0.4: inicio de sesión con los perfiles recepcionista y administrador (RF01), total con IVA en la confirmación y el comprobante (RF16), módulo Administración para crear, editar y eliminar usuarios (RF14) y clientes (RF02) reservado al administrador; proyecto Android Studio (`HotelReservasDemo_AndroidStudio/`) para generar la APK sin Visual Studio; documento maestro con las Figuras 15 a 17** | **Actual** |
+| Siguiente | Conexión de la app a la API y CRUD de habitaciones y reservas | Pendiente |
 | Final | Demostración de concurrencia (dos usuarios, última habitación) y pruebas | Pendiente |
 
-### Qué se agregó en esta entrega (S11): la API y el servicio de IA
+### Qué se agregó en esta entrega (S12): inicio de sesión, roles y módulo de administración
+
+- **Inicio de sesión y roles (CU-01, RF01, RNF01)**: la app abre en la pantalla Iniciar sesión. Usuarios de prueba (script 06): `recepcion1@hotel.com` (RECEPCIONISTA) y `admin@hotel.com` (ADMINISTRADOR), contraseña `Hotel2026*`. Credenciales incorrectas responden 401; la sesión muestra nombre y perfil y se puede cerrar. El perfil decide lo que se ve: el módulo Administración y el botón Cancelar reserva aparecen solo al administrador, y la bitácora registra el usuario de la sesión activa.
+- **Total con IVA (RF16)**: el resumen de la confirmación muestra subtotal de alojamiento, IVA 19 % y **Total con IVA**; el mismo valor aparece en el campo Total a pagar, en el mensaje de confirmación (subtotal + IVA = total) y en el comprobante compartible. El huésped extranjero no residente queda exento.
+- **Módulo Administración (CU-14 / RF14 y CU-02 / RF02)**, solo para el administrador: pestaña Usuarios (listar, crear con contraseña protegida por hash, editar, eliminar, desactivar y reactivar; correo único; un recepcionista con movimientos en la bitácora se desactiva en lugar de borrarse; la cuenta de administrador está protegida y no se puede eliminar ni cambiar de rol) y pestaña Clientes (listar, crear, editar y eliminar huéspedes; documento único; un cliente con reservas no se elimina para conservar el historial). Los clientes creados quedan disponibles de inmediato en la confirmación de reservas.
+- **`HotelReservasDemo_AndroidStudio/`**: proyecto Android nativo (Kotlin + WebView) que empaqueta el mismo prototipo en una APK desde Android Studio, como alternativa a Visual Studio con .NET MAUI (ver `LEEME_ANDROID_STUDIO.md`). `HotelReservas/Resources/Raw/prototipo.html` (MAUI) y `docs/auditoria/Prototipo_Interactivo.html` llevan la misma versión 0.4.
+- Documento maestro actualizado: RF01, RF02 y RF14 en la Tabla 2, Figura 11 con el total con IVA y nuevas Figuras 15 (inicio de sesión), 16 (administración de usuarios) y 17 (administración de clientes).
+
+<p align="center">
+  <img src="docs/prototipo/iniciar-sesion.png" width="230" alt="Inicio de sesión">
+  <img src="docs/prototipo/administracion-usuarios.png" width="230" alt="Administración de usuarios">
+  <img src="docs/prototipo/administracion-clientes.png" width="230" alt="Administración de clientes">
+</p>
+
+### Qué se agregó en la entrega S11: la API y el servicio de IA
 
 - **`HotelReservas.Api/`**: proyecto ASP.NET Core 8 + Entity Framework Core + SQL Server. Es la capa de lógica de negocio y de acceso a datos de la arquitectura en capas. Recursos: `POST /api/auth/login` (JWT), `GET /api/disponibilidad`, `POST /api/reservas` (ejecuta `sp_ConfirmarReserva`: 201 o **409** si la habitación ya no está disponible), `PUT /api/reservas/{codigo}/checkin|checkout|cancelar` (concurrencia optimista con `versionFila`), `GET /api/huespedes?documento=` (RF18), `GET /api/comprobantes/{numero}/compartir` (RF17) y `POST /api/asistente`.
 - **Servicio de IA (sección 13 del documento) implementado en `HotelReservas.Api/Asistente/`**: `OrquestadorAsistente` (lógica de integración: filtro de datos personales → intérprete → validación contra el catálogo de solo lectura → ejecución → registro en `CONSULTA_ASISTENTE`), `CatalogoFunciones` (consultarDisponibilidad, consultarTarifa, consultarReserva, consultarLlegadas, consultarReservasConfirmadas), `InterpreteAzureOpenAI` (GPT-4o por Azure OpenAI Service con `tools`/`tool_choice`, mensaje de sistema que lo limita a los resultados de las funciones) e `InterpreteReglas` (respaldo sin internet con las mismas funciones). El asistente nunca crea, modifica ni cancela reservas.
@@ -162,6 +177,8 @@ HotelReservas/
 │   ├── Servicios/ServicioReservas.cs sp_ConfirmarReserva (409 en 50001), cambios de estado con ROWVERSION
 │   ├── Asistente/                    Orquestador, catálogo de funciones de lectura, intérpretes (Azure OpenAI y reglas)
 │   └── Data/                         DbContext y entidades (10 tablas)
+├── HotelReservasDemo_AndroidStudio/   Proyecto Android Studio (Kotlin + WebView) que empaqueta el prototipo v0.4 en una APK
+│   └── app/src/main/assets/prototipo.html
 ├── docs/
 │   ├── FaseI_Documentacion_Proyecto_S7_Hotel_Reservas.pdf
 │   ├── FaseII_Documentacion_Proyecto_S8_Hotel_Reservas.pdf / .docx
@@ -197,6 +214,12 @@ HotelReservas/
 ```bash
 dotnet build -f net8.0-android -c Release
 ```
+
+**Aplicación móvil con Android Studio (alternativa sin Visual Studio)**
+
+1. Abrir la carpeta `HotelReservasDemo_AndroidStudio/` en Android Studio y esperar la sincronización de Gradle.
+2. Ejecutar en un emulador o teléfono (Run), o generar la APK con **Build > Build Bundle(s) / APK(s) > Build APK(s)**.
+3. Iniciar sesión con `admin@hotel.com` o `recepcion1@hotel.com` y la contraseña `Hotel2026*`.
 
 ## Documentos relacionados
 
