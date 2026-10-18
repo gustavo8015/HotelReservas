@@ -1,0 +1,9 @@
+<resources>
+    <style name="Theme.HotelReservas" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">#0B2A5B</item>
+        <item name="colorPrimaryDark">#0B2A5B</item>
+        <item name="colorAccent">#1F6B3D</item>
+        <item name="android:statusBarColor">#0B2A5B</item>
+        <item name="android:windowBackground">#F2F5F8</item>
+    </style>
+</resources>
