@@ -1,0 +1,295 @@
+[
+  {
+    "prueba": "P1 Servicio activo",
+    "metodo": "GET",
+    "ruta": "/",
+    "solicitud": null,
+    "codigo_http": 200,
+    "respuesta": {
+      "servicio": "Hotel Reservas · Servicio inteligente",
+      "estado": "activo",
+      "tensorflow": "2.21.0",
+      "modelos": [
+        "modelo_cancelacion.keras (clasificacion, RF19)",
+        "modelo_ocupacion.keras (regresion, RF21)"
+      ]
+    },
+    "resultado": "PASA"
+  },
+  {
+    "prueba": "P2 Metricas de validacion disponibles",
+    "metodo": "GET",
+    "ruta": "/metricas",
+    "solicitud": null,
+    "codigo_http": 200,
+    "respuesta": {
+      "cancelacion": {
+        "exactitud": 0.8625,
+        "precision": 0.9,
+        "sensibilidad": 0.8372093023255814,
+        "f1": 0.8674698795180723,
+        "matriz_confusion": {
+          "VP": 36,
+          "FN": 7,
+          "FP": 4,
+          "VN": 33
+        },
+        "perdida_final_entrenamiento": 0.2653871774673462,
+        "perdida_final_validacion": 0.42248767614364624,
+        "ejemplos_entrenamiento": 320,
+        "ejemplos_validacion": 80,
+        "epocas_ejecutadas": 36,
+        "mejor_epoca": 11
+      },
+      "ocupacion": {
+        "MAE_habitaciones": 0.9436324834823608,
+        "MSE_habitaciones2": 1.3927075862884521,
+        "RMSE_habitaciones": 1.1801303259760982,
+        "R2": 0.8549894094467163,
+        "MAE_porcentaje_capacidad": 3.7745299339294434,
+        "dias_entrenamiento": 292,
+        "dias_validacion": 73,
+        "epocas": 300,
+        "perdida_final_entrenamiento": 0.0019783247262239456,
+        "perdida_final_validacion": 0.002228331984952092
+      },
+      "tensorflow": "2.21.0"
+    },
+    "resultado": "PASA"
+  },
+  {
+    "prueba": "P3 Cancelacion: reserva con tarjeta, 2 dias, frecuente → riesgo bajo",
+    "metodo": "POST",
+    "ruta": "/predecir/cancelacion",
+    "solicitud": {
+      "anticipacion_dias": 2,
+      "noches": 2,
+      "personas": 2,
+      "tipo": "Doble",
+      "medio_pago": "TARJETA",
+      "huesped_frecuente": true,
+      "fin_de_semana": false
+    },
+    "codigo_http": 200,
+    "respuesta": {
+      "probabilidad_cancelacion": 0.0022,
+      "nivel": "BAJO",
+      "recomendacion": "Sin accion adicional.",
+      "nota": "Modelo entrenado con historial simulado; validar con datos reales del hotel antes de uso operativo."
+    },
+    "resultado": "PASA"
+  },
+  {
+    "prueba": "P4 Cancelacion: efectivo, 55 dias, no frecuente → riesgo alto",
+    "metodo": "POST",
+    "ruta": "/predecir/cancelacion",
+    "solicitud": {
+      "anticipacion_dias": 55,
+      "noches": 3,
+      "personas": 2,
+      "tipo": "Suite",
+      "medio_pago": "EFECTIVO",
+      "huesped_frecuente": false,
+      "fin_de_semana": false
+    },
+    "codigo_http": 200,
+    "respuesta": {
+      "probabilidad_cancelacion": 0.9955,
+      "nivel": "ALTO",
+      "recomendacion": "Solicitar garantia con tarjeta o anticipo y enviar recordatorio por WhatsApp dos dias antes.",
+      "nota": "Modelo entrenado con historial simulado; validar con datos reales del hotel antes de uso operativo."
+    },
+    "resultado": "PASA"
+  },
+  {
+    "prueba": "P5 Cancelacion: dato fuera de rango (anticipacion -3) → 422",
+    "metodo": "POST",
+    "ruta": "/predecir/cancelacion",
+    "solicitud": {
+      "anticipacion_dias": -3,
+      "noches": 2,
+      "personas": 2,
+      "tipo": "Doble",
+      "medio_pago": "TARJETA",
+      "huesped_frecuente": false,
+      "fin_de_semana": false
+    },
+    "codigo_http": 422,
+    "respuesta": {
+      "detail": [
+        {
+          "type": "greater_than_equal",
+          "loc": [
+            "body",
+            "anticipacion_dias"
+          ],
+          "msg": "Input should be greater than or equal to 0",
+          "input": -3,
+          "ctx": {
+            "ge": 0
+          }
+        }
+      ]
+    },
+    "resultado": "PASA"
+  },
+  {
+    "prueba": "P6 Cancelacion: medio de pago no valido → 422",
+    "metodo": "POST",
+    "ruta": "/predecir/cancelacion",
+    "solicitud": {
+      "anticipacion_dias": 3,
+      "noches": 2,
+      "personas": 2,
+      "tipo": "Doble",
+      "medio_pago": "CHEQUE",
+      "huesped_frecuente": false,
+      "fin_de_semana": false
+    },
+    "codigo_http": 422,
+    "respuesta": {
+      "detail": [
+        {
+          "type": "literal_error",
+          "loc": [
+            "body",
+            "medio_pago"
+          ],
+          "msg": "Input should be 'TARJETA', 'EFECTIVO' or 'TRANSFERENCIA'",
+          "input": "CHEQUE",
+          "ctx": {
+            "expected": "'TARJETA', 'EFECTIVO' or 'TRANSFERENCIA'"
+          }
+        }
+      ]
+    },
+    "resultado": "PASA"
+  },
+  {
+    "prueba": "P7 Ocupacion: sabado de temporada alta con 15 reservas → ocupacion alta",
+    "metodo": "POST",
+    "ruta": "/predecir/ocupacion",
+    "solicitud": {
+      "fecha": "2026-12-19",
+      "reservas_anticipadas": 15
+    },
+    "codigo_http": 200,
+    "respuesta": {
+      "fecha": "2026-12-19",
+      "habitaciones_ocupadas_previstas": 21.8,
+      "capacidad": 25,
+      "nivel": "ALTA"
+    },
+    "resultado": "PASA"
+  },
+  {
+    "prueba": "P8 Ocupacion: martes ordinario sin reservas → ocupacion baja",
+    "metodo": "POST",
+    "ruta": "/predecir/ocupacion",
+    "solicitud": {
+      "fecha": "2026-10-20",
+      "reservas_anticipadas": 0
+    },
+    "codigo_http": 200,
+    "respuesta": {
+      "fecha": "2026-10-20",
+      "habitaciones_ocupadas_previstas": 5.2,
+      "capacidad": 25,
+      "nivel": "BAJA"
+    },
+    "resultado": "PASA"
+  },
+  {
+    "prueba": "P9 Ocupacion: pronostico de 7 dias",
+    "metodo": "POST",
+    "ruta": "/predecir/ocupacion/semana",
+    "solicitud": {
+      "desde": "2026-10-16",
+      "reservas_por_dia": [
+        1,
+        2,
+        1,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "codigo_http": 200,
+    "respuesta": {
+      "pronostico": [
+        {
+          "fecha": "2026-10-16",
+          "reservas_anticipadas": 1,
+          "habitaciones_ocupadas_previstas": 9.7,
+          "nivel": "BAJA"
+        },
+        {
+          "fecha": "2026-10-17",
+          "reservas_anticipadas": 2,
+          "habitaciones_ocupadas_previstas": 10.7,
+          "nivel": "BAJA"
+        },
+        {
+          "fecha": "2026-10-18",
+          "reservas_anticipadas": 1,
+          "habitaciones_ocupadas_previstas": 5.9,
+          "nivel": "BAJA"
+        },
+        {
+          "fecha": "2026-10-19",
+          "reservas_anticipadas": 0,
+          "habitaciones_ocupadas_previstas": 4.9,
+          "nivel": "BAJA"
+        },
+        {
+          "fecha": "2026-10-20",
+          "reservas_anticipadas": 0,
+          "habitaciones_ocupadas_previstas": 5.2,
+          "nivel": "BAJA"
+        },
+        {
+          "fecha": "2026-10-21",
+          "reservas_anticipadas": 0,
+          "habitaciones_ocupadas_previstas": 4.9,
+          "nivel": "BAJA"
+        },
+        {
+          "fecha": "2026-10-22",
+          "reservas_anticipadas": 0,
+          "habitaciones_ocupadas_previstas": 5.1,
+          "nivel": "BAJA"
+        }
+      ],
+      "capacidad": 25
+    },
+    "resultado": "PASA"
+  },
+  {
+    "prueba": "P10 Ocupacion: fecha invalida → 422",
+    "metodo": "POST",
+    "ruta": "/predecir/ocupacion",
+    "solicitud": {
+      "fecha": "31/02/2026",
+      "reservas_anticipadas": 3
+    },
+    "codigo_http": 422,
+    "respuesta": {
+      "detail": [
+        {
+          "type": "date_from_datetime_parsing",
+          "loc": [
+            "body",
+            "fecha"
+          ],
+          "msg": "Input should be a valid date or datetime, invalid character in year",
+          "input": "31/02/2026",
+          "ctx": {
+            "error": "invalid character in year"
+          }
+        }
+      ]
+    },
+    "resultado": "PASA"
+  }
+]
