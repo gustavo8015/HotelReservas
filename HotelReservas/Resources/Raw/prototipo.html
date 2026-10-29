@@ -68,10 +68,40 @@ body.apk .fab{display:flex}
 <div class="card"><span class="lbl">Contraseña</span><input id="lClave" type="password" value="Hotel2026*" autocomplete="current-password" onkeydown="if(event.key==='Enter')login()"></div>
 <div id="loginRes"></div>
 <button class="btn p" onclick="login()">Entrar</button>
-<div class="card" style="margin-top:12px;font-size:12px"><span class="lbl">Usuarios de prueba (script 06)</span><br>
-<b>recepcion1@hotel.com</b> · RECEPCIONISTA: reservas, check-in, check-out, historial, asistente.<br>
-<b>admin@hotel.com</b> · ADMINISTRADOR: todo lo anterior más el módulo Administración (usuarios y clientes) y la cancelación de reservas.<br>Contraseña de ambos: <b>Hotel2026*</b></div>
+<button class="btn s" onclick="document.getElementById('regForm').style.display=document.getElementById('regForm').style.display?'':'none'">¿Es huésped? Cree su cuenta</button>
+<div id="regForm" style="display:none">
+<h3>Registro de huésped (usuario normal)</h3>
+<div class="card"><span class="lbl">Nombre completo</span><input id="rNombre" placeholder="Nombres y apellidos"></div>
+<div class="row"><div class="card"><span class="lbl">Tipo doc.</span><select id="rTipo"><option>CC</option><option>CE</option><option>PA</option><option>TI</option></select></div><div class="card"><span class="lbl">Número</span><input id="rDoc" placeholder="1010101010"></div></div>
+<div class="row"><div class="card"><span class="lbl">Teléfono (WhatsApp)</span><input id="rTel" placeholder="3001234567"></div><div class="card"><span class="lbl">Correo</span><input id="rCorreo" placeholder="nombre@correo.com"></div></div>
+<div class="card"><span class="lbl">Contraseña (mínimo 8)</span><input id="rClave" type="password"></div>
+<div id="regRes"></div>
+<button class="btn p" onclick="registrar()">Crear mi cuenta</button>
 </div>
+<div class="card" style="margin-top:12px;font-size:12px"><span class="lbl">Usuarios de prueba (script 06)</span><br>
+<b>admin@hotel.com</b> · ADMINISTRADOR: precios, habitaciones, usuarios, clientes y eliminación de reservas.<br>
+<b>recepcion1@hotel.com</b> · RECEPCIONISTA: reservar, pagos, check-in, check-out, cancelar reservas, historial de su actividad.<br>Contraseña de ambos: <b>Hotel2026*</b><br>
+<b>laura@correo.com</b> · USUARIO NORMAL (huésped): reservar, pagar, ver sus reservas y salir. Contraseña: <b>Cliente2026*</b></div>
+</div>
+
+<!-- INICIO DEL CLIENTE (usuario normal) -->
+<div class="view" id="v-cli">
+<div class="hero"><div class="k">SISTEMA TRANSACCIONAL</div><h1 id="cliHola">Hola</h1><p>Reserve su habitación, pague en línea y reciba la confirmación por WhatsApp o correo.</p></div>
+<div class="stats"><div class="card"><b style="color:var(--naranja)" id="cPend">0</b><span class="lbl">Por pagar</span></div><div class="card"><b style="color:var(--verde)" id="cConf">0</b><span class="lbl">Confirmadas</span></div><div class="card"><b style="color:var(--azul)" id="cEst">0</b><span class="lbl">Estadías</span></div></div>
+<h3>¿Qué desea hacer?</h3>
+<div class="mods">
+<div class="card" onclick="go('disp')"><b>Reservar</b><span>Consultar disponibilidad y reservar.</span></div>
+<div class="card" onclick="go('misres')"><b>Mis reservas</b><span>Pagar, ver comprobantes o cancelar.</span></div>
+</div>
+<button class="btn p" onclick="go('disp')">Nueva reserva</button>
+<div class="card" style="margin-top:10px"><span class="lbl">Mi cuenta</span><br><span id="cliInfo"></span><button class="btn s" style="height:34px;font-size:12px" onclick="logout()">Salir (cerrar sesión)</button></div>
+</div>
+
+<!-- MIS RESERVAS (cliente) -->
+<div class="view" id="v-misres"><div id="misresList"></div></div>
+
+<!-- MI ACTIVIDAD (recepcionista y administrador) -->
+<div class="view" id="v-act"><div class="card"><span class="lbl">Registro de la sesión</span><br><span id="actInfo"></span></div><div id="actList"></div></div>
 
 <!-- INICIO -->
 <div class="view on" id="v-inicio">
@@ -84,6 +114,7 @@ body.apk .fab{display:flex}
 <div class="card" onclick="go('habs')"><b>Habitaciones</b><span>Inventario, tipos y estados.</span></div>
 <div class="card" onclick="go('hist')"><b>Historial</b><span>Reservas, comprobantes y bitácora.</span></div>
 <div class="card" onclick="go('ia')"><b>Asistente</b><span>Consultas en lenguaje natural.</span></div>
+<div class="card" onclick="go('rn')"><b>Red neuronal</b><span>Predicción del riesgo de cancelación.</span></div>
 <div class="card" id="modAdmin" style="display:none;border-color:var(--azul)" onclick="go('admin')"><b>Administración</b><span>Usuarios y clientes: crear, editar y eliminar.</span></div>
 </div>
 <button class="btn p" onclick="go('disp')">Nueva reserva</button>
@@ -91,12 +122,20 @@ body.apk .fab{display:flex}
 <div class="card" style="margin:0"><span class="lbl">Documento del huésped</span>
 <div class="input" style="margin-top:4px"><input id="qDoc" placeholder="Ej. 2020202020" onkeydown="if(event.key==='Enter')frecuente()"><button onclick="frecuente()">Buscar</button></div>
 <div id="freqRes"><span class="lbl" style="text-transform:none;letter-spacing:0">Con solo el número de documento la app reconoce al huésped frecuente, carga sus datos y le propone repetir su última estadía en un toque.</span></div></div>
-<div class="card" style="margin-top:10px"><span class="lbl">Sesión</span><br><span id="sesInfo"></span><button class="btn s" style="height:34px;font-size:12px" onclick="logout()">Cerrar sesión</button></div>
+<div class="card" style="margin-top:10px"><span class="lbl">Sesión</span><br><span id="sesInfo"></span><div class="row"><button class="btn s" style="height:34px;font-size:12px" onclick="go('act')">Mi actividad</button><button class="btn s" style="height:34px;font-size:12px" onclick="logout()">Cerrar sesión</button></div></div>
 </div>
 
 <!-- ADMINISTRACIÓN (CU-14 gestionar usuarios · CU-02 huéspedes) · solo ADMINISTRADOR -->
 <div class="view" id="v-admin">
-<div class="row" style="margin-bottom:8px"><button class="btn s" id="bAdmU" style="margin:0" onclick="admTab('usuarios')">Usuarios</button><button class="btn s" id="bAdmH" style="margin:0" onclick="admTab('clientes')">Clientes</button></div>
+<div class="row" style="margin-bottom:8px"><button class="btn s" id="bAdmU" style="margin:0" onclick="admTab('usuarios')">Usuarios</button><button class="btn s" id="bAdmH" style="margin:0" onclick="admTab('clientes')">Clientes</button><button class="btn s" id="bAdmT" style="margin:0" onclick="admTab('tarifas')">Precios y hab.</button></div>
+<div id="admTarifas" style="display:none">
+<h3>Precios por noche (tarifas vigentes)</h3><div id="tarList"></div>
+<h3>Habitaciones</h3><div id="habAdmList"></div>
+<h3>Nueva habitación</h3>
+<div class="row"><div class="card"><span class="lbl">Número</span><input id="hNum" placeholder="604"></div><div class="card"><span class="lbl">Piso</span><input id="hPiso" type="number" value="6" min="1" max="20"></div><div class="card"><span class="lbl">Tipo</span><select id="hTipo"><option value="1">Sencilla</option><option value="2" selected>Doble</option><option value="3">Suite</option></select></div></div>
+<div id="habRes"></div>
+<button class="btn p" onclick="crearHab()">Crear habitación</button>
+</div>
 <div id="admUsuarios">
 <h3>Usuarios del sistema</h3><div id="usuList"></div>
 <h3 id="usuFormT">Nuevo usuario</h3>
@@ -111,6 +150,7 @@ body.apk .fab{display:flex}
 <h3 id="cliFormT">Nuevo cliente</h3>
 <div class="card"><span class="lbl">Nombre completo</span><input id="cNombre" placeholder="Nombres y apellidos"></div>
 <div class="row"><div class="card"><span class="lbl">Tipo doc.</span><select id="cTipo"><option>CC</option><option>CE</option><option>PA</option><option>TI</option></select></div><div class="card"><span class="lbl">Número</span><input id="cDoc" placeholder="1010101010"></div></div>
+<div class="card"><span class="lbl">Correo electrónico</span><input id="cCorreo" placeholder="nombre@correo.com"></div>
 <div class="row"><div class="card"><span class="lbl">Teléfono (WhatsApp)</span><input id="cTel" placeholder="3001234567"></div><div class="card" style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="cExt" style="width:20px;height:20px;margin:0"><label for="cExt" style="font-size:12px;line-height:1.2">Extranjero no residente (exento de IVA)</label></div></div>
 <div id="cliRes"></div>
 <button class="btn p" id="cGuardar" onclick="guardarCliente()">Crear cliente</button><button class="btn d" id="cCancel" style="display:none" onclick="limpiarCliente()">Cancelar edición</button>
@@ -127,12 +167,20 @@ body.apk .fab{display:flex}
 
 <!-- CONFIRMAR -->
 <div class="view" id="v-conf">
-<div class="card"><span class="lbl">Huésped</span><select id="fHuesped"></select><span class="lbl" id="huDoc"></span><div id="freqTag"></div></div>
+<div class="card"><span class="lbl">Huésped · documento</span>
+<div class="row"><div><span class="lbl">Tipo</span><select id="fTipoDoc" onchange="huLookup()"><option>CC</option><option>CE</option><option>PA</option><option>TI</option></select></div><div style="flex:2"><span class="lbl">Número de documento</span><input id="fDoc" inputmode="numeric" placeholder="Ej. 1010101010" oninput="huLookup()"></div></div>
+<span class="lbl" id="huDoc" style="text-transform:none;letter-spacing:0"></span><div id="freqTag"></div>
+<select id="fHuesped" style="display:none"></select></div>
+<div class="card"><span class="lbl">Nombre completo del huésped</span><input id="fNombre" placeholder="Nombres y apellidos" oninput="canalDest()"></div>
+<div class="row"><div class="card"><span class="lbl">Teléfono (WhatsApp)</span><input id="fTel" inputmode="tel" placeholder="3001234567" oninput="canalDest()"></div><div class="card"><span class="lbl">Correo</span><input id="fCorreo" inputmode="email" placeholder="nombre@correo.com" oninput="canalDest()"></div></div>
 <div class="card" style="display:flex;gap:10px;align-items:center"><input type="checkbox" id="fExento" style="width:20px;height:20px;margin:0" onchange="recalc()"><label for="fExento" style="font-size:12.5px;line-height:1.3"><b>Huésped extranjero no residente</b><br><span class="lbl" style="text-transform:none;letter-spacing:0">Alojamiento exento de IVA (art. 481 E.T.) · requiere pasaporte y tarjeta migratoria</span></label></div>
 <div class="card"><table class="sum" style="width:100%" id="resumen"></table></div>
+<div class="card" id="riesgoCard" style="border-color:var(--azul)"></div>
 <div class="row"><div class="card"><span class="lbl">Medio de pago</span><select id="fMedio"><option>TARJETA</option><option>EFECTIVO</option><option>TRANSFERENCIA</option></select></div><div class="card"><span class="lbl">Total a pagar (IVA incluido)</span><input id="fPago" readonly></div></div>
+<div class="card"><span class="lbl">Recibir la confirmación por</span><div class="row" style="margin-top:6px"><label style="display:flex;gap:6px;align-items:center;font-size:13px"><input type="radio" name="canal" value="WHATSAPP" checked style="width:18px;height:18px;margin:0"> WhatsApp</label><label style="display:flex;gap:6px;align-items:center;font-size:13px"><input type="radio" name="canal" value="CORREO" style="width:18px;height:18px;margin:0"> Correo electrónico</label></div><span class="lbl" id="canalDest" style="text-transform:none;letter-spacing:0"></span></div>
 <div class="warn">Al confirmar, el servidor vuelve a verificar la disponibilidad con bloqueo y registra en una sola transacción la reserva, el pago, el comprobante y la bitácora. Si otra persona tomó la habitación, no se guarda nada.</div>
-<button class="btn p" onclick="confirmar()">Confirmar reserva</button>
+<button class="btn p" id="bConfirmar" onclick="confirmar(true)">Confirmar reserva</button>
+<button class="btn s" id="bPendiente" style="display:none" onclick="confirmar(false)">Reservar y pagar después (queda pendiente)</button>
 <button class="btn d" onclick="go('disp')">Cancelar</button>
 <div id="confRes"></div>
 </div>
@@ -143,6 +191,39 @@ body.apk .fab{display:flex}
 <!-- HISTORIAL -->
 <div class="view" id="v-hist"><h3>Reservas</h3><div id="histList"></div><h3>Bitácora</h3><div class="card" id="bitList" style="font-size:12px"></div></div>
 
+<!-- RED NEURONAL (predicción de cancelaciones) -->
+<div class="view" id="v-rn">
+<div class="row" style="margin-bottom:8px"><button class="btn p" id="bRnC" style="margin:0" onclick="rnTab('clas')">Cancelación · clasificación</button><button class="btn s" id="bRnR" style="margin:0" onclick="rnTab('reg')">Ocupación · regresión</button></div>
+<div id="rnReg" style="display:none">
+<div class="card"><b>Red de regresión 5-6-1 · pronóstico de ocupación</b><br><span class="lbl" style="text-transform:none;letter-spacing:0">Predice cuántas de las 25 habitaciones estarán ocupadas un día dado, a partir del día de la semana, el fin de semana, la temporada y las reservas ya registradas para esa fecha. Se entrena con 365 días de historial (simulado en el prototipo) minimizando el error cuadrático medio.</span></div>
+<div class="stats"><div class="card"><b style="color:var(--azul)" id="rgMae">0</b><span class="lbl">MAE (hab.)</span></div><div class="card"><b style="color:var(--naranja)" id="rgRmse">0</b><span class="lbl">RMSE (hab.)</span></div><div class="card"><b style="color:var(--verde)" id="rgR2">0</b><span class="lbl">R²</span></div></div>
+<h3>Real frente a predicho (últimos 30 días de validación)</h3>
+<div class="card"><canvas id="rgChart" width="336" height="150" style="width:100%;height:150px"></canvas><div class="lbl" style="text-transform:none;letter-spacing:0;margin-top:6px"><span style="color:var(--azul)">■</span> ocupación real &nbsp; <span style="color:var(--naranja)">■</span> predicha por la red</div></div>
+<h3>Métricas de regresión (validación, 73 días)</h3>
+<div class="card" id="rgTabla"></div>
+<button class="btn s" onclick="rgEntrenar();rgRender()">Entrenar de nuevo</button>
+<h3>Pronóstico de ocupación · próximos 7 días</h3>
+<div class="card" id="rgPron"></div>
+</div>
+<div id="rnClas">
+<div class="card"><b>Perceptrón multicapa (MLP) 8-8-1</b><br><span class="lbl" style="text-transform:none;letter-spacing:0">Estima la probabilidad de que una reserva confirmada termine cancelada o en no presentación, a partir de ocho variables de la reserva. Se entrena en el dispositivo con el historial de reservas (en el prototipo, 400 reservas históricas simuladas con el patrón del hotel) mediante retropropagación del error.</span></div>
+<div class="stats"><div class="card"><b style="color:var(--azul)" id="rnTrain">0</b><span class="lbl">Entrenamiento</span></div><div class="card"><b style="color:var(--verde)" id="rnVal">0</b><span class="lbl">Validación</span></div><div class="card"><b style="color:var(--naranja)" id="rnAcc">0 %</b><span class="lbl">Exactitud</span></div></div>
+<h3>Entrenamiento (retropropagación)</h3>
+<div class="card"><canvas id="rnChart" width="336" height="150" style="width:100%;height:150px"></canvas><div id="rnInfo" class="lbl" style="text-transform:none;letter-spacing:0;margin-top:6px"></div></div>
+<div class="row"><div class="card"><span class="lbl">Épocas</span><select id="rnEpocas"><option>50</option><option>100</option><option selected>200</option><option>400</option></select></div><div class="card"><span class="lbl">Tasa de aprendizaje</span><select id="rnLr"><option selected>0.05</option><option>0.1</option><option>0.2</option></select></div></div>
+<button class="btn s" onclick="rnEntrenar()">Entrenar de nuevo</button>
+<h3>Matriz de confusión (validación)</h3>
+<div class="card" id="rnMatriz"></div>
+<h3>Probar una reserva</h3>
+<div class="row"><div class="card"><span class="lbl">Anticipación (días)</span><input id="pAnt" type="number" value="20" min="0" max="120"></div><div class="card"><span class="lbl">Noches</span><input id="pNoc" type="number" value="2" min="1" max="14"></div></div>
+<div class="row"><div class="card"><span class="lbl">Tipo</span><select id="pTipo"><option value="1">Sencilla</option><option value="2" selected>Doble</option><option value="3">Suite</option></select></div><div class="card"><span class="lbl">Personas</span><select id="pPers"><option>1</option><option selected>2</option><option>3</option><option>4</option></select></div></div>
+<div class="row"><div class="card"><span class="lbl">Medio de pago</span><select id="pMedio"><option>TARJETA</option><option>EFECTIVO</option><option>TRANSFERENCIA</option></select></div><div class="card"><span class="lbl">Huésped frecuente</span><select id="pFrec"><option value="0">No</option><option value="1">Sí</option></select></div></div>
+<div class="row"><div class="card"><span class="lbl">Entrada en fin de semana</span><select id="pFin"><option value="0">No</option><option value="1">Sí</option></select></div></div>
+<button class="btn p" onclick="rnProbar()">Calcular riesgo</button>
+<div id="rnRes"></div>
+</div>
+</div>
+
 <!-- ASISTENTE -->
 <div class="view" id="v-ia">
 <div id="chat"><div class="msg ia">Hola. Puedo consultar disponibilidad, tarifas, reservas y llegadas. No creo ni modifico reservas.<small>Funciones de solo lectura · Azure OpenAI (simulado en el prototipo)</small></div></div>
@@ -152,7 +233,7 @@ body.apk .fab{display:flex}
 
 </div>
 <div class="tabs">
-<div id="t-inicio" class="on" onclick="go('inicio')"><i></i>Inicio</div><div id="t-disp" onclick="go('disp')"><i></i>Reservas</div><div id="t-habs" onclick="go('habs')"><i></i>Habitaciones</div><div id="t-hist" onclick="go('hist')"><i></i>Historial</div><div id="t-ia" onclick="go('ia')"><i></i>Asistente</div><div id="t-admin" style="display:none" onclick="go('admin')"><i></i>Admin</div>
+<div id="t-inicio" class="on" onclick="go('inicio')"><i></i>Inicio</div><div id="t-disp" onclick="go('disp')"><i></i>Reservas</div><div id="t-habs" onclick="go('habs')"><i></i>Habitaciones</div><div id="t-hist" onclick="go('hist')"><i></i>Historial</div><div id="t-ia" onclick="go('ia')"><i></i>Asistente</div><div id="t-rn" onclick="go('rn')"><i></i>Predicción</div><div id="t-admin" style="display:none" onclick="go('admin')"><i></i>Admin</div>
 </div>
 </div></div>
 
@@ -175,14 +256,18 @@ const tipos={1:{nombre:'Sencilla',cap:1,tarifa:120000},2:{nombre:'Doble',cap:2,t
 const habs=[];const plan=[[1,1],[1,1],[1,2],[1,2],[1,3],[2,1],[2,1],[2,2],[2,2],[2,3],[3,1],[3,1],[3,2],[3,2],[3,3],[4,1],[4,1],[4,2],[4,2],[4,3],[5,1],[5,1],[5,2],[5,2],[5,3]];
 plan.forEach(([piso,tipo],i)=>{const n=piso*100+(i%5)+1;habs.push({id:i+1,numero:String(n),piso,tipo,estado:n===302?'MANTENIMIENTO':'DISPONIBLE'})});
 // Huéspedes: tel para el comprobante por WhatsApp; estadias/ultima para la reserva rápida (huésped frecuente = 2 o más estadías)
-const huespedes=[{id:1,nombre:'Laura Martínez Pérez',doc:'CC 1010101010',tel:'573001234567',estadias:1},
- {id:2,nombre:'Carlos Gómez Rojas',doc:'CC 2020202020',tel:'573109876543',estadias:4,ultima:{tipo:2,pers:2,medio:'TARJETA',hab:'204',noches:1,fecha:'2026-09-26'}},
- {id:3,nombre:'Ana Silva Duarte',doc:'CE 3030303030',tel:'573157654321',estadias:2,ultima:{tipo:3,pers:2,medio:'TRANSFERENCIA',hab:'105',noches:4,fecha:'2026-10-15'}},
- {id:4,nombre:'John Walker Smith',doc:'PA AB123456',tel:'13055550147',estadias:0,extranjero:true}];
+const huespedes=[{id:1,nombre:'Laura Martínez Pérez',doc:'CC 1010101010',tel:'573001234567',correo:'laura@correo.com',estadias:1},
+ {id:2,nombre:'Carlos Gómez Rojas',doc:'CC 2020202020',tel:'573109876543',correo:'carlos.gomez@correo.com',estadias:4,ultima:{tipo:2,pers:2,medio:'TARJETA',hab:'204',noches:1,fecha:'2026-09-26'}},
+ {id:3,nombre:'Ana Silva Duarte',doc:'CE 3030303030',tel:'573157654321',correo:'ana.silva@correo.com',estadias:2,ultima:{tipo:3,pers:2,medio:'TRANSFERENCIA',hab:'105',noches:4,fecha:'2026-10-15'}},
+ {id:4,nombre:'John Walker Smith',doc:'PA AB123456',tel:'13055550147',correo:'john.walker@mail.com',estadias:0,extranjero:true}];
 // Usuarios del sistema (tabla USUARIO, script 06: contraseñas PBKDF2 · aquí en claro solo para el prototipo)
 const usuarios=[{id:1,nombre:'Administrador del hotel',correo:'admin@hotel.com',clave:'Hotel2026*',rol:'ADMINISTRADOR',activo:true},
  {id:2,nombre:'Recepcionista turno 1',correo:'recepcion1@hotel.com',clave:'Hotel2026*',rol:'RECEPCIONISTA',activo:true},
- {id:3,nombre:'Recepcionista turno 2',correo:'recepcion2@hotel.com',clave:'Hotel2026*',rol:'RECEPCIONISTA',activo:true}];
+ {id:3,nombre:'Recepcionista turno 2',correo:'recepcion2@hotel.com',clave:'Hotel2026*',rol:'RECEPCIONISTA',activo:true},
+ {id:4,nombre:'Laura Martínez Pérez',correo:'laura@correo.com',clave:'Cliente2026*',rol:'CLIENTE',idHuesped:1,activo:true}];
+// Registro de actividad por usuario (tabla ACTIVIDAD_USUARIO: quién hizo qué y cuándo)
+const HOTEL={correo:'hotelreservas2026@gmail.com',nombre:'Hotel Reservas'}; // cuenta del hotel desde la que la API envía las confirmaciones (SMTP Gmail)
+const actividad=[];function act(tipo,detalle){if(!sesion)return;actividad.push({usuario:sesion.usuario,rol:sesion.rol,tipo,detalle,fecha:'15/10 '+hora()})}
 let sesion=null;
 // Impuestos: IVA 19 % sobre el alojamiento; exento para extranjeros no residentes (art. 481 E.T.)
 const IVA=0.19;function calc(sub,exento){const iva=exento?0:Math.round(sub*IVA);return{sub,iva,neto:sub+iva,exento:!!exento}}
@@ -195,11 +280,12 @@ function seed(){ let t=calc(180000,false);reservas.push({id:1,codigo:'RSV0000000
 function habByNum(n){return habs.find(h=>h.numero===n)}
 const fmt=v=>'$ '+v.toLocaleString('es-CO');
 const noches=(a,b)=>Math.round((new Date(b)-new Date(a))/86400000);
-function solapa(h,ent,sal){return reservas.some(r=>r.hab.id===h.id&&['CONFIRMADA','EN_CASA'].includes(r.estado)&&r.entrada<sal&&r.salida>ent)}
+function solapa(h,ent,sal){return reservas.some(r=>r.hab.id===h.id&&['PENDIENTE','CONFIRMADA','EN_CASA'].includes(r.estado)&&r.entrada<sal&&r.salida>ent)}
 function log(t,cls){const el=document.getElementById('log');if(el.textContent.startsWith('Esperando'))el.textContent='';el.textContent+=t+'\n';el.scrollTop=el.scrollHeight}
 // ---------- Navegación ----------
-const titles={inicio:['Inicio','Hotel Reservas · prototipo'],disp:['Consultar disponibilidad','CU-03 · RF03'],conf:['Nueva reserva · Confirmación','CU-04, CU-05, CU-06 · RF04, RF05, RF16 impuestos'],habs:['Habitaciones','CU-11 · inventario y estados'],hist:['Historial y bitácora','CU-12 · RNF05 trazabilidad'],ia:['Asistente','Consultas en lenguaje natural · solo lectura'],login:['Iniciar sesión','CU-01 · RF01 autenticación JWT'],admin:['Administración','CU-14 usuarios · CU-02 clientes · solo ADMINISTRADOR']};
-function go(v){if(!sesion&&v!=='login')v='login';if(v==='admin'&&sesion.rol!=='ADMINISTRADOR'){v='inicio'}document.querySelector('.tabs').style.display=v==='login'?'none':'';document.querySelector('.appbar .back').style.visibility=v==='login'?'hidden':'';document.querySelectorAll('.view').forEach(x=>x.classList.remove('on'));document.getElementById('v-'+v).classList.add('on');document.querySelectorAll('.tabs div').forEach(x=>x.classList.remove('on'));const t=document.getElementById('t-'+(v==='conf'?'disp':v));if(t)t.classList.add('on');document.getElementById('title').textContent=titles[v][0];document.getElementById('subtitle').textContent=titles[v][1];if(v==='habs')renderHabs();if(v==='hist')renderHist();if(v==='inicio')kpis();if(v==='admin')renderAdmin();document.querySelector('.content').scrollTop=0}
+const titles={inicio:['Inicio','Hotel Reservas · prototipo'],disp:['Consultar disponibilidad','CU-03 · RF03'],conf:['Nueva reserva · Confirmación','CU-04, CU-05, CU-06 · RF04, RF05, RF16 impuestos'],habs:['Habitaciones','CU-11 · inventario y estados'],hist:['Historial y bitácora','CU-12 · RNF05 trazabilidad'],ia:['Asistente','Consultas en lenguaje natural · solo lectura'],login:['Iniciar sesión','CU-01 · RF01 autenticación JWT'],rn:['Red neuronal','RF19 · predicción del riesgo de cancelación'],cli:['Inicio','Hotel Reservas · huésped'],misres:['Mis reservas','Pagos, comprobantes y cancelaciones'],act:['Mi actividad','RNF05 · trazabilidad por usuario'],admin:['Administración','CU-14 usuarios · CU-02 clientes · solo ADMINISTRADOR']};
+const VISTAS_CLIENTE=['cli','disp','conf','misres','login'];
+function go(v){if(!sesion&&v!=='login')v='login';if(sesion&&sesion.rol==='CLIENTE'){if(v==='inicio')v='cli';if(!VISTAS_CLIENTE.includes(v))v='cli'}if(v==='admin'&&sesion.rol!=='ADMINISTRADOR'){v='inicio'}document.querySelector('.tabs').style.display=v==='login'?'none':'';document.querySelector('.appbar .back').style.visibility=v==='login'?'hidden':'';document.querySelectorAll('.view').forEach(x=>x.classList.remove('on'));document.getElementById('v-'+v).classList.add('on');document.querySelectorAll('.tabs div').forEach(x=>x.classList.remove('on'));const t=document.getElementById('t-'+(v==='conf'?'disp':v==='cli'?'inicio':v));if(t)t.classList.add('on');document.getElementById('title').textContent=titles[v][0];document.getElementById('subtitle').textContent=titles[v][1];if(v==='habs')renderHabs();if(v==='hist')renderHist();if(v==='inicio')kpis();if(v==='admin')renderAdmin();if(v==='rn'){rnRender();if(document.getElementById('rnReg').style.display!=='none')rgRender()}if(v==='cli')renderCli();if(v==='misres')renderMisRes();if(v==='act')renderAct();document.querySelector('.content').scrollTop=0}
 function kpis(){const hoy='2026-10-15';document.getElementById('kOcu').textContent=habs.filter(h=>h.estado==='OCUPADA').length;document.getElementById('kDis').textContent=habs.filter(h=>h.estado==='DISPONIBLE').length;document.getElementById('kRes').textContent=reservas.filter(r=>r.estado==='CONFIRMADA').length;
  document.getElementById('sRes').textContent=reservas.length;document.getElementById('sPag').textContent=pagos.length;document.getElementById('sCmp').textContent=comprobantes.length;document.getElementById('sBit').textContent=bitacora.length;document.getElementById('s409').textContent=conflictos;
  document.getElementById('tReserva').innerHTML=reservas.map(r=>`<tr><td>${r.id}</td><td>${r.codigo}</td><td>${r.hab.numero}</td><td>${huespedes.find(h=>h.id===r.huesped).nombre.split(' ')[0]}</td><td>${r.entrada}</td><td>${r.salida}</td><td>${fmt(r.sub)}</td><td>${fmt(r.iva)}</td><td>${fmt(r.valor)}</td><td>${r.estado}</td><td>0x${r.ver.toString(16).padStart(8,'0')}</td></tr>`).join('')}
@@ -216,21 +302,37 @@ function buscar(){const tipoN=document.getElementById('fTipo').value,pers=+docum
 function elegir(id,ent,sal,pers){const h=habs.find(x=>x.id===id);sel={hab:h,ent,sal,pers,n:noches(ent,sal),sub:noches(ent,sal)*tipos[h.tipo].tarifa};
  document.getElementById('fHuesped').innerHTML=huespedes.map(x=>`<option value="${x.id}">${x.nombre}</option>`).join('');
  if(pref){document.getElementById('fHuesped').value=pref.huesped;document.getElementById('fMedio').value=pref.medio}
+ const cli=sesion.rol==='CLIENTE';if(cli){document.getElementById('fHuesped').value=sesion.idHuesped}document.getElementById('bConfirmar').textContent=cli?'Reservar y pagar ahora':'Confirmar reserva';document.getElementById('bPendiente').style.display=cli?'':'none';
+ const hFix=(cli||pref)?huespedes.find(x=>x.id==document.getElementById('fHuesped').value):null;huSetForm(hFix);['fTipoDoc','fDoc','fNombre'].forEach(i=>document.getElementById(i).disabled=cli);
  huChange();document.getElementById('confRes').innerHTML='';go('conf')}
-document.getElementById('fHuesped').addEventListener('change',huChange);
-function huChange(){const h=huespedes.find(x=>x.id==document.getElementById('fHuesped').value);document.getElementById('huDoc').textContent=h.doc;
+// Rellena el formulario del huésped (documento, nombre, teléfono, correo) con un huésped existente o lo deja vacío
+function huSetForm(h){const g=id=>document.getElementById(id);if(h){const [t,...d]=h.doc.split(' ');g('fTipoDoc').value=t;g('fDoc').value=d.join(' ');g('fNombre').value=h.nombre;g('fTel').value=(h.tel||'').replace(/^57(?=3\d{9}$)/,'');g('fCorreo').value=h.correo||'';g('fHuesped').value=h.id}
+ else{g('fTipoDoc').value='CC';['fDoc','fNombre','fTel','fCorreo'].forEach(i=>g(i).value='');g('fHuesped').value=''}}
+// Busca al huésped por el número de documento mientras se escribe (GET /api/huespedes?documento=)
+function huLookup(){const g=id=>document.getElementById(id);const d=g('fDoc').value.replace(/[^0-9A-Za-z]/g,'').toUpperCase();if(d.length<5){g('fHuesped').value='';g('huDoc').textContent='Digite el documento del huésped; si ya está registrado se cargan sus datos.';g('freqTag').innerHTML='';canalDest();recalc();return}
+ const h=huespedes.find(x=>x.doc.split(' ').slice(1).join('').replace(/[^0-9A-Za-z]/g,'').toUpperCase()===d);
+ if(h){if(g('fHuesped').value!=String(h.id)){log(`GET /api/huespedes?documento=${d} → 200 OK · ${h.nombre}`);g('fHuesped').value=h.id;g('fNombre').value=h.nombre;g('fTel').value=(h.tel||'').replace(/^57(?=3\d{9}$)/,'');g('fCorreo').value=h.correo||'';const [t]=h.doc.split(' ');g('fTipoDoc').value=t;huChange()}}
+ else{if(g('fHuesped').value){g('fHuesped').value='';g('fNombre').value='';g('fTel').value='';g('fCorreo').value=''}g('huDoc').textContent='Documento no registrado: escriba el nombre y los datos de contacto; el huésped se registrará al confirmar (CU-02).';g('freqTag').innerHTML='';g('fExento').checked=g('fTipoDoc').value==='PA';canalDest();recalc()}}
+function huChange(){const h=huespedes.find(x=>x.id==document.getElementById('fHuesped').value);if(!h){huLookup();return}document.getElementById('huDoc').textContent=`Huésped registrado · ${h.doc} · ${h.estadias} estadía${h.estadias!==1?'s':''}`;
  document.getElementById('fExento').checked=!!h.extranjero;
- document.getElementById('freqTag').innerHTML=h.estadias>=2?`<span class="tag" style="margin-top:6px">★ Huésped frecuente · ${h.estadias} estadías</span>`:'';recalc()}
+ document.getElementById('freqTag').innerHTML=h.estadias>=2?`<span class="tag" style="margin-top:6px">★ Huésped frecuente · ${h.estadias} estadías</span>`:'';canalDest();recalc()}
+function canalSel(){return document.querySelector('input[name=canal]:checked').value}
+function canalDest(){const c=canalSel();let tel=document.getElementById('fTel').value.replace(/\D/g,'');if(tel.length===10&&tel.startsWith('3'))tel='57'+tel;const correo=document.getElementById('fCorreo').value.trim();document.getElementById('canalDest').textContent=c==='WHATSAPP'?`Se enviará al WhatsApp +${tel||'(escriba el teléfono)'}`:`Se enviará al correo ${correo||'(escriba el correo)'}`}
+document.querySelectorAll('input[name=canal]').forEach(r=>r.addEventListener('change',canalDest));
 // Desglose de impuestos (RF16): subtotal → IVA 19 % → precio neto
 function recalc(){if(!sel)return;const ex=document.getElementById('fExento').checked;const t=calc(sel.sub,ex);sel.iva=t.iva;sel.valor=t.neto;sel.exento=ex;const h=sel.hab;
  document.getElementById('resumen').innerHTML=`<tr><td>Habitación</td><td>${h.numero} · ${tipos[h.tipo].nombre}</td></tr><tr><td>Entrada / salida</td><td>${sel.ent} → ${sel.sal}</td></tr><tr><td>Noches × tarifa</td><td>${sel.n} × ${fmt(tipos[h.tipo].tarifa)}</td></tr><tr><td>Personas</td><td>${sel.pers}</td></tr><tr><td>Subtotal alojamiento</td><td>${fmt(sel.sub)}</td></tr><tr><td>IVA 19 %${ex?' <span class="tag g" style="font-size:10px">EXENTO</span>':''}</td><td>${fmt(sel.iva)}</td></tr><tr><td style="font-weight:700">Total con IVA</td><td style="color:var(--verde);font-size:16px;font-weight:700">${fmt(sel.valor)}</td></tr>`;
- document.getElementById('fPago').value=fmt(sel.valor)}
+ document.getElementById('fPago').value=fmt(sel.valor);rnRiesgoConf()}
 // Texto del comprobante compartible (RF17)
-function textoCmp(r){const h=huespedes.find(x=>x.id===r.huesped);return `🏨 *Hotel Reservas* · Comprobante ${r.cmp}\nReserva: ${r.codigo}\nHuésped: ${h.nombre} (${h.doc})\nHabitación: ${r.hab.numero} · ${tipos[r.hab.tipo].nombre} · ${r.pers} persona${r.pers>1?'s':''}\nEntrada: ${r.entrada} · Salida: ${r.salida} (${noches(r.entrada,r.salida)} noche${noches(r.entrada,r.salida)>1?'s':''})\nSubtotal: ${fmt(r.sub)}\nIVA 19 %: ${r.exento?'exento (extranjero no residente)':fmt(r.iva)}\n*Total con IVA: ${fmt(r.valor)}*\nPago: ${r.medio} · Estado: ${r.estado}\nPresente este comprobante en recepción. ¡Lo esperamos!`}
+function textoCmp(r){const h=huespedes.find(x=>x.id===r.huesped);return `🏨 *Hotel Reservas* · Comprobante ${r.cmp}\nReserva: ${r.codigo}\nHuésped: ${h.nombre} (${h.doc})\nHabitación: ${r.hab.numero} · ${tipos[r.hab.tipo].nombre} · ${r.pers} persona${r.pers>1?'s':''}\nEntrada: ${r.entrada} · Salida: ${r.salida} (${noches(r.entrada,r.salida)} noche${noches(r.entrada,r.salida)>1?'s':''})\nSubtotal: ${fmt(r.sub)}\nIVA 19 %: ${r.exento?'exento (extranjero no residente)':fmt(r.iva)}\n*Total con IVA: ${fmt(r.valor)}*\nPago: ${r.medio} · Estado: ${r.estado}\nPresente este comprobante en recepción. ¡Lo esperamos!\n${HOTEL.nombre} · ${HOTEL.correo}`}
 function cardCmp(r){const h=huespedes.find(x=>x.id===r.huesped);const txt=textoCmp(r);const wa='https://wa.me/'+h.tel+'?text='+encodeURIComponent(txt);
  return `<div class="card" style="margin-top:10px;border-color:var(--verde)"><span class="lbl">Comprobante ${r.cmp}</span><pre style="white-space:pre-wrap;font-family:inherit;font-size:12px;margin:6px 0 0;line-height:1.4">${txt.replace(/\*/g,'')}</pre>
  <a class="btn p" style="text-decoration:none;background:#25D366" href="${wa}" target="_blank" rel="noopener" onclick="log('GET /api/comprobantes/${r.cmp}/compartir → texto generado · abre WhatsApp (+${h.tel})')">Enviar comprobante por WhatsApp</a>
+ <a class="btn s" style="text-decoration:none;font-size:12px" href="mailto:${h.correo||''}?cc=${HOTEL.correo}&subject=${encodeURIComponent('Confirmación de reserva '+r.codigo+' · Hotel Reservas')}&body=${encodeURIComponent(txt.replace(/\*/g,''))}" onclick="log('POST /api/notificaciones {reserva:${r.codigo}, canal:CORREO, destino:${h.correo}} → SMTP smtp.gmail.com:587 desde ${HOTEL.correo} · 202 Accepted')">Enviar comprobante por correo${h.correo?' · '+h.correo:''}</a>
  <button class="btn s" onclick="copiar(${r.id})">Copiar texto del comprobante</button></div>`}
+// Notificación de confirmación (RF20): WhatsApp o correo electrónico, según la preferencia elegida al reservar
+function notificar(r,canal){const h=huespedes.find(x=>x.id===r.huesped);r.canal=canal;const dest=canal==='WHATSAPP'?'+'+h.tel:h.correo;log(`POST /api/notificaciones {reserva:${r.codigo}, canal:${canal}, destino:${dest}} → ${canal==='WHATSAPP'?'enlace wa.me generado':'SMTP smtp.gmail.com:587 desde '+HOTEL.correo+' (copia oculta al hotel)'} · 202 Accepted`);act('NOTIFICACION',`Confirmación de ${r.codigo} enviada por ${canal==='WHATSAPP'?'WhatsApp':'correo'} a ${dest}`);
+ return `<div class="ok">📨 Confirmación enviada por <b>${canal==='WHATSAPP'?'WhatsApp':'correo electrónico'}</b> a <b>${dest}</b>${canal==='CORREO'?` desde <b>${HOTEL.correo}</b>`:''}. En el prototipo, use el botón del comprobante para abrir ${canal==='WHATSAPP'?'WhatsApp':'su aplicación de correo'} con el mensaje listo.</div>`}
 function copiar(id){const r=reservas.find(x=>x.id===id);const t=textoCmp(r);if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(()=>log(`[app] comprobante ${r.cmp} copiado al portapapeles`)).catch(()=>{});else{prompt('Copie el texto:',t)}}
 // Reserva rápida para huésped frecuente (RF18): documento → perfil → repetir última estadía
 function frecuente(){const d=document.getElementById('qDoc').value.replace(/\D/g,'');const out=document.getElementById('freqRes');if(!d){out.innerHTML='<div class="err">Digite el número de documento.</div>';return}
@@ -243,7 +345,12 @@ function repetir(id){const h=huespedes.find(x=>x.id===id),u=h.ultima;pref={huesp
  document.getElementById('fTipo').value=tipos[u.tipo].nombre;document.getElementById('fPers').value=u.pers;const ent='2026-10-16';const sal=new Date(ent);sal.setDate(sal.getDate()+u.noches);document.getElementById('fIn').value=ent;document.getElementById('fOut').value=sal.toISOString().slice(0,10);
  go('disp');buscar();document.getElementById('resultados').insertAdjacentHTML('afterbegin',`<div class="ok">Filtros precargados con las preferencias de <b>${h.nombre}</b>. Al elegir la habitación, el huésped y su medio de pago ya estarán seleccionados.</div>`)}
 // ---------- CU-04 Confirmar reserva (transacción) ----------
-function confirmar(){const out=document.getElementById('confRes');const hu=+document.getElementById('fHuesped').value,medio=document.getElementById('fMedio').value;
+function confirmar(pagar=true){const out=document.getElementById('confRes');const g=id=>document.getElementById(id);let hu=+g('fHuesped').value;const medio=g('fMedio').value;const canal=canalSel();
+ const nom=g('fNombre').value.trim(),tdoc=g('fTipoDoc').value,ndoc=g('fDoc').value.trim();let tel=g('fTel').value.replace(/\D/g,'');if(tel.length===10&&tel.startsWith('3'))tel='57'+tel;const correo=g('fCorreo').value.trim().toLowerCase();
+ if(!hu){if(ndoc.length<5||!nom){out.innerHTML='<div class="err">Escriba el número de documento y el nombre completo del huésped.</div>';return}
+  const h={id:Math.max(...huespedes.map(x=>x.id))+1,nombre:nom,doc:tdoc+' '+ndoc,tel,correo,estadias:0,extranjero:g('fExento').checked};huespedes.push(h);hu=h.id;g('fHuesped').value=h.id;log(`POST /api/huespedes {${h.doc}, ${nom}} → INSERT HUESPED · 201 Created (id ${h.id})`);act('HUESPED',`Huésped ${nom} (${h.doc}) registrado`)}
+ else{const h=huespedes.find(x=>x.id===hu);if(h&&((tel&&tel!==h.tel)||(correo&&correo!==h.correo))){h.tel=tel||h.tel;h.correo=correo||h.correo;log(`PUT /api/huespedes/${h.id} → UPDATE HUESPED SET telefono, correo · 200 OK`)}}
+ if(canal==='WHATSAPP'&&!tel){out.innerHTML='<div class="err">Para recibir la confirmación por WhatsApp escriba el teléfono del huésped.</div>';return}if(canal==='CORREO'&&!correo.includes('@')){out.innerHTML='<div class="err">Para recibir la confirmación por correo escriba un correo válido.</div>';return}
  log(`POST /api/reservas {hab:${sel.hab.numero}, huesped:${hu}, ${sel.ent}→${sel.sal}}  → EXEC sp_ConfirmarReserva`);log('  SET TRANSACTION ISOLATION LEVEL SERIALIZABLE; BEGIN TRANSACTION;');
  if(conc){ // otra sesión gana la carrera
   const t2=calc(sel.sub,false);const r={id:reservas.length+1,codigo:'RSV'+String(++seq).padStart(9,'0'),hab:sel.hab,huesped:2,entrada:sel.ent,salida:sel.sal,pers:sel.pers,sub:t2.sub,iva:t2.iva,valor:t2.neto,exento:false,medio:'EFECTIVO',cmp:'CMP'+String(reservas.length+1).padStart(9,'0'),estado:'CONFIRMADA',ver:version++};reservas.push(r);pagos.push({res:r.id,valor:r.valor,medio:'EFECTIVO'});comprobantes.push({res:r.id,num:r.cmp});bitacora.push({res:r.codigo,usuario:'recepcion2',de:'-',a:'CONFIRMADA',fecha:'15/10 '+hora()});
@@ -251,20 +358,33 @@ function confirmar(){const out=document.getElementById('confRes');const hu=+docu
  log(`  SELECT 1 FROM RESERVA WITH (UPDLOCK, HOLDLOCK) WHERE id_habitacion=${sel.hab.id} AND estado IN ('CONFIRMADA','EN_CASA') AND fecha_entrada<'${sel.sal}' AND fecha_salida>'${sel.ent}'`);
  if(solapa(sel.hab,sel.ent,sel.sal)){conflictos++;log('  → existe solapamiento: ROLLBACK TRANSACTION; THROW 50001 "Habitación no disponible"');log('  409 Conflict · ninguna fila insertada en RESERVA, PAGO, COMPROBANTE ni BITACORA');
   out.innerHTML=`<div class="err">✖ HTTP 409 · La habitación ${sel.hab.numero} ya no está disponible para esas fechas: otra recepcionista la confirmó un instante antes. No se guardó ningún dato. Vuelva a consultar la disponibilidad.</div>`;kpis();return}
- const cmp='CMP'+String(reservas.length+1).padStart(9,'0');const r={id:reservas.length+1,codigo:'RSV'+String(++seq).padStart(9,'0'),hab:sel.hab,huesped:hu,entrada:sel.ent,salida:sel.sal,pers:sel.pers,sub:sel.sub,iva:sel.iva,valor:sel.valor,exento:sel.exento,medio,cmp,estado:'CONFIRMADA',ver:version++};reservas.push(r);
+ const cmp='CMP'+String(reservas.length+1).padStart(9,'0');const r={id:reservas.length+1,codigo:'RSV'+String(++seq).padStart(9,'0'),hab:sel.hab,huesped:hu,entrada:sel.ent,salida:sel.sal,pers:sel.pers,sub:sel.sub,iva:sel.iva,valor:sel.valor,exento:sel.exento,medio,cmp:pagar?cmp:null,estado:pagar?'CONFIRMADA':'PENDIENTE',ver:version++,riesgo:rnRiesgoSel(hu,medio),canal};reservas.push(r);
+ if(!pagar){bitacora.push({res:r.codigo,usuario:sesion.usuario,de:'-',a:'PENDIENTE',fecha:'15/10 '+hora()});log(`  INSERT RESERVA(${r.codigo}, estado=PENDIENTE, sin pago) · INSERT BITACORA_RESERVA · COMMIT · 201 Created`);act('RESERVA',`Reserva ${r.codigo} creada pendiente de pago (hab. ${sel.hab.numero})`);
+  out.innerHTML=`<div class="warn">⏳ Reserva <b>${r.codigo}</b> registrada en estado <b>PENDIENTE</b> por ${fmt(r.valor)}. La habitación queda apartada; pague desde Mis reservas para recibir el comprobante.</div>${notificar(r,canal)}<button class="btn s" onclick="go('misres')">Ir a Mis reservas</button>`;kpis();return}log(`  riesgo_cancelacion=${(r.riesgo*100).toFixed(0)} % (red neuronal MLP 8-8-1, calculada en el dispositivo)`);
  pagos.push({res:r.id,valor:r.valor,medio});comprobantes.push({res:r.id,num:cmp});bitacora.push({res:r.codigo,usuario:sesion.usuario,de:'-',a:'CONFIRMADA',fecha:'15/10 '+hora()});
  const hh=huespedes.find(x=>x.id===hu);hh.estadias++;hh.ultima={tipo:sel.hab.tipo,pers:sel.pers,medio,hab:sel.hab.numero,noches:sel.n,fecha:sel.ent};pref=null;
  log(`  INSERT RESERVA(${r.codigo}, subtotal=${r.sub}, impuesto=${r.iva}${r.exento?' [exento IVA]':''}, valor_total=${r.valor}) · INSERT PAGO(${medio}, ${fmt(r.valor)}) · INSERT COMPROBANTE(${cmp}) · INSERT BITACORA_RESERVA(${sesion.usuario}, - → CONFIRMADA)`);log('  COMMIT TRANSACTION · 201 Created');
- out.innerHTML=`<div class="ok">✔ Reserva <b>${r.codigo}</b> confirmada · Comprobante <b>${cmp}</b><br>Subtotal ${fmt(r.sub)} + IVA 19 % ${r.exento?'exento':fmt(r.iva)} = <b>Total con IVA ${fmt(r.valor)}</b><br>Registrada por ${sesion.nombre} (${sesion.rol})</div>${cardCmp(r)}<button class="btn s" onclick="go('hist')">Ver en el historial</button>`;kpis()}
+ act('RESERVA',`Reserva ${r.codigo} confirmada y pagada (${medio}, ${fmt(r.valor)}) para ${hh.nombre}`);
+ out.innerHTML=`<div class="ok">✔ Reserva <b>${r.codigo}</b> confirmada · Comprobante <b>${cmp}</b><br>Subtotal ${fmt(r.sub)} + IVA 19 % ${r.exento?'exento':fmt(r.iva)} = <b>Total con IVA ${fmt(r.valor)}</b><br>Registrada por ${sesion.nombre} (${sesion.rol})</div>${notificar(r,canal)}${cardCmp(r)}<button class="btn s" onclick="go('${sesion.rol==='CLIENTE'?'misres':'hist'}')">${sesion.rol==='CLIENTE'?'Ver mis reservas':'Ver en el historial'}</button>`;kpis()}
+// Pago de una reserva pendiente (CU-05): registra PAGO y COMPROBANTE y pasa a CONFIRMADA en una transacción
+function pagar(id,medio){const r=reservas.find(x=>x.id===id);if(r.estado!=='PENDIENTE')return;medio=medio||'TARJETA';log(`POST /api/reservas/${r.codigo}/pagos {medio:${medio}, valor:${r.valor}} → BEGIN TRAN; INSERT PAGO; INSERT COMPROBANTE; UPDATE RESERVA SET estado='CONFIRMADA'; INSERT BITACORA; COMMIT · 201 Created`);
+ r.medio=medio;r.cmp='CMP'+String(r.id).padStart(9,'0');r.estado='CONFIRMADA';r.ver=version++;pagos.push({res:r.id,valor:r.valor,medio});comprobantes.push({res:r.id,num:r.cmp});bitacora.push({res:r.codigo,usuario:sesion.usuario,de:'PENDIENTE',a:'CONFIRMADA',fecha:'15/10 '+hora()});
+ const hh=huespedes.find(x=>x.id===r.huesped);hh.estadias++;hh.ultima={tipo:r.hab.tipo,pers:r.pers,medio,hab:r.hab.numero,noches:noches(r.entrada,r.salida),fecha:r.entrada};act('PAGO',`Pago de ${r.codigo} registrado (${medio}, ${fmt(r.valor)})`);notificar(r,r.canal||'WHATSAPP');kpis();return r}
 function toggleConc(){conc=!conc;document.getElementById('bConc').textContent=conc?'Activada ✓':'Activar';log(conc?'[prueba] Otra sesión intentará la misma habitación en la próxima confirmación':'[prueba] Concurrencia desactivada')}
 function hora(){const d=new Date();return d.getHours().toString().padStart(2,'0')+':'+d.getMinutes().toString().padStart(2,'0')}
 // ---------- Habitaciones / historial ----------
 function renderHabs(){document.getElementById('habsList').innerHTML=[1,2,3,4,5].map(p=>`<h3>Piso ${p}</h3>`+habs.filter(h=>h.piso===p).map(h=>`<div class="card hab"><div><b>Hab. ${h.numero}</b><br><span class="lbl">${tipos[h.tipo].nombre} · ${tipos[h.tipo].cap} pers. · ${fmt(tipos[h.tipo].tarifa)}/noche</span></div><span class="tag ${h.estado==='OCUPADA'?'o':h.estado==='MANTENIMIENTO'?'g':''}">${h.estado}</span></div>`).join('')).join('')}
-function renderHist(){document.getElementById('histList').innerHTML=reservas.slice().reverse().map(r=>`<div class="card"><b>${r.codigo}</b> · Hab. ${r.hab.numero} · ${huespedes.find(h=>h.id===r.huesped).nombre}<br><span class="lbl">${r.entrada} → ${r.salida} · total ${fmt(r.valor)} (IVA ${r.exento?'exento':fmt(r.iva)})</span> <span class="tag ${r.estado==='EN_CASA'?'o':''}">${r.estado}</span>${['CONFIRMADA','EN_CASA'].includes(r.estado)?`<button class="btn s" style="height:34px;font-size:12px" onclick="verCmp(${r.id})">Comprobante ${r.cmp} · compartir</button>`:''}${r.estado==='CONFIRMADA'?`<button class="btn s" style="height:34px;font-size:12px" onclick="checkin(${r.id})">Registrar check-in</button>${sesion.rol==='ADMINISTRADOR'?`<button class="btn w" style="height:34px;font-size:12px" onclick="cancelar(${r.id})">Cancelar reserva</button>`:''}`:''}<div id="cmp${r.id}"></div></div>`).join('')||'<div class="card">Sin reservas.</div>';
+function renderHist(){document.getElementById('histList').innerHTML=reservas.slice().reverse().map(r=>`<div class="card"><b>${r.codigo}</b> · Hab. ${r.hab.numero} · ${huespedes.find(h=>h.id===r.huesped).nombre}<br><span class="lbl">${r.entrada} → ${r.salida} · total ${fmt(r.valor)} (IVA ${r.exento?'exento':fmt(r.iva)})</span> <span class="tag ${r.estado==='EN_CASA'?'o':r.estado==='PENDIENTE'?'g':''}">${r.estado}</span>${r.riesgo!=null&&['PENDIENTE','CONFIRMADA'].includes(r.estado)?` <span class="tag ${r.riesgo>=0.5?'o':r.riesgo>=0.25?'':'g'}">riesgo ${(r.riesgo*100).toFixed(0)} %</span>`:''}${['CONFIRMADA','EN_CASA'].includes(r.estado)?`<button class="btn s" style="height:34px;font-size:12px" onclick="verCmp(${r.id})">Comprobante ${r.cmp} · compartir</button>`:''}${r.estado==='PENDIENTE'?`<button class="btn p" style="height:34px;font-size:12px" onclick="pagar(${r.id},'TARJETA');renderHist()">Registrar pago (tarjeta)</button>`:''}${r.estado==='CONFIRMADA'?`<button class="btn s" style="height:34px;font-size:12px" onclick="checkin(${r.id})">Registrar check-in</button>`:''}${['PENDIENTE','CONFIRMADA'].includes(r.estado)?`<button class="btn w" style="height:34px;font-size:12px" onclick="cancelar(${r.id})">Cancelar reserva</button>`:''}${sesion.rol==='ADMINISTRADOR'?`<button class="btn d" style="height:34px;font-size:12px;background:#FDECEC;color:#8A1C1C" onclick="eliminarReserva(${r.id})">Eliminar definitivamente</button><div id="del${r.id}"></div>`:''}<div id="cmp${r.id}"></div></div>`).join('')||'<div class="card">Sin reservas.</div>';
  document.getElementById('bitList').innerHTML='<table class="lst" style="width:100%">'+bitacora.slice().reverse().map(b=>`<tr><td>${b.fecha}</td><td>${b.res}</td><td>${b.de} → <b>${b.a}</b></td><td>${b.usuario}</td></tr>`).join('')+'</table>'}
 function verCmp(id){const el=document.getElementById('cmp'+id);el.innerHTML=el.innerHTML?'':cardCmp(reservas.find(x=>x.id===id))}
-function checkin(id){const r=reservas.find(x=>x.id===id);log(`PUT /api/reservas/${r.codigo}/checkin → BEGIN TRAN; UPDATE RESERVA SET estado='EN_CASA' WHERE id=${id} AND version_fila=0x${r.ver.toString(16).padStart(8,'0')}; UPDATE HABITACION SET estado='OCUPADA'; INSERT BITACORA; COMMIT`);r.estado='EN_CASA';r.ver=version++;r.hab.estado='OCUPADA';bitacora.push({res:r.codigo,usuario:sesion.usuario,de:'CONFIRMADA',a:'EN_CASA',fecha:'15/10 '+hora()});renderHist();kpis()}
-function cancelar(id){const r=reservas.find(x=>x.id===id);log(`PUT /api/reservas/${r.codigo}/cancelar → BEGIN TRAN; UPDATE RESERVA SET estado='CANCELADA'; UPDATE PAGO SET estado='ANULADO'; INSERT BITACORA; COMMIT`);r.estado='CANCELADA';r.ver=version++;bitacora.push({res:r.codigo,usuario:sesion.usuario,de:'CONFIRMADA',a:'CANCELADA',fecha:'15/10 '+hora()});renderHist();kpis()}
+function checkin(id){const r=reservas.find(x=>x.id===id);act('CHECKIN',`Check-in de ${r.codigo} (hab. ${r.hab.numero})`);log(`PUT /api/reservas/${r.codigo}/checkin → BEGIN TRAN; UPDATE RESERVA SET estado='EN_CASA' WHERE id=${id} AND version_fila=0x${r.ver.toString(16).padStart(8,'0')}; UPDATE HABITACION SET estado='OCUPADA'; INSERT BITACORA; COMMIT`);r.estado='EN_CASA';r.ver=version++;r.hab.estado='OCUPADA';bitacora.push({res:r.codigo,usuario:sesion.usuario,de:'CONFIRMADA',a:'EN_CASA',fecha:'15/10 '+hora()});renderHist();kpis()}
+function cancelar(id){const r=reservas.find(x=>x.id===id);const de=r.estado;log(`PUT /api/reservas/${r.codigo}/cancelar → BEGIN TRAN; UPDATE RESERVA SET estado='CANCELADA'; UPDATE PAGO SET estado='ANULADO'; INSERT BITACORA; COMMIT`);r.estado='CANCELADA';r.ver=version++;bitacora.push({res:r.codigo,usuario:sesion.usuario,de,a:'CANCELADA',fecha:'15/10 '+hora()});act('CANCELACION',`Reserva ${r.codigo} cancelada (estaba ${de})`);if(sesion.rol==='CLIENTE')renderMisRes();else renderHist();kpis()}
+// Eliminación definitiva (solo ADMINISTRADOR): borra RESERVA, PAGO y COMPROBANTE; la bitácora conserva el rastro
+function eliminarReserva(id,ok){const r=reservas.find(x=>x.id===id);const box=document.getElementById('del'+id);
+ if(!ok){box.innerHTML=`<div class="warn">¿Eliminar definitivamente la reserva <b>${r.codigo}</b>? Se borran también su pago y su comprobante.<div class="row"><button class="btn w" style="height:34px;font-size:12px" onclick="eliminarReserva(${id},true)">Sí, eliminar</button><button class="btn s" style="height:34px;font-size:12px" onclick="document.getElementById('del${id}').innerHTML=''">No</button></div></div>`;return}
+ log(`DELETE /api/reservas/${r.codigo} → BEGIN TRAN; DELETE PAGO; DELETE COMPROBANTE; INSERT BITACORA(${r.estado} → ELIMINADA); DELETE RESERVA; COMMIT · 200 OK`);
+ if(r.estado==='EN_CASA')r.hab.estado='DISPONIBLE';for(let i=pagos.length-1;i>=0;i--)if(pagos[i].res===id)pagos.splice(i,1);for(let i=comprobantes.length-1;i>=0;i--)if(comprobantes[i].res===id)comprobantes.splice(i,1);
+ bitacora.push({res:r.codigo,usuario:sesion.usuario,de:r.estado,a:'ELIMINADA',fecha:'15/10 '+hora()});reservas.splice(reservas.indexOf(r),1);act('ELIMINACION',`Reserva ${r.codigo} eliminada definitivamente`);renderHist();kpis()}
 // ---------- Asistente (lógica de integración simulada: interpreta → función → respuesta) ----------
 function ask(t){const q=t||document.getElementById('q').value.trim();if(!q)return;document.getElementById('q').value='';const chat=document.getElementById('chat');chat.innerHTML+=`<div class="msg me">${q}</div>`;
  const s=q.toLowerCase();let fn='',ans='';
@@ -283,15 +403,53 @@ function login(){const c=document.getElementById('lCorreo').value.trim().toLower
  log(`POST /api/auth/login {correo:${c}} → SELECT USUARIO WHERE correo=@correo AND activo=1 · PBKDF2.Verificar(clave)`);
  const u=usuarios.find(x=>x.correo===c&&x.activo);
  if(!u||u.clave!==k){log('  401 Unauthorized · correo o contraseña incorrectos');out.innerHTML='<div class="err">Correo o contraseña incorrectos.</div>';return}
- sesion={id:u.id,nombre:u.nombre,rol:u.rol,usuario:u.correo.split('@')[0]};log(`  200 OK · token JWT emitido · rol ${u.rol} · vigencia 480 min`);out.innerHTML='';
+ sesion={id:u.id,nombre:u.nombre,rol:u.rol,usuario:u.correo.split('@')[0],idHuesped:u.idHuesped};log(`  200 OK · token JWT emitido · rol ${u.rol} · vigencia 480 min`);out.innerHTML='';act('SESION','Inicio de sesión');
  document.getElementById('sesInfo').innerHTML=`<b>${u.nombre}</b> · token JWT válido · perfil <b>${u.rol}</b>`;
- const adm=u.rol==='ADMINISTRADOR';document.getElementById('modAdmin').style.display=adm?'':'none';document.getElementById('t-admin').style.display=adm?'':'none';
+ const adm=u.rol==='ADMINISTRADOR';document.getElementById('modAdmin').style.display=adm?'':'none';tabsPorRol(u.rol);
  go(vistaInicial);vistaInicial='inicio'}
-function logout(){log(`[app] sesión de ${sesion.usuario} cerrada · token descartado`);sesion=null;document.getElementById('lClave').value='';go('login')}
+function tabsPorRol(rol){const T=rol==='CLIENTE'?[['inicio','Inicio'],['disp','Reservar'],['misres','Mis reservas']]:[['inicio','Inicio'],['disp','Reservas'],['habs','Habitaciones'],['hist','Historial'],['ia','Asistente'],['rn','Predicción']].concat(rol==='ADMINISTRADOR'?[['admin','Admin']]:[]);
+ document.querySelector('.tabs').innerHTML=T.map(([v,t])=>`<div id="t-${v}" onclick="go('${v}')"><i></i>${t}</div>`).join('')+(rol==='CLIENTE'?`<div onclick="logout()"><i></i>Salir</div>`:'')}
+// Registro de un huésped como usuario normal (CU-02 + CU-01): crea HUESPED y USUARIO con rol CLIENTE
+function registrar(){const n=document.getElementById('rNombre').value.trim(),t=document.getElementById('rTipo').value,d=document.getElementById('rDoc').value.trim(),c=document.getElementById('rCorreo').value.trim().toLowerCase(),k=document.getElementById('rClave').value;let tel=document.getElementById('rTel').value.replace(/\D/g,'');if(tel.length===10&&tel.startsWith('3'))tel='57'+tel;const out=document.getElementById('regRes');
+ if(!n||!d||!c.includes('@')){out.innerHTML='<div class="err">Nombre, documento y correo válido son obligatorios.</div>';return}if(k.length<8){out.innerHTML='<div class="err">La contraseña debe tener al menos 8 caracteres.</div>';return}
+ if(usuarios.some(u=>u.correo===c)){out.innerHTML='<div class="err">409 · Ya existe una cuenta con ese correo.</div>';return}const doc=t+' '+d;let h=huespedes.find(x=>x.doc===doc);
+ if(!h){h={id:Math.max(...huespedes.map(x=>x.id))+1,nombre:n,doc,tel,correo:c,estadias:0,extranjero:t==='PA'};huespedes.push(h);log(`POST /api/huespedes {${doc}} → INSERT HUESPED · 201 Created`)}else{h.correo=c;if(tel)h.tel=tel}
+ const u={id:Math.max(...usuarios.map(x=>x.id))+1,nombre:n,correo:c,clave:k,rol:'CLIENTE',idHuesped:h.id,activo:true};usuarios.push(u);log(`POST /api/auth/registro {${c}} → INSERT USUARIO (rol CLIENTE, clave_hash PBKDF2, id_huesped=${h.id}) · 201 Created`);
+ out.innerHTML=`<div class="ok">✔ Cuenta creada para ${n}. Ya puede iniciar sesión con ${c}.</div>`;document.getElementById('lCorreo').value=c;document.getElementById('lClave').value=k;document.getElementById('regForm').style.display='none'}
+function logout(){act('SESION','Cierre de sesión');log(`[app] sesión de ${sesion.usuario} cerrada · token descartado`);sesion=null;document.getElementById('lClave').value='';go('login')}
 // ---------- Administración: CRUD de usuarios (CU-15) y de clientes (CU-02) · solo ADMINISTRADOR ----------
-function admTab(t){document.getElementById('admUsuarios').style.display=t==='usuarios'?'':'none';document.getElementById('admClientes').style.display=t==='clientes'?'':'none';
- document.getElementById('bAdmU').className='btn '+(t==='usuarios'?'p':'s');document.getElementById('bAdmH').className='btn '+(t==='clientes'?'p':'s')}
-function renderAdmin(){admTab(document.getElementById('admClientes').style.display==='none'?'usuarios':'clientes');renderUsuarios();renderClientes()}
+let admTabActual='usuarios';
+function admTab(t){admTabActual=t;document.getElementById('admUsuarios').style.display=t==='usuarios'?'':'none';document.getElementById('admClientes').style.display=t==='clientes'?'':'none';document.getElementById('admTarifas').style.display=t==='tarifas'?'':'none';
+ document.getElementById('bAdmU').className='btn '+(t==='usuarios'?'p':'s');document.getElementById('bAdmH').className='btn '+(t==='clientes'?'p':'s');document.getElementById('bAdmT').className='btn '+(t==='tarifas'?'p':'s')}
+function renderAdmin(){admTab(admTabActual);renderUsuarios();renderClientes();renderTarifas()}
+// ---------- CU-11 / RF11: precios (tarifas) y habitaciones · solo ADMINISTRADOR ----------
+function renderTarifas(){document.getElementById('tarList').innerHTML=Object.keys(tipos).map(k=>`<div class="card"><div class="row" style="align-items:flex-end"><div><b>${tipos[k].nombre}</b><br><span class="lbl">${tipos[k].cap} persona(s) · vigente ${fmt(tipos[k].tarifa)}</span></div><div><span class="lbl">Nuevo precio por noche</span><input id="tar${k}" type="number" value="${tipos[k].tarifa}" step="1000" min="10000"></div><button class="btn s" style="height:34px;font-size:12px;margin:0" onclick="guardarTarifa(${k})">Guardar</button></div></div>`).join('');
+ const activa=r=>['PENDIENTE','CONFIRMADA','EN_CASA'].includes(r.estado);
+ document.getElementById('habAdmList').innerHTML=habs.slice().sort((a,b)=>a.numero.localeCompare(b.numero)).map(h=>{const n=reservas.filter(r=>r.hab.id===h.id&&activa(r)).length;
+  return `<div class="card hab"><div><b>Hab. ${h.numero}</b> · piso ${h.piso}<br><span class="lbl">${tipos[h.tipo].nombre} · ${n} reserva${n!==1?'s':''} activa${n!==1?'s':''}</span></div><div style="text-align:right">${h.estado==='OCUPADA'?'<span class="tag o">OCUPADA</span>':`<select style="width:auto;font-size:12px" onchange="estadoHab(${h.id},this.value)"><option ${h.estado==='DISPONIBLE'?'selected':''}>DISPONIBLE</option><option ${h.estado==='MANTENIMIENTO'?'selected':''}>MANTENIMIENTO</option></select>`}<br>${n||h.estado==='OCUPADA'?'<span class="lbl">no eliminable</span>':`<button class="btn w" style="height:28px;font-size:11px;margin-top:4px;width:auto;padding:0 10px" onclick="eliminarHab(${h.id})">Eliminar</button>`}</div></div>`}).join('')}
+function guardarTarifa(k){const v=+document.getElementById('tar'+k).value;const out=document.getElementById('habRes');if(!(v>=10000)){out.innerHTML='<div class="err">Precio no válido.</div>';return}const ant=tipos[k].tarifa;tipos[k].tarifa=v;
+ log(`PUT /api/tarifas/${k} {valor_noche:${v}} → UPDATE TARIFA SET vigencia_hasta=HOY WHERE id_tipo=${k}; INSERT TARIFA(id_tipo=${k}, valor_noche=${v}, vigencia_desde=HOY) · 200 OK`);act('TARIFA',`Precio de ${tipos[k].nombre}: ${fmt(ant)} → ${fmt(v)}`);out.innerHTML=`<div class="ok">✔ ${tipos[k].nombre}: nuevo precio ${fmt(v)} por noche. Las reservas ya confirmadas conservan su valor.</div>`;renderTarifas()}
+function estadoHab(id,est){const h=habs.find(x=>x.id===id);log(`PUT /api/habitaciones/${h.numero} {estado:${est}} → UPDATE HABITACION · 200 OK`);h.estado=est;act('HABITACION',`Hab. ${h.numero} pasa a ${est}`);document.getElementById('habRes').innerHTML=`<div class="ok">✔ Habitación ${h.numero} en estado ${est}.</div>`;renderTarifas()}
+function eliminarHab(id){const h=habs.find(x=>x.id===id);const out=document.getElementById('habRes');if(reservas.some(r=>r.hab.id===id)){log(`DELETE /api/habitaciones/${h.numero} → 409 Conflict (FK_RESERVA_HABITACION)`);out.innerHTML=`<div class="err">409 · La habitación ${h.numero} tiene reservas en el historial; póngala en MANTENIMIENTO en lugar de eliminarla.</div>`;return}
+ habs.splice(habs.indexOf(h),1);log(`DELETE /api/habitaciones/${h.numero} → DELETE FROM HABITACION · 200 OK`);act('HABITACION',`Hab. ${h.numero} eliminada`);out.innerHTML=`<div class="ok">✔ Habitación ${h.numero} eliminada.</div>`;renderTarifas()}
+function crearHab(){const num=document.getElementById('hNum').value.trim(),piso=+document.getElementById('hPiso').value,tipo=+document.getElementById('hTipo').value;const out=document.getElementById('habRes');
+ if(!/^\d{3,4}$/.test(num)){out.innerHTML='<div class="err">El número debe tener 3 o 4 dígitos.</div>';return}if(habs.some(h=>h.numero===num)){log('POST /api/habitaciones → 409 Conflict (UQ_HABITACION_numero)');out.innerHTML=`<div class="err">409 · Ya existe la habitación ${num}.</div>`;return}
+ habs.push({id:Math.max(...habs.map(h=>h.id))+1,numero:num,piso,tipo,estado:'DISPONIBLE'});log(`POST /api/habitaciones {numero:${num}, piso:${piso}, tipo:${tipos[tipo].nombre}} → INSERT HABITACION · 201 Created`);act('HABITACION',`Hab. ${num} creada (${tipos[tipo].nombre}, piso ${piso})`);out.innerHTML=`<div class="ok">✔ Habitación ${num} creada.</div>`;document.getElementById('hNum').value='';renderTarifas()}
+// ---------- Vistas del cliente (usuario normal) ----------
+function misReservas(){return reservas.filter(r=>r.huesped===sesion.idHuesped)}
+function renderCli(){const h=huespedes.find(x=>x.id===sesion.idHuesped);const mr=misReservas();document.getElementById('cliHola').textContent='Hola, '+h.nombre.split(' ')[0];document.getElementById('cPend').textContent=mr.filter(r=>r.estado==='PENDIENTE').length;document.getElementById('cConf').textContent=mr.filter(r=>['CONFIRMADA','EN_CASA'].includes(r.estado)).length;document.getElementById('cEst').textContent=h.estadias;
+ document.getElementById('cliInfo').innerHTML=`<b>${h.nombre}</b> · ${h.doc}<br>WhatsApp +${h.tel||'-'} · ${h.correo||'-'}${h.estadias>=2?' · <span class="tag">★ frecuente</span>':''}`}
+function renderMisRes(){const mr=misReservas().slice().reverse();log(`GET /api/reservas?huesped=${sesion.idHuesped} → reservas del huésped autenticado`);
+ document.getElementById('misresList').innerHTML=mr.map(r=>`<div class="card"><b>${r.codigo}</b> · Hab. ${r.hab.numero} · ${tipos[r.hab.tipo].nombre}<br><span class="lbl">${r.entrada} → ${r.salida} · ${r.pers} pers. · total ${fmt(r.valor)} (IVA ${r.exento?'exento':fmt(r.iva)})</span> <span class="tag ${r.estado==='PENDIENTE'?'g':r.estado==='EN_CASA'?'o':''}">${r.estado}</span>
+  ${r.estado==='PENDIENTE'?`<div class="row" style="margin-top:6px"><div class="card" style="margin:0"><span class="lbl">Medio de pago</span><select id="pm${r.id}"><option>TARJETA</option><option>EFECTIVO</option><option>TRANSFERENCIA</option></select></div></div><button class="btn p" style="height:36px;font-size:12px" onclick="pagarCli(${r.id})">Pagar ${fmt(r.valor)}</button>`:''}
+  ${['CONFIRMADA','EN_CASA'].includes(r.estado)&&r.cmp?`<button class="btn s" style="height:34px;font-size:12px" onclick="verCmpCli(${r.id})">Ver comprobante · reenviar por WhatsApp o correo</button>`:''}
+  ${['PENDIENTE','CONFIRMADA'].includes(r.estado)?`<button class="btn w" style="height:34px;font-size:12px" onclick="cancelar(${r.id})">Cancelar reserva</button>`:''}<div id="cmpc${r.id}"></div></div>`).join('')||'<div class="card">Aún no tiene reservas. <button class="btn p" onclick="go(\'disp\')">Reservar ahora</button></div>'}
+function pagarCli(id){const medio=document.getElementById('pm'+id).value;const r=pagar(id,medio);renderMisRes();const el=document.getElementById('cmpc'+id);el.innerHTML=`<div class="ok">✔ Pago registrado · Comprobante <b>${r.cmp}</b> · confirmación enviada por ${r.canal==='WHATSAPP'?'WhatsApp':'correo'}.</div>`+cardCmp(r)}
+function verCmpCli(id){const el=document.getElementById('cmpc'+id);el.innerHTML=el.innerHTML?'':cardCmp(reservas.find(x=>x.id===id))}
+// ---------- Mi actividad (RNF05): lo que hizo el usuario de la sesión ----------
+function renderAct(){const mias=actividad.filter(a=>a.usuario===sesion.usuario).slice().reverse();const bit=bitacora.filter(b=>b.usuario===sesion.usuario).length;log(`GET /api/actividad?usuario=${sesion.usuario} → ACTIVIDAD_USUARIO + BITACORA_RESERVA`);
+ document.getElementById('actInfo').innerHTML=`<b>${sesion.nombre}</b> · ${sesion.rol} · ${mias.length} ${mias.length!==1?'acciones':'acción'} en esta sesión · ${bit} movimiento${bit!==1?'s':''} en la bitácora de reservas`;
+ document.getElementById('actList').innerHTML='<div class="card"><table class="lst" style="width:100%">'+(mias.map(a=>`<tr><td>${a.fecha}</td><td><span class="tag ${a.tipo==='CANCELACION'||a.tipo==='ELIMINACION'?'o':a.tipo==='SESION'?'g':''}">${a.tipo}</span></td><td>${a.detalle}</td></tr>`).join('')||'<tr><td>Sin acciones registradas.</td></tr>')+'</table></div>'}
 function renderUsuarios(){log('GET /api/usuarios → SELECT USUARIO + COUNT(RESERVA), COUNT(BITACORA_RESERVA)');
  document.getElementById('usuList').innerHTML=usuarios.map(u=>{const mov=bitacora.filter(b=>b.usuario===u.correo.split('@')[0]).length;
   return `<div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><div><b>${u.nombre}</b>${sesion.id===u.id?' <span class="lbl">(usted)</span>':''}<br><span class="lbl" style="text-transform:none;letter-spacing:0">${u.correo} · ${mov} movimiento${mov!==1?'s':''} en bitácora</span></div><div style="text-align:right"><span class="tag ${u.rol==='ADMINISTRADOR'?'':'g'}">${u.rol}</span><br><span class="tag ${u.activo?'':'o'}" style="margin-top:4px">${u.activo?'ACTIVO':'INACTIVO'}</span></div></div>
@@ -318,22 +476,92 @@ function eliminarUsuario(id,ok){const u=usuarios.find(x=>x.id===id);const out=do
 function reactivarUsuario(id){const u=usuarios.find(x=>x.id===id);u.activo=true;log(`PUT /api/usuarios/${u.id}/reactivar → UPDATE USUARIO SET activo=1 · 200 OK`);document.getElementById('usuRes').innerHTML=`<div class="ok">✔ ${u.nombre} reactivado.</div>`;renderUsuarios()}
 function renderClientes(){log('GET /api/huespedes → SELECT HUESPED + COUNT(RESERVA)');
  document.getElementById('cliList').innerHTML=huespedes.map(h=>{const act=reservas.filter(r=>r.huesped===h.id&&['CONFIRMADA','EN_CASA'].includes(r.estado)).length;
-  return `<div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><div><b>${h.nombre}</b><br><span class="lbl" style="text-transform:none;letter-spacing:0">${h.doc} · tel. ${h.tel||'-'} · ${h.estadias} estadía${h.estadias!==1?'s':''}${act?` · ${act} reserva${act>1?'s':''} activa${act>1?'s':''}`:''}</span></div><div style="text-align:right">${h.estadias>=2?'<span class="tag">★ frecuente</span><br>':''}${h.extranjero?'<span class="tag g" style="margin-top:4px">exento IVA</span>':''}</div></div>
+  return `<div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><div><b>${h.nombre}</b><br><span class="lbl" style="text-transform:none;letter-spacing:0">${h.doc} · tel. ${h.tel||'-'} · ${h.correo||'sin correo'} · ${h.estadias} estadía${h.estadias!==1?'s':''}${act?` · ${act} reserva${act>1?'s':''} activa${act>1?'s':''}`:''}</span></div><div style="text-align:right">${h.estadias>=2?'<span class="tag">★ frecuente</span><br>':''}${h.extranjero?'<span class="tag g" style="margin-top:4px">exento IVA</span>':''}</div></div>
   <div class="row"><button class="btn s" style="height:34px;font-size:12px" onclick="editarCliente(${h.id})">Editar</button><button class="btn w" style="height:34px;font-size:12px" onclick="eliminarCliente(${h.id})">Eliminar</button></div></div>`}).join('')}
-function limpiarCliente(){admEdC=null;['cNombre','cDoc','cTel'].forEach(i=>document.getElementById(i).value='');document.getElementById('cTipo').value='CC';document.getElementById('cExt').checked=false;document.getElementById('cliFormT').textContent='Nuevo cliente';document.getElementById('cGuardar').textContent='Crear cliente';document.getElementById('cCancel').style.display='none';document.getElementById('cliRes').innerHTML=''}
-function editarCliente(id){const h=huespedes.find(x=>x.id===id);admEdC=id;const [t,...d]=h.doc.split(' ');document.getElementById('cNombre').value=h.nombre;document.getElementById('cTipo').value=t;document.getElementById('cDoc').value=d.join(' ');document.getElementById('cTel').value=(h.tel||'').replace(/^57(?=3\d{9}$)/,'');document.getElementById('cExt').checked=!!h.extranjero;
+function limpiarCliente(){admEdC=null;['cNombre','cDoc','cTel','cCorreo'].forEach(i=>document.getElementById(i).value='');document.getElementById('cTipo').value='CC';document.getElementById('cExt').checked=false;document.getElementById('cliFormT').textContent='Nuevo cliente';document.getElementById('cGuardar').textContent='Crear cliente';document.getElementById('cCancel').style.display='none';document.getElementById('cliRes').innerHTML=''}
+function editarCliente(id){const h=huespedes.find(x=>x.id===id);admEdC=id;const [t,...d]=h.doc.split(' ');document.getElementById('cNombre').value=h.nombre;document.getElementById('cTipo').value=t;document.getElementById('cDoc').value=d.join(' ');document.getElementById('cTel').value=(h.tel||'').replace(/^57(?=3\d{9}$)/,'');document.getElementById('cCorreo').value=h.correo||'';document.getElementById('cExt').checked=!!h.extranjero;
  document.getElementById('cliFormT').textContent='Editar cliente · '+h.nombre;document.getElementById('cGuardar').textContent='Guardar cambios';document.getElementById('cCancel').style.display='';document.getElementById('cliRes').innerHTML='';document.getElementById('cliFormT').scrollIntoView({behavior:'smooth'})}
-function guardarCliente(){const n=document.getElementById('cNombre').value.trim(),t=document.getElementById('cTipo').value,d=document.getElementById('cDoc').value.trim(),ext=document.getElementById('cExt').checked;let tel=document.getElementById('cTel').value.replace(/\D/g,'');if(tel.length===10&&tel.startsWith('3'))tel='57'+tel;const out=document.getElementById('cliRes');
+function guardarCliente(){const n=document.getElementById('cNombre').value.trim(),t=document.getElementById('cTipo').value,d=document.getElementById('cDoc').value.trim(),ext=document.getElementById('cExt').checked,correo=document.getElementById('cCorreo').value.trim().toLowerCase();let tel=document.getElementById('cTel').value.replace(/\D/g,'');if(tel.length===10&&tel.startsWith('3'))tel='57'+tel;const out=document.getElementById('cliRes');
  if(!n||!d){out.innerHTML='<div class="err">Nombre y número de documento son obligatorios.</div>';return}
  const doc=t+' '+d;if(huespedes.some(h=>h.doc===doc&&h.id!==admEdC)){log(`${admEdC?'PUT':'POST'} /api/huespedes → 409 Conflict (UQ_HUESPED_documento)`);out.innerHTML='<div class="err">409 · Ya existe un cliente con ese documento.</div>';return}
- if(admEdC){const h=huespedes.find(x=>x.id===admEdC);h.nombre=n;h.doc=doc;h.tel=tel;h.extranjero=ext;log(`PUT /api/huespedes/${h.id} → UPDATE HUESPED SET nombres, apellidos, tipo_documento, numero_documento, telefono, extranjero_no_residente=${ext?1:0} · 200 OK`);out.innerHTML=`<div class="ok">✔ Cliente ${h.nombre} actualizado.</div>`}
- else{const h={id:Math.max(...huespedes.map(x=>x.id))+1,nombre:n,doc,tel,estadias:0,extranjero:ext};huespedes.push(h);log(`POST /api/huespedes {${doc}} → INSERT HUESPED · 201 Created`);out.innerHTML=`<div class="ok">✔ Cliente ${h.nombre} registrado.</div>`}
+ if(admEdC){const h=huespedes.find(x=>x.id===admEdC);h.nombre=n;h.doc=doc;h.tel=tel;h.correo=correo;h.extranjero=ext;log(`PUT /api/huespedes/${h.id} → UPDATE HUESPED SET nombres, apellidos, tipo_documento, numero_documento, telefono, extranjero_no_residente=${ext?1:0} · 200 OK`);out.innerHTML=`<div class="ok">✔ Cliente ${h.nombre} actualizado.</div>`}
+ else{const h={id:Math.max(...huespedes.map(x=>x.id))+1,nombre:n,doc,tel,correo,estadias:0,extranjero:ext};huespedes.push(h);log(`POST /api/huespedes {${doc}} → INSERT HUESPED · 201 Created`);out.innerHTML=`<div class="ok">✔ Cliente ${h.nombre} registrado.</div>`}
  const msg=out.innerHTML;limpiarCliente();out.innerHTML=msg;renderClientes()}
 function eliminarCliente(id,ok){const h=huespedes.find(x=>x.id===id);const out=document.getElementById('cliRes');
  const total=reservas.filter(r=>r.huesped===h.id).length;
  if(total>0){log(`DELETE /api/huespedes/${h.id} → ${total} reserva(s) referencian al huésped (FK_RESERVA_HUESPED) · 409 Conflict`);out.innerHTML=`<div class="err">409 · ${h.nombre} tiene ${total} reserva${total>1?'s':''} registrada${total>1?'s':''}; no se puede eliminar sin perder el historial. Puede editar sus datos.</div>`;return}
  if(!ok){out.innerHTML=`<div class="warn">¿Eliminar al cliente <b>${h.nombre}</b> (${h.doc})?<div class="row"><button class="btn w" style="height:34px;font-size:12px" onclick="eliminarCliente(${id},true)">Sí, eliminar</button><button class="btn s" style="height:34px;font-size:12px" onclick="document.getElementById('cliRes').innerHTML=''">No</button></div></div>`;out.scrollIntoView({behavior:'smooth'});return}
  huespedes.splice(huespedes.indexOf(h),1);log(`DELETE /api/huespedes/${h.id} → DELETE FROM HUESPED WHERE id_huesped=${h.id} · 200 OK`);out.innerHTML=`<div class="ok">✔ Cliente ${h.nombre} eliminado.</div>`;if(admEdC===id)limpiarCliente();renderClientes()}
+// ---------- RF19 Red neuronal: perceptrón multicapa 8-8-1 entrenado con retropropagación ----------
+// Ocho entradas normalizadas: anticipación/60, noches/7, personas/4, tipo (0, 0.5, 1), pago con tarjeta (1/0), pago en efectivo (1/0; transferencia = 0 en ambas),
+// huésped frecuente (1/0) y entrada en fin de semana (1/0). Capa oculta de 8 neuronas tanh; salida sigmoide = probabilidad de cancelación.
+const RN={nIn:8,nHid:8,w1:[],b1:[],w2:[],b2:0,hist:[],datos:[],acc:0,prec:0,rec:0,mat:[0,0,0,0],entrenada:false};
+function rnRand(seed){let a=seed>>>0;return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function rnFeat(ant,noc,pers,tipo,medio,frec,fin){return[Math.min(ant,60)/60,Math.min(noc,7)/7,pers/4,(tipo-1)/2,medio==='TARJETA'?1:0,medio==='EFECTIVO'?1:0,frec?1:0,fin?1:0]}
+// Historial simulado del hotel: el patrón de cancelación crece con la anticipación y el pago sin garantía, y baja con el huésped frecuente y la tarjeta.
+function rnDatos(){const rnd=rnRand(2026);const d=[];for(let i=0;i<400;i++){const ant=Math.floor(rnd()*60),noc=1+Math.floor(rnd()*6),pers=1+Math.floor(rnd()*4),tipo=1+Math.floor(rnd()*3);
+  const medio=['TARJETA','EFECTIVO','TRANSFERENCIA'][Math.floor(rnd()*3)],frec=rnd()<0.3?1:0,fin=rnd()<0.3?1:0;
+  const logit=-1.6+3.2*(ant/60)+1.1*(medio==='EFECTIVO')-0.8*(medio==='TARJETA')-1.4*frec+0.5*(noc/7)-0.4*fin+0.3*((tipo-1)/2)+(rnd()-0.5)*2.0;
+  d.push({x:rnFeat(ant,noc,pers,tipo,medio,frec,fin),y:logit>0?1:0})}return d}
+const sig=z=>1/(1+Math.exp(-z));
+function rnForward(x){const h=RN.w1.map((w,j)=>Math.tanh(w.reduce((a,wi,i)=>a+wi*x[i],RN.b1[j])));return{h,y:sig(RN.w2.reduce((a,wi,j)=>a+wi*h[j],RN.b2))}}
+function rnEntrenar(){const epocas=+document.getElementById('rnEpocas').value,lr=+document.getElementById('rnLr').value;const rnd=rnRand(7);
+ RN.w1=Array.from({length:RN.nHid},()=>Array.from({length:RN.nIn},()=>(rnd()-0.5)*0.8));RN.b1=Array(RN.nHid).fill(0);RN.w2=Array.from({length:RN.nHid},()=>(rnd()-0.5)*0.8);RN.b2=0;
+ if(!RN.datos.length)RN.datos=rnDatos();const train=RN.datos.slice(0,320),val=RN.datos.slice(320);RN.hist=[];
+ log(`[red neuronal] entrenamiento MLP 8-8-1 · ${train.length} ejemplos · ${epocas} épocas · tasa ${lr} · pérdida: entropía cruzada binaria · L2 0.003`);
+ const WD=0.003; // regularización L2 (decaimiento de pesos) para evitar el sobreajuste con 320 ejemplos
+ for(let e=0;e<epocas;e++){let L=0;const orden=train.slice();for(let i=orden.length-1;i>0;i--){const j=Math.floor(rnd()*(i+1));[orden[i],orden[j]]=[orden[j],orden[i]]} // barajar cada época
+  for(const {x,y} of orden){const {h,y:o}=rnForward(x);L+=-(y*Math.log(o+1e-9)+(1-y)*Math.log(1-o+1e-9));
+   const d2=o-y;for(let j=0;j<RN.nHid;j++){const d1=d2*RN.w2[j]*(1-h[j]*h[j]);RN.w2[j]-=lr*(d2*h[j]+WD*RN.w2[j]);for(let i=0;i<RN.nIn;i++)RN.w1[j][i]-=lr*(d1*x[i]+WD*RN.w1[j][i]);RN.b1[j]-=lr*d1}RN.b2-=lr*d2}
+   RN.hist.push(L/train.length)}
+ let tp=0,tn=0,fp=0,fn=0;for(const {x,y} of val){const o=rnForward(x).y>=0.5?1:0;if(o&&y)tp++;else if(!o&&!y)tn++;else if(o&&!y)fp++;else fn++}
+ RN.acc=(tp+tn)/val.length;RN.prec=tp/(tp+fp||1);RN.rec=tp/(tp+fn||1);RN.mat=[tp,fn,fp,tn];RN.entrenada=true;
+ log(`  pérdida final ${RN.hist.at(-1).toFixed(3)} · exactitud en validación ${(RN.acc*100).toFixed(1)} % (${val.length} ejemplos) · precisión ${(RN.prec*100).toFixed(0)} % · sensibilidad ${(RN.rec*100).toFixed(0)} %`);rnRender()}
+function rnRender(){if(!RN.entrenada)rnEntrenar();document.getElementById('rnTrain').textContent='320';document.getElementById('rnVal').textContent='80';document.getElementById('rnAcc').textContent=(RN.acc*100).toFixed(0)+' %';
+ const c=document.getElementById('rnChart'),g=c.getContext('2d');g.clearRect(0,0,c.width,c.height);const H=RN.hist,mx=Math.max(...H),mn=Math.min(...H);g.strokeStyle='#DDE3EA';g.beginPath();g.moveTo(30,8);g.lineTo(30,130);g.lineTo(330,130);g.stroke();
+ g.fillStyle='#5B6B82';g.font='10px sans-serif';g.fillText(mx.toFixed(2),2,12);g.fillText(mn.toFixed(2),2,132);g.fillText('época 1',32,144);g.fillText('época '+H.length,270,144);
+ g.strokeStyle='#1F6B3D';g.lineWidth=2;g.beginPath();H.forEach((v,i)=>{const x=30+i/(H.length-1)*300,y=130-(v-mn)/(mx-mn||1)*120;i?g.lineTo(x,y):g.moveTo(x,y)});g.stroke();g.lineWidth=1;
+ document.getElementById('rnInfo').innerHTML=`Pérdida (entropía cruzada) por época: de <b>${mx.toFixed(3)}</b> a <b>${RN.hist.at(-1).toFixed(3)}</b> en ${H.length} épocas. Validación: exactitud <b>${(RN.acc*100).toFixed(1)} %</b>, precisión ${(RN.prec*100).toFixed(1)} %, sensibilidad ${(RN.rec*100).toFixed(1)} %, F1 ${(200*RN.prec*RN.rec/(RN.prec+RN.rec||1)).toFixed(1)} %. Ninguna métrica basta por sí sola: la precisión mide las falsas alarmas y la sensibilidad las cancelaciones omitidas. Parámetros: 8×8 pesos + 8 sesgos de la capa oculta + 8 pesos + 1 sesgo de salida = 81.`;
+ const [tp,fn,fp,tn]=RN.mat;document.getElementById('rnMatriz').innerHTML=`<table class="lst" style="width:100%"><tr><td></td><td><b>Predijo cancela</b></td><td><b>Predijo cumple</b></td></tr><tr><td><b>Canceló</b></td><td style="color:var(--verde)">${tp} aciertos</td><td style="color:#8A1C1C">${fn} omisiones</td></tr><tr><td><b>Cumplió</b></td><td style="color:#8A1C1C">${fp} falsas alarmas</td><td style="color:var(--verde)">${tn} aciertos</td></tr></table>`}
+function rnNivel(p){return p>=0.5?['ALTO','o','Solicite garantía con tarjeta o anticipo y envíe recordatorio por WhatsApp dos días antes.']:p>=0.25?['MEDIO','','Envíe recordatorio por WhatsApp un día antes de la llegada.']:['BAJO','g','Sin acción adicional.']}
+function rnFinDeSemana(f){const d=new Date(f+'T00:00:00').getDay();return d===5||d===6?1:0}
+function rnRiesgoSel(hu,medio){if(!RN.entrenada)rnEntrenar();const h=huespedes.find(x=>x.id===hu);const ant=Math.max(0,noches('2026-10-15',sel.ent));return rnForward(rnFeat(ant,sel.n,sel.pers,sel.hab.tipo,medio,h&&h.estadias>=2,rnFinDeSemana(sel.ent))).y}
+function rnRiesgoConf(){const hu=+document.getElementById('fHuesped').value,medio=document.getElementById('fMedio').value;const p=rnRiesgoSel(hu,medio);const [niv,cls,acc]=rnNivel(p);
+ document.getElementById('riesgoCard').innerHTML=`<span class="lbl">Riesgo de cancelación · red neuronal (RF19)</span><div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px"><b style="font-size:18px;color:var(--azul)">${(p*100).toFixed(0)} %</b><span class="tag ${cls}">${niv}</span></div><span class="lbl" style="text-transform:none;letter-spacing:0">${acc}</span>`}
+document.getElementById('fMedio').addEventListener('change',()=>{if(sel)rnRiesgoConf()});
+function rnProbar(){if(!RN.entrenada)rnEntrenar();const ant=+document.getElementById('pAnt').value,noc=+document.getElementById('pNoc').value,pers=+document.getElementById('pPers').value,tipo=+document.getElementById('pTipo').value,medio=document.getElementById('pMedio').value,frec=+document.getElementById('pFrec').value,fin=+document.getElementById('pFin').value;
+ const p=rnForward(rnFeat(ant,noc,pers,tipo,medio,frec,fin)).y;const [niv,cls,acc]=rnNivel(p);log(`POST /api/prediccion {anticipacion:${ant}, noches:${noc}, personas:${pers}, tipo:${tipos[tipo].nombre}, medio:${medio}, frecuente:${frec}, finDeSemana:${fin}} → MLP → ${(p*100).toFixed(1)} %`);
+ document.getElementById('rnRes').innerHTML=`<div class="ok" style="border-color:var(--azul);background:#E3ECF8;color:var(--azul)">Probabilidad de cancelación: <b style="font-size:16px">${(p*100).toFixed(1)} %</b> · riesgo <b>${niv}</b><br>${acc}</div>`}
+// ---------- RF21 Regresión: red 5-6-1 para pronosticar la ocupación diaria (métricas MAE, MSE, RMSE y R²) ----------
+const RG={nIn:5,nHid:6,w1:[],b1:[],w2:[],b2:0,hist:[],datos:[],met:null,entrenada:false};
+const RG_TEMP=[12,1,6,7]; // meses de temporada alta
+function rgFeat(fecha,anticipadas){const d=new Date(fecha+'T00:00:00');const dow=d.getDay(),mes=d.getMonth()+1;return[Math.sin(2*Math.PI*dow/7),Math.cos(2*Math.PI*dow/7),(dow===5||dow===6)?1:0,RG_TEMP.includes(mes)?1:0,Math.min(anticipadas,25)/25]}
+// Historial simulado de 365 días (del 29/10/2025 al 28/10/2026): la ocupación sube en fin de semana y temporada alta y crece con las reservas anticipadas
+function rgDatos(){const rnd=rnRand(365);const d=[];const ini=new Date('2025-10-29T00:00:00');for(let i=0;i<365;i++){const f=new Date(ini);f.setDate(ini.getDate()+i);const iso=f.toISOString().slice(0,10);const dow=f.getDay(),mes=f.getMonth()+1;
+  const base=0.42+0.22*((dow===5||dow===6)?1:0)+0.15*(RG_TEMP.includes(mes)?1:0)+0.05*Math.sin(2*Math.PI*i/365)+(rnd()-0.5)*0.16;
+  const ant=Math.max(0,Math.min(25,Math.round(base*25*0.65+(rnd()-0.5)*4)));const y=Math.max(0,Math.min(1,base+0.25*(ant/25-base*0.65)+(rnd()-0.5)*0.08));d.push({fecha:iso,x:rgFeat(iso,ant),ant,y})}return d}
+function rgForward(x){const h=RG.w1.map((w,j)=>Math.tanh(w.reduce((a,wi,i)=>a+wi*x[i],RG.b1[j])));return{h,y:RG.w2.reduce((a,wi,j)=>a+wi*h[j],RG.b2)}}
+function rgPredecir(x){return Math.max(0,Math.min(1,rgForward(x).y))}
+// Métricas de la ficha técnica: MAE, MSE, RMSE y R² (coeficiente de determinación)
+function rgMetrics(y,yp){const n=y.length;const mae=y.reduce((a,v,i)=>a+Math.abs(v-yp[i]),0)/n;const mse=y.reduce((a,v,i)=>a+(v-yp[i])**2,0)/n;const my=y.reduce((a,v)=>a+v,0)/n;const sst=y.reduce((a,v)=>a+(v-my)**2,0);return{mae,mse,rmse:Math.sqrt(mse),r2:sst?1-mse*n/sst:0}}
+function rgEntrenar(){const rnd=rnRand(11),lr=0.05,WD=0.001,epocas=300;RG.w1=Array.from({length:RG.nHid},()=>Array.from({length:RG.nIn},()=>(rnd()-0.5)*0.8));RG.b1=Array(RG.nHid).fill(0);RG.w2=Array.from({length:RG.nHid},()=>(rnd()-0.5)*0.8);RG.b2=0.5;
+ if(!RG.datos.length)RG.datos=rgDatos();const train=RG.datos.slice(0,292),val=RG.datos.slice(292);RG.hist=[];
+ log(`[regresión] entrenamiento red 5-6-1 · ${train.length} días · ${epocas} épocas · tasa ${lr} · pérdida: error cuadrático medio`);
+ for(let e=0;e<epocas;e++){let L=0;const orden=train.slice();for(let i=orden.length-1;i>0;i--){const j=Math.floor(rnd()*(i+1));[orden[i],orden[j]]=[orden[j],orden[i]]}
+  for(const {x,y} of orden){const {h,y:o}=rgForward(x);const d2=o-y;L+=d2*d2;for(let j=0;j<RG.nHid;j++){const d1=d2*RG.w2[j]*(1-h[j]*h[j]);RG.w2[j]-=lr*(d2*h[j]+WD*RG.w2[j]);for(let i=0;i<RG.nIn;i++)RG.w1[j][i]-=lr*(d1*x[i]+WD*RG.w1[j][i]);RG.b1[j]-=lr*d1}RG.b2-=lr*d2}RG.hist.push(L/train.length)}
+ const y=val.map(v=>v.y*25),yp=val.map(v=>rgPredecir(v.x)*25);RG.met=rgMetrics(y,yp);RG.val=val.map((v,i)=>({fecha:v.fecha,y:y[i],yp:yp[i]}));RG.entrenada=true;
+ log(`  validación (${val.length} días): MAE ${RG.met.mae.toFixed(2)} hab. · MSE ${RG.met.mse.toFixed(2)} · RMSE ${RG.met.rmse.toFixed(2)} hab. · R² ${RG.met.r2.toFixed(3)}`)}
+function rgOcupadasEl(fecha){return reservas.filter(r=>['PENDIENTE','CONFIRMADA','EN_CASA'].includes(r.estado)&&r.entrada<=fecha&&r.salida>fecha).length}
+function rgRender(){if(!RG.entrenada)rgEntrenar();const m=RG.met;document.getElementById('rgMae').textContent=m.mae.toFixed(2);document.getElementById('rgRmse').textContent=m.rmse.toFixed(2);document.getElementById('rgR2').textContent=m.r2.toFixed(2);
+ const c=document.getElementById('rgChart'),g=c.getContext('2d');g.clearRect(0,0,c.width,c.height);const V=RG.val.slice(-30);g.strokeStyle='#DDE3EA';g.beginPath();g.moveTo(30,8);g.lineTo(30,130);g.lineTo(330,130);g.stroke();g.fillStyle='#5B6B82';g.font='10px sans-serif';g.fillText('25',10,12);g.fillText('0',16,132);g.fillText(V[0].fecha.slice(5),32,144);g.fillText(V.at(-1).fecha.slice(5),290,144);
+ const px=i=>30+i/(V.length-1)*300,py=v=>130-v/25*122;[['y','#0B2A5B'],['yp','#E8821A']].forEach(([k,col])=>{g.strokeStyle=col;g.lineWidth=2;g.beginPath();V.forEach((v,i)=>i?g.lineTo(px(i),py(v[k])):g.moveTo(px(i),py(v[k])));g.stroke()});g.lineWidth=1;
+ const inter=(mae,rmse,r2)=>[`En promedio la predicción se aleja ${mae.toFixed(2)} habitaciones de la ocupación real (${(mae/25*100).toFixed(1)} % de la capacidad).`,`Los errores grandes pesan más: ${rmse>mae?'el RMSE supera al MAE, hay días con desviaciones mayores.':'sin desviaciones extremas.'}`,`La red explica el ${(r2*100).toFixed(1)} % de la variación diaria de la ocupación.`];
+ const [i1,i2,i3]=inter(m.mae,m.rmse,m.r2);
+ document.getElementById('rgTabla').innerHTML=`<table class="lst" style="width:100%"><tr><td><b>MAE</b><br><span class="lbl">error absoluto medio</span></td><td><b>${m.mae.toFixed(2)}</b> hab.</td><td>${i1}</td></tr><tr><td><b>MSE</b><br><span class="lbl">error cuadrático medio</span></td><td><b>${m.mse.toFixed(2)}</b> hab.²</td><td>Penaliza los errores grandes; está en unidades al cuadrado.</td></tr><tr><td><b>RMSE</b><br><span class="lbl">raíz del MSE</span></td><td><b>${m.rmse.toFixed(2)}</b> hab.</td><td>${i2}</td></tr><tr><td><b>R²</b><br><span class="lbl">coef. de determinación</span></td><td><b>${m.r2.toFixed(3)}</b></td><td>${i3}</td></tr></table><span class="lbl" style="text-transform:none;letter-spacing:0">Cuanto más cerca de 0 los errores y más cerca de 1 el R², mejor. Ninguna métrica por sí sola es suficiente.</span>`;
+ const hoy=new Date('2026-10-15T00:00:00');let rows='';for(let i=1;i<=7;i++){const f=new Date(hoy);f.setDate(hoy.getDate()+i);const iso=f.toISOString().slice(0,10);const ant=rgOcupadasEl(iso);const p=rgPredecir(rgFeat(iso,ant))*25;const dia=['dom','lun','mar','mié','jue','vie','sáb'][f.getDay()];
+  rows+=`<tr><td>${dia} ${iso.slice(5)}</td><td>${ant} reservada${ant!==1?'s':''}</td><td><b>${p.toFixed(1)}</b> de 25</td><td><span class="tag ${p/25>=0.8?'o':p/25>=0.5?'':'g'}">${p/25>=0.8?'ALTA':p/25>=0.5?'MEDIA':'BAJA'}</span></td></tr>`}
+ document.getElementById('rgPron').innerHTML=`<table class="lst" style="width:100%"><tr><td><b>Día</b></td><td><b>Reservas hoy</b></td><td><b>Ocupación prevista</b></td><td></td></tr>${rows}</table><span class="lbl" style="text-transform:none;letter-spacing:0">Usa las reservas registradas en la base de datos para cada fecha (RF13). Apoya la planeación de personal, tarifas y mantenimiento sin tocar la transacción de reserva.</span>`;log('GET /api/prediccion/ocupacion?dias=7 → red de regresión con las reservas registradas por fecha')}
+function rnTab(t){document.getElementById('rnClas').style.display=t==='clas'?'':'none';document.getElementById('rnReg').style.display=t==='reg'?'':'none';document.getElementById('bRnC').className='btn '+(t==='clas'?'p':'s');document.getElementById('bRnR').className='btn '+(t==='reg'?'p':'s');if(t==='reg')rgRender();document.querySelector('.content').scrollTop=0}
 // ---------- init ----------
 seed();kpis();document.getElementById('clock').textContent=hora();go('login');
 function toggleSrv(){const o=document.getElementById('srv').classList.toggle('on');document.getElementById('fabSrv').style.display=o?'none':''}
