@@ -14,7 +14,7 @@ Diseñar y construir un sistema transaccional, implementado como aplicación mó
 
 La transacción crítica del sistema es **confirmar reserva**: verificar disponibilidad, bloquear la habitación para el rango de fechas, registrar el huésped y el pago, y emitir el comprobante, todo como una única unidad de trabajo con propiedades ACID. Si alguna parte falla, no queda ningún cambio a medias.
 
-## Estado actual: Entregas S13-S14 (APK v0.6: perfiles de cliente, pagos, confirmación por correo o WhatsApp, redes neuronales y servicio inteligente con TensorFlow)
+## Estado actual: Entregas S13-S14 (APK v0.7: imágenes de las habitaciones, perfiles de cliente, pagos, confirmación por correo o WhatsApp, redes neuronales y servicio inteligente con TensorFlow)
 
 | Entrega | Contenido | Estado |
 |---|---|---|
@@ -30,6 +30,7 @@ La transacción crítica del sistema es **confirmar reserva**: verificar disponi
 
 ### Qué se agregó en las entregas S13-S14: perfiles, pagos, notificaciones, redes neuronales y servicio inteligente
 
+- **Imágenes de las habitaciones (APK v0.7)**: ilustraciones vectoriales (SVG en línea, sin internet ni archivos externos; función `imgHab` en `prototipo.html`) con una escena por tipo (Sencilla, Doble, Suite) y color de pared por piso. Aparecen en la galería de tipos de la pantalla Reservar, en cada resultado de búsqueda, en la confirmación de la reserva, en el inventario de Habitaciones, en Precios y habitaciones del administrador y en Mis reservas del cliente. Para fotos reales basta con ponerlas en `app/src/main/assets/img/` y hacer que `imgHab` devuelva `<img src="img/...">`.
 - **Tres perfiles (RF01, RF20)**: administrador (modifica tarifas, crea y da de baja habitaciones, elimina reservas y recepcionistas; la cuenta `admin@hotel.com` está protegida), recepcionista (`recepcion1@hotel.com`: reserva, cancela, registra pagos y tiene la vista Mi actividad con todo lo que hace) y cliente (`laura@correo.com`, contraseña `Cliente2026*`, o registro desde la app: reserva, paga y sale). Contraseña de los usuarios del hotel: `Hotel2026*`.
 - **Reserva pendiente y pago (RF05)**: la reserva se crea en estado PENDIENTE con el total con IVA y pasa a CONFIRMADA al registrar el pago (tarjeta, efectivo o transferencia); cancelar anula el pago. El huésped se identifica por número de documento y nombre.
 - **Confirmación por correo o WhatsApp (RF20)**: al confirmar, el cliente recibe el comprobante por el canal que elija; en la API, `NotificacionesController` y `Servicios/ServicioCorreo.cs` envían el correo por SMTP desde la cuenta del hotel (la clave de aplicación se guarda con `dotnet user-secrets`, nunca en el repositorio).
@@ -38,6 +39,12 @@ La transacción crítica del sistema es **confirmar reserva**: verificar disponi
 - **`servicio_inteligente/`**: los dos modelos implementados con TensorFlow/Keras y expuestos con FastAPI (`GET /metricas`, `POST /predecir/cancelacion`, `POST /predecir/ocupacion`, `POST /predecir/ocupacion/semana`), con generación de datos, entrenamiento, `metricas.json`, modelos `.keras` y diez pruebas automáticas (`probar_api.py`, evidencias en `pruebas/evidencias.json`). `HotelReservas.Api/Controllers/PrediccionController.cs` reenvía las solicitudes desde la API transaccional. Guía en `servicio_inteligente/README.md`.
 - **`database/07_servicio_inteligente.sql`**: columna `riesgo_cancelacion` en `RESERVA`, perfil CLIENTE con `id_huesped` en `USUARIO` y vistas `vw_historial_cancelaciones` y `vw_ocupacion_diaria` para reentrenar con el historial real.
 - **Documento maestro (110 páginas)**: sección 15 red neuronal, estado del arte, métricas de la ficha técnica y servicio TensorFlow; sección 16 validación técnica (matriz de RNF con métrica y procedimiento, evidencias de pruebas, coherencia diseño-implementación); sección 17 auditoría presencial del 25 de octubre de 2026 (ficha en `docs/auditoria/`) y plan de mejora, con el compromiso de que las interfaces definitivas las desarrolle el equipo en Android Studio; sección 18 presupuesto y cronograma en pesos colombianos. Además `docs/Actividad4_Continuacion_Documento_Maestro.pdf`, `docs/Cronograma_Actividades_Hotel_Reservas.xlsx` y `docs/Presupuesto_Hotel_Reservas.xlsx`.
+
+<p align="center">
+  <img src="docs/prototipo/habitaciones-galeria-tipos.png" width="230" alt="Galería de tipos de habitación">
+  <img src="docs/prototipo/habitaciones-resultados-imagenes.png" width="230" alt="Resultados con imagen">
+  <img src="docs/prototipo/habitaciones-confirmacion-imagen.png" width="230" alt="Confirmación con imagen de la habitación">
+</p>
 
 <p align="center">
   <img src="docs/prototipo/red-neuronal.png" width="230" alt="Red neuronal de cancelación">
@@ -196,7 +203,7 @@ HotelReservas/
 │   ├── Servicios/                    ServicioReservas.cs (sp_ConfirmarReserva, ROWVERSION) y ServicioCorreo.cs (SMTP)
 │   ├── Asistente/                    Orquestador, catálogo de funciones de lectura, intérpretes (Azure OpenAI y reglas)
 │   └── Data/                         DbContext y entidades (10 tablas)
-├── HotelReservasDemo_AndroidStudio/   Proyecto Android Studio (Kotlin + WebView) que empaqueta el prototipo v0.6 en una APK
+├── HotelReservasDemo_AndroidStudio/   Proyecto Android Studio (Kotlin + WebView) que empaqueta el prototipo v0.7 en una APK
 │   └── app/src/main/assets/prototipo.html
 ├── servicio_inteligente/             Servicio inteligente TensorFlow/Keras + FastAPI (datos, entrenamiento, API, pruebas)
 ├── docs/
