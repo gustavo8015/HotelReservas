@@ -1,0 +1,33 @@
+{
+  "cancelacion": {
+    "exactitud": 0.8625,
+    "precision": 0.9,
+    "sensibilidad": 0.8372093023255814,
+    "f1": 0.8674698795180723,
+    "matriz_confusion": {
+      "VP": 36,
+      "FN": 7,
+      "FP": 4,
+      "VN": 33
+    },
+    "perdida_final_entrenamiento": 0.2653871774673462,
+    "perdida_final_validacion": 0.42248767614364624,
+    "ejemplos_entrenamiento": 320,
+    "ejemplos_validacion": 80,
+    "epocas_ejecutadas": 36,
+    "mejor_epoca": 11
+  },
+  "ocupacion": {
+    "MAE_habitaciones": 0.9436324834823608,
+    "MSE_habitaciones2": 1.3927075862884521,
+    "RMSE_habitaciones": 1.1801303259760982,
+    "R2": 0.8549894094467163,
+    "MAE_porcentaje_capacidad": 3.7745299339294434,
+    "dias_entrenamiento": 292,
+    "dias_validacion": 73,
+    "epocas": 300,
+    "perdida_final_entrenamiento": 0.0019783247262239456,
+    "perdida_final_validacion": 0.002228331984952092
+  },
+  "tensorflow": "2.21.0"
+}
