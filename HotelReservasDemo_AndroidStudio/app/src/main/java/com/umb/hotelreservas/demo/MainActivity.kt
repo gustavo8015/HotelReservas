@@ -29,10 +29,11 @@ class MainActivity : AppCompatActivity() {
         web.settings.domStorageEnabled = true
         web.settings.allowFileAccess = true
         web.webViewClient = object : WebViewClient() {
-            // Enlaces externos (wa.me para compartir el comprobante por WhatsApp) se abren con la app del teléfono
+            // Enlaces externos (WhatsApp y correo electrónico) se abren con la app del teléfono
             override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
                 val url = request?.url ?: return false
-                if (url.scheme == "http" || url.scheme == "https") {
+                // http/https (wa.me de WhatsApp) y mailto (confirmación por correo) se abren con la app correspondiente
+                if (url.scheme == "http" || url.scheme == "https" || url.scheme == "mailto") {
                     try { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url.toString()))) } catch (_: Exception) {}
                     return true
                 }
