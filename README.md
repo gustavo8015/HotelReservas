@@ -14,7 +14,7 @@ Diseñar y construir un sistema transaccional, implementado como aplicación mó
 
 La transacción crítica del sistema es **confirmar reserva**: verificar disponibilidad, bloquear la habitación para el rango de fechas, registrar el huésped y el pago, y emitir el comprobante, todo como una única unidad de trabajo con propiedades ACID. Si alguna parte falla, no queda ningún cambio a medias.
 
-## Estado actual: Entrega S12 (APK v0.4: inicio de sesión, roles, total con IVA y módulo de administración)
+## Estado actual: Entregas S13-S14 (APK v0.6: perfiles de cliente, pagos, confirmación por correo o WhatsApp, redes neuronales y servicio inteligente con TensorFlow)
 
 | Entrega | Contenido | Estado |
 |---|---|---|
@@ -23,11 +23,29 @@ La transacción crítica del sistema es **confirmar reserva**: verificar disponi
 | S9 | Fase III: requerimientos funcionales (RF01 a RF15) y no funcionales (RNF01 a RNF05), MER y arquitectura de la base de datos, marco conceptual, marco contextual, marco integrador con el servicio de IA (modelo de datos, modelo de IA, lógica de integración, interfaz e infraestructura) y prototipo de pantallas | Entregada |
 | S10 | Cálculo de impuestos y precio neto (RF16), comprobante compartible por WhatsApp (RF17) y reserva rápida para huésped frecuente (RF18); prototipo funcional en la APK v0.3; script 05 con el desglose de impuestos en la transacción; auditoría presencial | Entregada |
 | S11 | API REST en ASP.NET Core (`HotelReservas.Api`): JWT, disponibilidad, confirmación transaccional vía `sp_ConfirmarReserva` (201/409), cambios de estado con ROWVERSION, huésped frecuente, comprobante compartible y el servicio de IA de la sección 13 (`/api/asistente`, Azure OpenAI con llamada a funciones de solo lectura + intérprete de reglas de respaldo, tabla `CONSULTA_ASISTENTE`) | Entregada |
-| **S12** | **APK v0.4: inicio de sesión con los perfiles recepcionista y administrador (RF01), total con IVA en la confirmación y el comprobante (RF16), módulo Administración para crear, editar y eliminar usuarios (RF14) y clientes (RF02) reservado al administrador; proyecto Android Studio (`HotelReservasDemo_AndroidStudio/`) para generar la APK sin Visual Studio; documento maestro con las Figuras 15 a 17** | **Actual** |
-| Siguiente | Conexión de la app a la API y CRUD de habitaciones y reservas | Pendiente |
-| Final | Demostración de concurrencia (dos usuarios, última habitación) y pruebas | Pendiente |
+| S12 | APK v0.4: inicio de sesión con los perfiles recepcionista y administrador (RF01), total con IVA en la confirmación y el comprobante (RF16), módulo Administración para crear, editar y eliminar usuarios (RF14) y clientes (RF02) reservado al administrador; proyecto Android Studio (`HotelReservasDemo_AndroidStudio/`) para generar la APK sin Visual Studio | Entregada |
+| **S13-S14** | **APK v0.6: tres perfiles (administrador, recepcionista y cliente), reserva pendiente con pago posterior, confirmación por correo o WhatsApp (RF20), red neuronal de riesgo de cancelación (RF19) y red de regresión de ocupación (RF21) evaluadas con MAE, MSE, RMSE, R², exactitud, precisión, sensibilidad y F1; servicio inteligente `servicio_inteligente/` con TensorFlow/Keras y FastAPI; script 07; documento maestro con las secciones 15 a 18 (red neuronal y estado del arte, validación técnica, auditoría presencial y plan de mejora, presupuesto y cronograma en COP); Actividad 4 y formatos de cronograma y presupuesto** | **Actual** |
+| Siguiente | Interfaces definitivas desarrolladas por el equipo en Android Studio (XML y Kotlin) y conexión de la app a la API (actividad 3 del cronograma) | Pendiente |
+| Final | Pruebas de aceptación de los RNF con evidencias, demostración de concurrencia sobre la API y SQL Server, APK firmada y sustentación (27 y 28 de noviembre de 2026) | Pendiente |
 
-### Qué se agregó en esta entrega (S12): inicio de sesión, roles y módulo de administración
+### Qué se agregó en las entregas S13-S14: perfiles, pagos, notificaciones, redes neuronales y servicio inteligente
+
+- **Tres perfiles (RF01, RF20)**: administrador (modifica tarifas, crea y da de baja habitaciones, elimina reservas y recepcionistas; la cuenta `admin@hotel.com` está protegida), recepcionista (`recepcion1@hotel.com`: reserva, cancela, registra pagos y tiene la vista Mi actividad con todo lo que hace) y cliente (`laura@correo.com`, contraseña `Cliente2026*`, o registro desde la app: reserva, paga y sale). Contraseña de los usuarios del hotel: `Hotel2026*`.
+- **Reserva pendiente y pago (RF05)**: la reserva se crea en estado PENDIENTE con el total con IVA y pasa a CONFIRMADA al registrar el pago (tarjeta, efectivo o transferencia); cancelar anula el pago. El huésped se identifica por número de documento y nombre.
+- **Confirmación por correo o WhatsApp (RF20)**: al confirmar, el cliente recibe el comprobante por el canal que elija; en la API, `NotificacionesController` y `Servicios/ServicioCorreo.cs` envían el correo por SMTP desde la cuenta del hotel (la clave de aplicación se guarda con `dotnet user-secrets`, nunca en el repositorio).
+- **Red neuronal de riesgo de cancelación (RF19)**: perceptrón 8-8-1 en la pestaña Predicción, entrenado en el teléfono con retropropagación; exactitud 88,8 %, precisión 88,1 %, sensibilidad 90,2 %, F1 89,2 % en validación. El riesgo se muestra antes de confirmar y queda en el historial.
+- **Red de regresión de ocupación (RF21)**: red 5-6-1 que pronostica las habitaciones ocupadas de los próximos siete días; MAE 1,00, MSE 1,37, RMSE 1,17 y R² 0,838, con la interpretación de cada métrica en pantalla.
+- **`servicio_inteligente/`**: los dos modelos implementados con TensorFlow/Keras y expuestos con FastAPI (`GET /metricas`, `POST /predecir/cancelacion`, `POST /predecir/ocupacion`, `POST /predecir/ocupacion/semana`), con generación de datos, entrenamiento, `metricas.json`, modelos `.keras` y diez pruebas automáticas (`probar_api.py`, evidencias en `pruebas/evidencias.json`). `HotelReservas.Api/Controllers/PrediccionController.cs` reenvía las solicitudes desde la API transaccional. Guía en `servicio_inteligente/README.md`.
+- **`database/07_servicio_inteligente.sql`**: columna `riesgo_cancelacion` en `RESERVA`, perfil CLIENTE con `id_huesped` en `USUARIO` y vistas `vw_historial_cancelaciones` y `vw_ocupacion_diaria` para reentrenar con el historial real.
+- **Documento maestro (110 páginas)**: sección 15 red neuronal, estado del arte, métricas de la ficha técnica y servicio TensorFlow; sección 16 validación técnica (matriz de RNF con métrica y procedimiento, evidencias de pruebas, coherencia diseño-implementación); sección 17 auditoría presencial del 25 de octubre de 2026 (ficha en `docs/auditoria/`) y plan de mejora, con el compromiso de que las interfaces definitivas las desarrolle el equipo en Android Studio; sección 18 presupuesto y cronograma en pesos colombianos. Además `docs/Actividad4_Continuacion_Documento_Maestro.pdf`, `docs/Cronograma_Actividades_Hotel_Reservas.xlsx` y `docs/Presupuesto_Hotel_Reservas.xlsx`.
+
+<p align="center">
+  <img src="docs/prototipo/red-neuronal.png" width="230" alt="Red neuronal de cancelación">
+  <img src="docs/prototipo/regresion-ocupacion.png" width="230" alt="Regresión de ocupación">
+  <img src="docs/prototipo/riesgo-cancelacion-confirmacion.png" width="230" alt="Riesgo en la confirmación">
+</p>
+
+### Qué se agregó en la entrega S12: inicio de sesión, roles y módulo de administración
 
 - **Inicio de sesión y roles (CU-01, RF01, RNF01)**: la app abre en la pantalla Iniciar sesión. Usuarios de prueba (script 06): `recepcion1@hotel.com` (RECEPCIONISTA) y `admin@hotel.com` (ADMINISTRADOR), contraseña `Hotel2026*`. Credenciales incorrectas responden 401; la sesión muestra nombre y perfil y se puede cerrar. El perfil decide lo que se ve: el módulo Administración y el botón Cancelar reserva aparecen solo al administrador, y la bitácora registra el usuario de la sesión activa.
 - **Total con IVA (RF16)**: el resumen de la confirmación muestra subtotal de alojamiento, IVA 19 % y **Total con IVA**; el mismo valor aparece en el campo Total a pagar, en el mensaje de confirmación (subtotal + IVA = total) y en el comprobante compartible. El huésped extranjero no residente queda exento.
@@ -170,23 +188,28 @@ HotelReservas/
 │   ├── 02_transaccion_confirmar_reserva.sql
 │   ├── 03_datos_de_prueba.sql
 │   ├── 05_impuestos_comprobante_huesped_frecuente.sql   Impuestos, comprobante compartible, huésped frecuente
-│   └── 06_consulta_asistente.sql     Tabla CONSULTA_ASISTENTE (IA) y contraseñas de prueba
+│   ├── 06_consulta_asistente.sql     Tabla CONSULTA_ASISTENTE (IA) y contraseñas de prueba
+│   └── 07_servicio_inteligente.sql   riesgo_cancelacion, perfil CLIENTE y vistas para el servicio inteligente
 ├── HotelReservas.Api/                API REST ASP.NET Core 8 (lógica de negocio, acceso a datos, servicio de IA)
 │   ├── Program.cs / appsettings.json JWT, EF Core, Swagger, configuración de Azure OpenAI
-│   ├── Controllers/                  auth, disponibilidad, reservas, huéspedes, comprobantes, asistente
-│   ├── Servicios/ServicioReservas.cs sp_ConfirmarReserva (409 en 50001), cambios de estado con ROWVERSION
+│   ├── Controllers/                  auth, disponibilidad, reservas, huéspedes, comprobantes, asistente, notificaciones, prediccion
+│   ├── Servicios/                    ServicioReservas.cs (sp_ConfirmarReserva, ROWVERSION) y ServicioCorreo.cs (SMTP)
 │   ├── Asistente/                    Orquestador, catálogo de funciones de lectura, intérpretes (Azure OpenAI y reglas)
 │   └── Data/                         DbContext y entidades (10 tablas)
-├── HotelReservasDemo_AndroidStudio/   Proyecto Android Studio (Kotlin + WebView) que empaqueta el prototipo v0.4 en una APK
+├── HotelReservasDemo_AndroidStudio/   Proyecto Android Studio (Kotlin + WebView) que empaqueta el prototipo v0.6 en una APK
 │   └── app/src/main/assets/prototipo.html
+├── servicio_inteligente/             Servicio inteligente TensorFlow/Keras + FastAPI (datos, entrenamiento, API, pruebas)
 ├── docs/
 │   ├── FaseI_Documentacion_Proyecto_S7_Hotel_Reservas.pdf
 │   ├── FaseII_Documentacion_Proyecto_S8_Hotel_Reservas.pdf / .docx
-│   ├── FaseII_y_III_Documentacion_Proyecto_Hotel_Reservas.pdf / .docx   Documento maestro vigente
+│   ├── FaseII_y_III_Documentacion_Proyecto_Hotel_Reservas.pdf / .docx   Documento maestro vigente (110 p.)
+│   ├── Actividad4_Continuacion_Documento_Maestro.pdf / .docx
+│   ├── Cronograma_Actividades_Hotel_Reservas.xlsx / Presupuesto_Hotel_Reservas.xlsx   Formatos UMB
 │   ├── pantalla-inicio.png
 │   ├── diagramas/                    PNG + fuente .puml (PlantUML) y .svg
 │   ├── prototipo/                    Pantallas de alta fidelidad (PNG + HTML)
-│   └── fichas/                       Fichas UMB de requerimientos y auditoría
+│   ├── fichas/                       Fichas UMB de requerimientos y auditoría
+│   └── auditoria/                    Prototipo interactivo, ficha de auditoría presencial (25/10/2026) y guion de la demostración
 └── README.md
 ```
 
@@ -219,7 +242,13 @@ dotnet build -f net8.0-android -c Release
 
 1. Abrir la carpeta `HotelReservasDemo_AndroidStudio/` en Android Studio y esperar la sincronización de Gradle.
 2. Ejecutar en un emulador o teléfono (Run), o generar la APK con **Build > Build Bundle(s) / APK(s) > Build APK(s)**.
-3. Iniciar sesión con `admin@hotel.com` o `recepcion1@hotel.com` y la contraseña `Hotel2026*`.
+3. Iniciar sesión con `admin@hotel.com` o `recepcion1@hotel.com` y la contraseña `Hotel2026*`, o como cliente con `laura@correo.com` / `Cliente2026*`.
+
+**Servicio inteligente (TensorFlow + FastAPI)**
+
+1. En `servicio_inteligente/`: `pip install -r requirements.txt`, luego `python generar_datos.py` y `python entrenar_modelo.py` (escribe `metricas.json` y los modelos `.keras`).
+2. `uvicorn api:app --reload --port 8000` y abrir `http://127.0.0.1:8000/docs`.
+3. `python probar_api.py` ejecuta las diez pruebas y guarda `pruebas/evidencias.json`. En la API .NET, `ServicioInteligente:Url` apunta a ese puerto.
 
 ## Documentos relacionados
 
