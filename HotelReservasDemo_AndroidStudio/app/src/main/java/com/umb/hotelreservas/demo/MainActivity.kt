@@ -13,7 +13,8 @@ import androidx.appcompat.app.AppCompatActivity
 /**
  * Hotel Reservas - prototipo funcional (APK de demostración).
  * Carga el prototipo (assets/prototipo.html) en un WebView a pantalla completa.
- * El prototipo simula la API REST y SQL Server con los datos del script 03 del repositorio.
+ * En modo demostración simula la API REST y SQL Server; en modo conectado (casilla "Conectar con la API"
+ * en el inicio de sesión) llama a HotelReservas.Api por HTTP y los datos quedan en SQL Server.
  */
 class MainActivity : AppCompatActivity() {
 
@@ -28,6 +29,9 @@ class MainActivity : AppCompatActivity() {
         web.settings.javaScriptEnabled = true
         web.settings.domStorageEnabled = true
         web.settings.allowFileAccess = true
+        // Permite que la página local (file://) llame a la API (http://IP:5080) desde fetch (modo conectado)
+        @Suppress("DEPRECATION")
+        web.settings.allowUniversalAccessFromFileURLs = true
         web.webViewClient = object : WebViewClient() {
             // Enlaces externos (WhatsApp y correo electrónico) se abren con la app del teléfono
             override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
