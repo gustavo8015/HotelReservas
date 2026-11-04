@@ -14,7 +14,7 @@ Diseñar y construir un sistema transaccional, implementado como aplicación mó
 
 La transacción crítica del sistema es **confirmar reserva**: verificar disponibilidad, bloquear la habitación para el rango de fechas, registrar el huésped y el pago, y emitir el comprobante, todo como una única unidad de trabajo con propiedades ACID. Si alguna parte falla, no queda ningún cambio a medias.
 
-## Estado actual: Entregas S13-S14 (APK v0.7: imágenes de las habitaciones, perfiles de cliente, pagos, confirmación por correo o WhatsApp, redes neuronales y servicio inteligente con TensorFlow)
+## Estado actual: Entregas S13-S14 (APK v0.8: modo conectado con la API y SQL Server, imágenes de las habitaciones, perfiles de cliente, pagos, confirmación por correo o WhatsApp, redes neuronales y servicio inteligente con TensorFlow)
 
 | Entrega | Contenido | Estado |
 |---|---|---|
@@ -30,6 +30,7 @@ La transacción crítica del sistema es **confirmar reserva**: verificar disponi
 
 ### Qué se agregó en las entregas S13-S14: perfiles, pagos, notificaciones, redes neuronales y servicio inteligente
 
+- **Modo conectado (APK v0.8, auditoría II)**: en la pantalla de inicio de sesión, la casilla **Conectar con la API** y la dirección del servidor (`http://IP-del-PC:5080`) hacen que inicio de sesión, disponibilidad, huéspedes, confirmación de reserva, historial con bitácora, check-in, check-out y cancelación se ejecuten contra `HotelReservas.Api` con token JWT y queden guardados en SQL Server (`fetch` desde el WebView; `MainActivity` habilita el acceso y el manifiesto el permiso de internet). El botón **Ver servidor** muestra cada llamada HTTP con su código de respuesta (200, 201, 400, 401, 404, 409). Con la casilla apagada la app funciona en modo demostración con datos en memoria. Guía de la auditoría en `docs/auditoria/Guia_Preparacion_Auditoria_II.pdf`.
 - **Imágenes de las habitaciones (APK v0.7)**: ilustraciones vectoriales (SVG en línea, sin internet ni archivos externos; función `imgHab` en `prototipo.html`) con una escena por tipo (Sencilla, Doble, Suite) y color de pared por piso. Aparecen en la galería de tipos de la pantalla Reservar, en cada resultado de búsqueda, en la confirmación de la reserva, en el inventario de Habitaciones, en Precios y habitaciones del administrador y en Mis reservas del cliente. Para fotos reales basta con ponerlas en `app/src/main/assets/img/` y hacer que `imgHab` devuelva `<img src="img/...">`.
 - **Tres perfiles (RF01, RF20)**: administrador (modifica tarifas, crea y da de baja habitaciones, elimina reservas y recepcionistas; la cuenta `admin@hotel.com` está protegida), recepcionista (`recepcion1@hotel.com`: reserva, cancela, registra pagos y tiene la vista Mi actividad con todo lo que hace) y cliente (`laura@correo.com`, contraseña `Cliente2026*`, o registro desde la app: reserva, paga y sale). Contraseña de los usuarios del hotel: `Hotel2026*`.
 - **Reserva pendiente y pago (RF05)**: la reserva se crea en estado PENDIENTE con el total con IVA y pasa a CONFIRMADA al registrar el pago (tarjeta, efectivo o transferencia); cancelar anula el pago. El huésped se identifica por número de documento y nombre.
@@ -39,6 +40,12 @@ La transacción crítica del sistema es **confirmar reserva**: verificar disponi
 - **`servicio_inteligente/`**: los dos modelos implementados con TensorFlow/Keras y expuestos con FastAPI (`GET /metricas`, `POST /predecir/cancelacion`, `POST /predecir/ocupacion`, `POST /predecir/ocupacion/semana`), con generación de datos, entrenamiento, `metricas.json`, modelos `.keras` y diez pruebas automáticas (`probar_api.py`, evidencias en `pruebas/evidencias.json`). `HotelReservas.Api/Controllers/PrediccionController.cs` reenvía las solicitudes desde la API transaccional. Guía en `servicio_inteligente/README.md`.
 - **`database/07_servicio_inteligente.sql`**: columna `riesgo_cancelacion` en `RESERVA`, perfil CLIENTE con `id_huesped` en `USUARIO` y vistas `vw_historial_cancelaciones` y `vw_ocupacion_diaria` para reentrenar con el historial real.
 - **Documento maestro (110 páginas)**: sección 15 red neuronal, estado del arte, métricas de la ficha técnica y servicio TensorFlow; sección 16 validación técnica (matriz de RNF con métrica y procedimiento, evidencias de pruebas, coherencia diseño-implementación); sección 17 auditoría presencial del 25 de octubre de 2026 (ficha en `docs/auditoria/`) y plan de mejora, con el compromiso de que las interfaces definitivas las desarrolle el equipo en Android Studio; sección 18 presupuesto y cronograma en pesos colombianos. Además `docs/Actividad4_Continuacion_Documento_Maestro.pdf`, `docs/Cronograma_Actividades_Hotel_Reservas.xlsx` y `docs/Presupuesto_Hotel_Reservas.xlsx`.
+
+<p align="center">
+  <img src="docs/prototipo/conectado-disponibilidad.png" width="230" alt="Disponibilidad desde la API">
+  <img src="docs/prototipo/conectado-confirmacion-201.png" width="230" alt="Reserva confirmada HTTP 201">
+  <img src="docs/prototipo/conectado-historial-bitacora.png" width="230" alt="Historial y bitácora desde SQL Server">
+</p>
 
 <p align="center">
   <img src="docs/prototipo/habitaciones-galeria-tipos.png" width="230" alt="Galería de tipos de habitación">
@@ -203,7 +210,7 @@ HotelReservas/
 │   ├── Servicios/                    ServicioReservas.cs (sp_ConfirmarReserva, ROWVERSION) y ServicioCorreo.cs (SMTP)
 │   ├── Asistente/                    Orquestador, catálogo de funciones de lectura, intérpretes (Azure OpenAI y reglas)
 │   └── Data/                         DbContext y entidades (10 tablas)
-├── HotelReservasDemo_AndroidStudio/   Proyecto Android Studio (Kotlin + WebView) que empaqueta el prototipo v0.7 en una APK
+├── HotelReservasDemo_AndroidStudio/   Proyecto Android Studio (Kotlin + WebView) que empaqueta la app v0.8 en una APK (modo conectado a la API o demostración local)
 │   └── app/src/main/assets/prototipo.html
 ├── servicio_inteligente/             Servicio inteligente TensorFlow/Keras + FastAPI (datos, entrenamiento, API, pruebas)
 ├── docs/
@@ -216,7 +223,7 @@ HotelReservas/
 │   ├── diagramas/                    PNG + fuente .puml (PlantUML) y .svg
 │   ├── prototipo/                    Pantallas de alta fidelidad (PNG + HTML)
 │   ├── fichas/                       Fichas UMB de requerimientos y auditoría
-│   └── auditoria/                    Prototipo interactivo, ficha de auditoría presencial (25/10/2026) y guion de la demostración
+│   └── auditoria/                    Prototipo interactivo, fichas de auditoría, guías de preparación (I y II) y script de concurrencia
 └── README.md
 ```
 
@@ -250,6 +257,7 @@ dotnet build -f net8.0-android -c Release
 1. Abrir la carpeta `HotelReservasDemo_AndroidStudio/` en Android Studio y esperar la sincronización de Gradle.
 2. Ejecutar en un emulador o teléfono (Run), o generar la APK con **Build > Build Bundle(s) / APK(s) > Build APK(s)**.
 3. Iniciar sesión con `admin@hotel.com` o `recepcion1@hotel.com` y la contraseña `Hotel2026*`, o como cliente con `laura@correo.com` / `Cliente2026*`.
+4. **Modo conectado** (la app usa la API y SQL Server): ejecutar la API con `dotnet run --urls "http://0.0.0.0:5080"`, permitir el puerto 5080 en el firewall, averiguar la IP del PC con `ipconfig`, conectar el teléfono a la misma red Wi-Fi y, en la pantalla de inicio de sesión de la APK, marcar **Conectar con la API**, escribir `http://IP:5080` y tocar **Probar conexión**. Los usuarios son los del script 06.
 
 **Servicio inteligente (TensorFlow + FastAPI)**
 
