@@ -70,6 +70,11 @@ body.apk .fab{display:flex}
 <div class="card"><span class="lbl">Correo</span><input id="lCorreo" value="recepcion1@hotel.com" autocomplete="username"></div>
 <div class="card"><span class="lbl">Contraseña</span><input id="lClave" type="password" value="Hotel2026*" autocomplete="current-password" onkeydown="if(event.key==='Enter')login()"></div>
 <div id="loginRes"></div>
+<div class="card" style="border-color:var(--azul)"><span class="lbl">Servidor · API REST y SQL Server</span>
+<div style="display:flex;gap:8px;align-items:center;margin:4px 0"><input type="checkbox" id="lConectar" style="width:20px;height:20px;margin:0" onchange="apiCfgSave()"><label for="lConectar" style="font-size:12.5px;line-height:1.3"><b>Conectar con la API</b> (HotelReservas.Api + SQL Server). Si está apagado, la app funciona en modo demostración con datos en memoria.</label></div>
+<span class="lbl">Dirección de la API</span><input id="lServidor" placeholder="http://192.168.1.10:5080" inputmode="url" onchange="apiCfgSave()">
+<div id="apiBadge" style="margin-top:6px"></div>
+<button class="btn s" style="height:34px;font-size:12px" onclick="apiProbar()">Probar conexión (GET /api/salud)</button></div>
 <button class="btn p" onclick="login()">Entrar</button>
 <button class="btn s" onclick="document.getElementById('regForm').style.display=document.getElementById('regForm').style.display?'':'none'">¿Es huésped? Cree su cuenta</button>
 <div id="regForm" style="display:none">
@@ -597,6 +602,117 @@ function rnTab(t){document.getElementById('rnClas').style.display=t==='clas'?'':
 // ---------- init ----------
 seed();kpis();document.getElementById('clock').textContent=hora();go('login');
 function toggleSrv(){const o=document.getElementById('srv').classList.toggle('on');document.getElementById('fabSrv').style.display=o?'none':''}
+// ================= MODO CONECTADO: HotelReservas.Api + SQL Server (auditoría II, S14) =================
+// Cuando el modo conectado está activo, el inicio de sesión, la disponibilidad, el huésped, la confirmación,
+// el historial, el check-in y la cancelación se ejecutan contra la API REST (ASP.NET Core) y quedan en SQL Server.
+// Si está inactivo, la app funciona en modo demostración con los datos en memoria.
+const API={on:false,url:'',token:null,habs:{}};
+function apiCfgLoad(){try{API.url=localStorage.getItem('apiUrl')||'';API.on=localStorage.getItem('apiOn')==='1'}catch(e){}
+ const u=document.getElementById('lServidor'),c=document.getElementById('lConectar');if(u)u.value=API.url||'http://192.168.1.10:5080';if(c)c.checked=API.on;apiBadge()}
+function apiCfgSave(){API.url=document.getElementById('lServidor').value.trim().replace(/\/+$/,'');API.on=document.getElementById('lConectar').checked;
+ try{localStorage.setItem('apiUrl',API.url);localStorage.setItem('apiOn',API.on?'1':'0')}catch(e){}apiBadge()}
+function apiBadge(){const b=document.getElementById('apiBadge');if(b)b.innerHTML=API.on?`<span class="tag">CONECTADO · ${API.url}</span>`:'<span class="tag g">DEMOSTRACIÓN LOCAL (datos en memoria)</span>'}
+async function api(path,method='GET',body){const h={'Content-Type':'application/json'};if(API.token)h.Authorization='Bearer '+API.token;
+ log(`${method} ${API.url}${path}${body?' '+JSON.stringify(body):''}`);
+ let res;try{res=await fetch(API.url+path,{method,headers:h,body:body?JSON.stringify(body):undefined})}catch(e){log('  ✖ sin conexión con la API: '+e.message);throw new Error('No hay conexión con la API en '+API.url+'. Verifique que la API esté en ejecución (dotnet run --urls http://0.0.0.0:5080) y que el teléfono esté en la misma red.')}
+ let data=null;const txt=await res.text();try{data=txt?JSON.parse(txt):null}catch(e){data=txt}
+ log(`  ${res.status} ${res.statusText||''}${data&&data.mensaje?' · '+data.mensaje:''}`);return{ok:res.ok,status:res.status,data}}
+function apiMsg(r){return (r.data&&(r.data.mensaje||r.data.title))||(r.status===401?'No autorizado: inicie sesión de nuevo.':r.status===404?'No encontrado.':'Error '+r.status)}
+async function apiProbar(){const out=document.getElementById('loginRes');apiCfgSave();out.innerHTML='<div class="warn">Probando conexión…</div>';
+ try{const r=await api('/api/salud');out.innerHTML=r.ok?`<div class="ok">✔ API en línea en ${API.url} (${r.data&&r.data.estado?r.data.estado:'200 OK'}).</div>`:`<div class="err">La API respondió ${r.status}.</div>`}catch(e){out.innerHTML=`<div class="err">${e.message}</div>`}}
+// ---- habitaciones y huéspedes que llegan de la API se guardan en las mismas estructuras de la app ----
+function apiHab(x){const tipoId=+Object.keys(tipos).find(k=>tipos[k].nombre===x.tipo)||2;let h=habs.find(v=>v.id===x.idHabitacion);
+ if(!h){h={id:x.idHabitacion,numero:x.numero,piso:x.piso,tipo:tipoId,estado:x.estado};habs.push(h)}else{Object.assign(h,{numero:x.numero,piso:x.piso,tipo:tipoId,estado:x.estado})}
+ if(x.tarifaNoche)tipos[tipoId].tarifa=x.tarifaNoche;return h}
+function apiHuesped(x){let h=huespedes.find(v=>v.id===x.idHuesped);const o={id:x.idHuesped,nombre:(x.nombres+' '+x.apellidos).trim(),doc:x.tipoDocumento+' '+x.numeroDocumento,tel:x.telefono||'',correo:x.correo||'',estadias:x.estadias||0,extranjero:!!x.extranjeroNoResidente};
+ if(h)Object.assign(h,o);else{h=o;huespedes.push(h)}if(x.ultimaEstadia){const u=x.ultimaEstadia;h.ultima={tipo:u.idTipo,pers:u.personas,medio:u.medioPago,hab:u.habitacion,noches:u.noches,fecha:u.fecha}}return h}
+async function apiCargarHabitaciones(){const hoy=new Date(),man=new Date(Date.now()+86400000);const f=d=>d.toISOString().slice(0,10);
+ habs.length=0;reservas.length=0;pagos.length=0;comprobantes.length=0;bitacora.length=0;
+ for(const k of Object.keys(tipos)){const r=await api(`/api/disponibilidad?tipo=${tipos[k].nombre}&entrada=${f(hoy)}&salida=${f(man)}`);if(r.ok)r.data.forEach(apiHab)}
+ habs.sort((a,b)=>a.numero.localeCompare(b.numero))}
+// ---- inicio de sesión ----
+const _loginLocal=login;
+login=async function(){apiCfgSave();if(!API.on)return _loginLocal();
+ const c=document.getElementById('lCorreo').value.trim().toLowerCase(),k=document.getElementById('lClave').value,out=document.getElementById('loginRes');
+ if(!c||!k){out.innerHTML='<div class="err">Escriba el correo y la contraseña.</div>';return}
+ out.innerHTML='<div class="warn">Validando con la API…</div>';
+ try{const r=await api('/api/auth/login','POST',{correo:c,clave:k});
+  if(!r.ok){out.innerHTML=`<div class="err">${r.status===401?'Correo o contraseña incorrectos (HTTP 401).':apiMsg(r)}</div>`;return}
+  API.token=r.data.token;sesion={id:0,nombre:r.data.nombre,rol:r.data.rol,usuario:c.split('@')[0]};
+  out.innerHTML='<div class="ok">✔ Token JWT recibido · cargando habitaciones desde SQL Server…</div>';await apiCargarHabitaciones();
+  act('SESION','Inicio de sesión (API)');document.getElementById('sesInfo').innerHTML=`<b>${sesion.nombre}</b> · token JWT válido hasta ${new Date(r.data.expira).toLocaleTimeString()} · perfil <b>${sesion.rol}</b> · <span class="tag">API + SQL Server</span>`;
+  document.getElementById('modAdmin').style.display=sesion.rol==='ADMINISTRADOR'?'':'none';tabsPorRol(sesion.rol);out.innerHTML='';go(vistaInicial);vistaInicial='inicio'}
+ catch(e){out.innerHTML=`<div class="err">${e.message}</div>`}}
+const _logoutLocal=logout;logout=function(){API.token=null;_logoutLocal()}
+// ---- disponibilidad (CU-03) ----
+const _buscarLocal=buscar;
+buscar=async function(){if(!API.on)return _buscarLocal();
+ const tipoN=document.getElementById('fTipo').value,pers=+document.getElementById('fPers').value,ent=document.getElementById('fIn').value,sal=document.getElementById('fOut').value,out=document.getElementById('resultados');
+ const tipoId=+Object.keys(tipos).find(k=>tipos[k].nombre===tipoN);const n=noches(ent,sal);
+ if(!ent||!sal||n<=0){out.innerHTML='<div class="err">La fecha de salida debe ser posterior a la de entrada.</div>';return}
+ if(pers>tipos[tipoId].cap){out.innerHTML=`<div class="err">El tipo ${tipoN} admite máximo ${tipos[tipoId].cap} persona(s).</div>`;return}
+ out.innerHTML='<div class="warn">Consultando disponibilidad en la API…</div>';
+ try{const r=await api(`/api/disponibilidad?tipo=${encodeURIComponent(tipoN)}&entrada=${ent}&salida=${sal}`);
+  if(!r.ok){out.innerHTML=`<div class="err">HTTP ${r.status} · ${apiMsg(r)}</div>`;return}
+  let html=`<h3>${tipoN} · ${n} noche${n>1?'s':''} · tarifa ${fmt(tipos[tipoId].tarifa)}/noche · <span class="tag">SQL Server</span></h3>`;
+  r.data.forEach(x=>{const h=apiHab(x);const ok=x.disponible&&x.estado!=='MANTENIMIENTO';const st=x.estado==='MANTENIMIENTO'?'Mantenimiento':x.disponible?'Disponible':'Reservada';const cls=ok?'':x.estado==='MANTENIMIENTO'?'g':'o';
+   html+=`<div class="card hab" ${ok?`onclick="elegir(${h.id},'${ent}','${sal}',${pers})"`:''}><div class="th">${imgHab(h.tipo,h.piso)}</div><div class="info"><b>Hab. ${h.numero} · Piso ${h.piso}</b><br><span class="lbl">${tipoN} · ${x.capacidad} personas</span></div><div style="text-align:right"><span class="tag ${cls}">${st}</span><br>${ok?`<span class="pr">${fmt(x.precioNeto)}</span><br><span class="lbl" style="font-size:10px">total con IVA 19 %</span>`:''}</div></div>`});
+  if(!r.data.length)html+='<div class="warn">No hay habitaciones de ese tipo.</div>';
+  html+='<div class="ok">Resultado calculado por la API con la consulta de solapamiento sobre RESERVA en SQL Server. Toque una habitación disponible para reservar.</div>';out.innerHTML=html}
+ catch(e){out.innerHTML=`<div class="err">${e.message}</div>`}}
+// ---- huésped por documento (CU-02 / RF18) ----
+const _huLookupLocal=huLookup;let _huUltimo='';
+huLookup=function(){if(!API.on)return _huLookupLocal();const g=id=>document.getElementById(id);const d=g('fDoc').value.replace(/[^0-9A-Za-z]/g,'').toUpperCase();
+ if(d.length<5){g('fHuesped').value='';g('huDoc').textContent='Digite el documento del huésped; si ya está registrado en SQL Server se cargan sus datos.';g('freqTag').innerHTML='';canalDest();recalc();return}
+ if(d===_huUltimo)return;_huUltimo=d;
+ api(`/api/huespedes?documento=${d}`).then(r=>{if(g('fDoc').value.replace(/[^0-9A-Za-z]/g,'').toUpperCase()!==d)return;
+  if(r.ok){const h=apiHuesped(r.data);g('fHuesped').value=h.id;g('fNombre').value=h.nombre;g('fTel').value=(h.tel||'').replace(/^57(?=3\d{9}$)/,'');g('fCorreo').value=h.correo||'';g('fTipoDoc').value=h.doc.split(' ')[0];huChange()}
+  else{if(g('fHuesped').value){g('fHuesped').value='';g('fNombre').value='';g('fTel').value='';g('fCorreo').value=''}g('huDoc').textContent=r.status===404?'Documento no registrado en la base de datos: escriba el nombre y los datos de contacto; el huésped se creará al confirmar (POST /api/huespedes).':apiMsg(r);g('freqTag').innerHTML='';canalDest();recalc()}}).catch(e=>{g('huDoc').textContent=e.message})}
+// ---- confirmación transaccional (CU-04, CU-05, CU-06) ----
+const _confirmarLocal=confirmar;
+confirmar=async function(pagar=true){if(!API.on)return _confirmarLocal(pagar);
+ const out=document.getElementById('confRes');const g=id=>document.getElementById(id);let hu=+g('fHuesped').value;const medio=g('fMedio').value;const canal=canalSel();
+ const nom=g('fNombre').value.trim(),tdoc=g('fTipoDoc').value,ndoc=g('fDoc').value.trim();let tel=g('fTel').value.replace(/\D/g,'');if(tel.length===10&&tel.startsWith('3'))tel='57'+tel;const correo=g('fCorreo').value.trim().toLowerCase();
+ if(!sel){out.innerHTML='<div class="err">Seleccione primero una habitación disponible.</div>';return}
+ if(!hu&&(ndoc.length<5||!nom)){out.innerHTML='<div class="err">Escriba el número de documento y el nombre completo del huésped.</div>';return}
+ if(canal==='WHATSAPP'&&!tel){out.innerHTML='<div class="err">Para recibir la confirmación por WhatsApp escriba el teléfono del huésped.</div>';return}
+ if(canal==='CORREO'&&!correo.includes('@')){out.innerHTML='<div class="err">Para recibir la confirmación por correo escriba un correo válido.</div>';return}
+ out.innerHTML='<div class="warn">Enviando a la API… (sp_ConfirmarReserva)</div>';
+ try{
+  if(!hu){const partes=nom.split(/\s+/);const nombres=partes.slice(0,Math.max(1,partes.length-2)).join(' '),apellidos=partes.slice(Math.max(1,partes.length-2)).join(' ')||'-';
+   const rh=await api('/api/huespedes','POST',{tipoDocumento:tdoc,numeroDocumento:ndoc,nombres,apellidos,telefono:tel||null,correo:correo||null,extranjeroNoResidente:g('fExento').checked});
+   if(!rh.ok){out.innerHTML=`<div class="err">HTTP ${rh.status} al registrar el huésped · ${apiMsg(rh)}</div>`;return}
+   hu=rh.data.idHuesped;apiHuesped({idHuesped:hu,nombres,apellidos,tipoDocumento:tdoc,numeroDocumento:ndoc,telefono:tel,correo,extranjeroNoResidente:g('fExento').checked,estadias:0});g('fHuesped').value=hu;act('HUESPED',`Huésped ${nom} (${tdoc} ${ndoc}) registrado en SQL Server`)}
+  const r=await api('/api/reservas','POST',{idHuesped:hu,idHabitacion:sel.hab.id,fechaEntrada:sel.ent,fechaSalida:sel.sal,numeroPersonas:sel.pers,medioPago:medio,exentoIva:g('fExento').checked});
+  if(r.status===409){conflictos++;out.innerHTML=`<div class="err">✖ HTTP 409 · ${apiMsg(r)} La transacción hizo ROLLBACK: no se guardó ningún dato. Vuelva a consultar la disponibilidad.</div>`;return}
+  if(!r.ok){out.innerHTML=`<div class="err">✖ HTTP ${r.status} · ${apiMsg(r)}</div>`;return}
+  const d=r.data;const hh=huespedes.find(x=>x.id===hu);const rv={id:d.idReserva,codigo:d.codigo,hab:sel.hab,huesped:hu,entrada:sel.ent,salida:sel.sal,pers:sel.pers,sub:d.subtotal,iva:d.impuesto,valor:d.precioNeto,exento:d.exentoIva,medio,cmp:d.comprobante,estado:'CONFIRMADA',ver:0,riesgo:rnRiesgoSel(hu,medio),canal};
+  reservas.push(rv);if(hh){hh.estadias++}act('RESERVA',`Reserva ${d.codigo} confirmada en SQL Server (${medio}, ${fmt(d.precioNeto)})`);
+  out.innerHTML=`<div class="ok">✔ HTTP 201 Created · Reserva <b>${d.codigo}</b> confirmada · Comprobante <b>${d.comprobante}</b><br>Subtotal ${fmt(d.subtotal)} + IVA 19 % ${d.exentoIva?'exento':fmt(d.impuesto)} = <b>Total con IVA ${fmt(d.precioNeto)}</b><br>Guardada en SQL Server por ${sesion.nombre} (${sesion.rol}) · riesgo de cancelación ${(rv.riesgo*100).toFixed(0)} %</div>${notificar(rv,canal)}${cardCmp(rv)}<button class="btn s" onclick="go('hist')">Ver en el historial (consulta a la API)</button>`}
+ catch(e){out.innerHTML=`<div class="err">${e.message}</div>`}}
+// ---- historial y bitácora desde la base de datos (CU-12, RNF05) ----
+const _renderHistLocal=renderHist;
+renderHist=async function(){if(!API.on)return _renderHistLocal();const el=document.getElementById('histList');el.innerHTML='<div class="warn">Consultando reservas en la API…</div>';
+ try{const r=await api('/api/reservas');if(!r.ok){el.innerHTML=`<div class="err">HTTP ${r.status} · ${apiMsg(r)}</div>`;return}
+  const tag=e=>e==='EN_CASA'?'o':['PENDIENTE','CANCELADA','FINALIZADA'].includes(e)?'g':'';
+  el.innerHTML=r.data.map(x=>`<div class="card"><b>${x.codigo}</b> · Hab. ${x.habitacion} · ${x.huesped}<br><span class="lbl">${x.fechaEntrada} → ${x.fechaSalida} · ${x.numeroPersonas} pers. · total ${fmt(x.precioNeto)} (IVA ${x.exentoIva?'exento':fmt(x.impuesto)})${x.comprobante?' · '+x.comprobante:''}</span> <span class="tag ${tag(x.estado)}">${x.estado}</span>
+   ${x.estado==='CONFIRMADA'?`<button class="btn s" style="height:34px;font-size:12px" onclick="apiEstado('${x.codigo}','checkin','${x.versionFila}')">Check-in</button>`:''}${x.estado==='EN_CASA'?`<button class="btn s" style="height:34px;font-size:12px" onclick="apiEstado('${x.codigo}','checkout','${x.versionFila}')">Check-out</button>`:''}
+   ${['CONFIRMADA','EN_CASA'].includes(x.estado)?`<button class="btn w" style="height:34px;font-size:12px" onclick="apiEstado('${x.codigo}','cancelar','${x.versionFila}')">Cancelar</button>`:''}
+   <button class="btn s" style="height:34px;font-size:12px" onclick="apiDetalle('${x.codigo}')">Ver detalle (pagos, comprobante, bitácora)</button><div id="det-${x.codigo}"></div></div>`).join('')||'<div class="card">No hay reservas registradas.</div>';
+  document.getElementById('bitList').innerHTML='La bitácora de cada reserva se consulta con "Ver detalle" (GET /api/reservas/{codigo}).'}
+ catch(e){el.innerHTML=`<div class="err">${e.message}</div>`}}
+async function apiDetalle(codigo){const box=document.getElementById('det-'+codigo);if(box.innerHTML){box.innerHTML='';return}box.innerHTML='<div class="warn">Consultando…</div>';
+ try{const r=await api(`/api/reservas/${codigo}`);if(!r.ok){box.innerHTML=`<div class="err">HTTP ${r.status} · ${apiMsg(r)}</div>`;return}const d=r.data;
+  box.innerHTML=`<div class="card" style="margin-top:8px;background:var(--fondo)"><span class="lbl">Huésped</span><br>${d.huesped.nombres} ${d.huesped.apellidos} · ${d.huesped.documento}<br><span class="lbl">Pagos</span><br>${(d.pagos||[]).map(p=>`${p.medio} · ${fmt(p.valor)} · ${p.estado}`).join('<br>')||'sin pagos'}<br><span class="lbl">Comprobante</span><br>${d.comprobante?d.comprobante.numero+' · '+fmt(d.comprobante.valor):'sin comprobante'}<br><span class="lbl">Bitácora (BITACORA_RESERVA)</span><table class="lst" style="width:100%">${(d.bitacora||[]).map(b=>`<tr><td>${String(b.fecha).replace('T',' ').slice(0,16)}</td><td>${b.estadoAnterior||'-'} → <b>${b.estadoNuevo}</b></td><td>${b.usuario}</td></tr>`).join('')}</table></div>`}
+ catch(e){box.innerHTML=`<div class="err">${e.message}</div>`}}
+async function apiEstado(codigo,accion,versionFila){const el=document.getElementById('histList');
+ try{const r=await api(`/api/reservas/${codigo}/${accion}`,'PUT',{versionFila,detalle:'Desde la APK por '+sesion.usuario});
+  if(r.status===409){el.insertAdjacentHTML('afterbegin',`<div class="err">✖ HTTP 409 · ${apiMsg(r)} (otro usuario modificó la reserva: concurrencia optimista con ROWVERSION). Se recarga la lista.</div>`)}
+  else if(!r.ok){el.insertAdjacentHTML('afterbegin',`<div class="err">HTTP ${r.status} · ${apiMsg(r)}</div>`);return}
+  else act(accion.toUpperCase(),`${codigo} → ${r.data.estado} (API)`);
+  renderHist()}catch(e){el.insertAdjacentHTML('afterbegin',`<div class="err">${e.message}</div>`)}}
+apiCfgLoad();
+
 (function(){const q=new URLSearchParams(location.search);if(q.get('apk')==='1'){document.body.classList.add('apk');const v=q.get('vista');if(v&&document.getElementById('v-'+v))vistaInicial=v}})();
 </script>
 </body></html>
