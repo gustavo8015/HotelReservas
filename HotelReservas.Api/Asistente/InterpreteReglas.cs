@@ -29,7 +29,7 @@ public class InterpreteReglas : IInterpreteConsultas
         if (codigo.Success)
             return Task.FromResult(Llamar("consultarReserva", new { codigo = Regex.Replace(codigo.Value, @"\s", "").ToUpperInvariant() }));
 
-        var tipo = s.Contains("suite") ? "Suite" : s.Contains("sencill") ? "Sencilla" : s.Contains("doble") ? "Doble" : null;
+        var tipo = (s.Contains("cuádruple") || s.Contains("cuadruple") || s.Contains("cuatro camas")) ? "Cuádruple" : s.Contains("triple") ? "Triple" : s.Contains("sencill") ? "Sencilla" : s.Contains("doble") ? "Doble" : null;
 
         if (Regex.IsMatch(s, @"\b(llegada|llegan|entran|check\s*-?\s*in)"))
         {
@@ -42,14 +42,14 @@ public class InterpreteReglas : IInterpreteConsultas
 
         if (Regex.IsMatch(s, @"\b(cuanto|precio|cuesta|tarifa|vale|valor|costo|costaria)\b"))
         {
-            if (tipo == null) return Task.FromResult(Interpretacion.Aclaracion("¿Para qué tipo de habitación (Sencilla, Doble o Suite) y cuántas noches?"));
+            if (tipo == null) return Task.FromResult(Interpretacion.Aclaracion("¿Para qué tipo de habitación (Sencilla, Doble, Triple o Cuádruple) y cuántas noches?"));
             var noches = Regex.Match(s, @"(\d{1,2})\s*noche");
             return Task.FromResult(Llamar("consultarTarifa", new { tipo, noches = noches.Success ? int.Parse(noches.Groups[1].Value) : 1 }));
         }
 
         if (Regex.IsMatch(s, @"\b(libre|disponib|hay|quedan|tienen|habitacion)"))
         {
-            if (tipo == null) return Task.FromResult(Interpretacion.Aclaracion("¿Qué tipo de habitación necesita (Sencilla, Doble o Suite) y para qué fechas?"));
+            if (tipo == null) return Task.FromResult(Interpretacion.Aclaracion("¿Qué tipo de habitación necesita (Sencilla, Doble, Triple o Cuádruple) y para qué fechas?"));
             var rango = Rango(s, hoy);
             if (rango == null) return Task.FromResult(Interpretacion.Aclaracion($"¿Para qué fechas necesita la habitación {tipo.ToLower()}? Por ejemplo: del 16 al 18 de octubre."));
             return Task.FromResult(Llamar("consultarDisponibilidad", new { tipo, entrada = rango.Value.entrada.ToString("yyyy-MM-dd"), salida = rango.Value.salida.ToString("yyyy-MM-dd") }));

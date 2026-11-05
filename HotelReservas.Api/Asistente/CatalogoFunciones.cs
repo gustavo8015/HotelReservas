@@ -25,14 +25,14 @@ public class CatalogoFunciones
         new("consultarDisponibilidad",
             "Lista las habitaciones de un tipo que están libres, reservadas o en mantenimiento para un intervalo de fechas, con la tarifa por noche y el precio neto (IVA 19 % incluido).",
             new { type = "object", properties = new {
-                tipo = new { type = "string", @enum = new[] { "Sencilla", "Doble", "Suite" }, description = "Tipo de habitación" },
+                tipo = new { type = "string", @enum = new[] { "Sencilla", "Doble", "Triple", "Cuádruple" }, description = "Tipo de habitación" },
                 entrada = new { type = "string", description = "Fecha de entrada en formato AAAA-MM-DD" },
                 salida = new { type = "string", description = "Fecha de salida en formato AAAA-MM-DD (posterior a la entrada)" } },
                 required = new[] { "tipo", "entrada", "salida" } }),
         new("consultarTarifa",
             "Devuelve la tarifa vigente por noche de un tipo de habitación y el desglose subtotal, IVA 19 % y precio neto para un número de noches.",
             new { type = "object", properties = new {
-                tipo = new { type = "string", @enum = new[] { "Sencilla", "Doble", "Suite" } },
+                tipo = new { type = "string", @enum = new[] { "Sencilla", "Doble", "Triple", "Cuádruple" } },
                 noches = new { type = "integer", minimum = 1, description = "Número de noches; 1 si no se indica" },
                 fecha = new { type = "string", description = "Fecha de referencia AAAA-MM-DD; hoy si no se indica" } },
                 required = new[] { "tipo" } }),
@@ -114,7 +114,8 @@ public class CatalogoFunciones
     {
         t = t.Trim().ToLowerInvariant();
         if (t.StartsWith("sen")) return "Sencilla";
-        if (t.StartsWith("sui")) return "Suite";
+        if (t.StartsWith("tri")) return "Triple";
+        if (t.StartsWith("cua")) return "Cuádruple";
         return "Doble";
     }
 
