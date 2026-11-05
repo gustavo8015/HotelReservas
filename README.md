@@ -14,7 +14,7 @@ Diseñar y construir un sistema transaccional, implementado como aplicación mó
 
 La transacción crítica del sistema es **confirmar reserva**: verificar disponibilidad, bloquear la habitación para el rango de fechas, registrar el huésped y el pago, y emitir el comprobante, todo como una única unidad de trabajo con propiedades ACID. Si alguna parte falla, no queda ningún cambio a medias.
 
-## Estado actual: Entregas S13-S14 (APK v0.8: modo conectado con la API y SQL Server, imágenes de las habitaciones, perfiles de cliente, pagos, confirmación por correo o WhatsApp, redes neuronales y servicio inteligente con TensorFlow)
+## Estado actual: Entregas S13-S14 (APK v0.9: tipos Sencilla, Doble, Triple y Cuádruple con fotografías, modo conectado con la API y SQL Server, perfiles de cliente, pagos, confirmación por correo o WhatsApp, redes neuronales y servicio inteligente con TensorFlow)
 
 | Entrega | Contenido | Estado |
 |---|---|---|
@@ -30,8 +30,10 @@ La transacción crítica del sistema es **confirmar reserva**: verificar disponi
 
 ### Qué se agregó en las entregas S13-S14: perfiles, pagos, notificaciones, redes neuronales y servicio inteligente
 
-- **Modo conectado (APK v0.8, auditoría II)**: en la pantalla de inicio de sesión, la casilla **Conectar con la API** y la dirección del servidor (`http://IP-del-PC:5080`) hacen que inicio de sesión, disponibilidad, huéspedes, confirmación de reserva, historial con bitácora, check-in, check-out y cancelación se ejecuten contra `HotelReservas.Api` con token JWT y queden guardados en SQL Server (`fetch` desde el WebView; `MainActivity` habilita el acceso y el manifiesto el permiso de internet). El botón **Ver servidor** muestra cada llamada HTTP con su código de respuesta (200, 201, 400, 401, 404, 409). Con la casilla apagada la app funciona en modo demostración con datos en memoria. Guía de la auditoría en `docs/auditoria/Guia_Preparacion_Auditoria_II.pdf`.
-- **Imágenes de las habitaciones (APK v0.7)**: ilustraciones vectoriales (SVG en línea, sin internet ni archivos externos; función `imgHab` en `prototipo.html`) con una escena por tipo (Sencilla, Doble, Suite) y color de pared por piso. Aparecen en la galería de tipos de la pantalla Reservar, en cada resultado de búsqueda, en la confirmación de la reserva, en el inventario de Habitaciones, en Precios y habitaciones del administrador y en Mis reservas del cliente. Para fotos reales basta con ponerlas en `app/src/main/assets/img/` y hacer que `imgHab` devuelva `<img src="img/...">`.
+- **Plazo para pagar (APK v0.9)**: una reserva apartada sin pago (cliente o recepcionista) muestra la fecha y hora límite para pagar (24 h por defecto, configurable por el administrador) y la cuenta regresiva en Mis reservas y en el Historial; vencido el plazo se cancela sola y la habitación vuelve a estar disponible.
+- **Un tipo de habitación por cantidad de personas, con fotografías (APK v0.9)**: desaparece la Suite y el catálogo queda Sencilla (1 persona, 120.000), Doble (2, 180.000), Triple (3, 220.000) y Cuádruple (4, 260.000), cada uno con su fotografía y el baño privado como segunda foto (`app/src/main/assets/img/`). `database/08_tipos_triple_cuadruple.sql` renombra Suite a Cuádruple, crea Triple con su tarifa y pasa las habitaciones x02 a Triple, de modo que la app y la base de datos usan los mismos identificadores; el asistente de la API reconoce los cuatro tipos (`Asistente/CatalogoFunciones.cs`, `InterpreteReglas.cs`, `InterpreteAzureOpenAI.cs`).
+- **Modo conectado (APK v0.8, auditoría II)**: en la pantalla de inicio de sesión, la casilla **Conectar con la API** y la dirección del servidor (`http://IP-del-PC:5080`) hacen que inicio de sesión, disponibilidad, huéspedes, confirmación de reserva, historial con bitácora, check-in, check-out y cancelación se ejecuten contra `HotelReservas.Api` con token JWT y queden guardados en SQL Server (`fetch` desde el WebView; `MainActivity` habilita el acceso y el manifiesto el permiso de internet). El botón **Ver servidor** muestra cada llamada HTTP con su código de respuesta (200, 201, 400, 401, 404, 409). Con la casilla apagada la app funciona en modo demostración con datos en memoria. Guía de la auditoría en `docs/auditoria/Guia_Preparacion_Auditoria_II.pdf` y presentación en `docs/auditoria/Presentacion_Auditoria_II.html` (con la figura animada de la transacción).
+- **Imágenes de las habitaciones (APK v0.7, reemplazadas por fotografías en v0.9)**: aparecen en la galería de tipos de la pantalla Reservar, en cada resultado de búsqueda, en la confirmación de la reserva, en el inventario de Habitaciones, en Precios y habitaciones del administrador y en Mis reservas del cliente (función `imgHab` en `prototipo.html`).
 - **Tres perfiles (RF01, RF20)**: administrador (modifica tarifas, crea y da de baja habitaciones, elimina reservas y recepcionistas; la cuenta `admin@hotel.com` está protegida), recepcionista (`recepcion1@hotel.com`: reserva, cancela, registra pagos y tiene la vista Mi actividad con todo lo que hace) y cliente (`laura@correo.com`, contraseña `Cliente2026*`, o registro desde la app: reserva, paga y sale). Contraseña de los usuarios del hotel: `Hotel2026*`.
 - **Reserva pendiente y pago (RF05)**: la reserva se crea en estado PENDIENTE con el total con IVA y pasa a CONFIRMADA al registrar el pago (tarjeta, efectivo o transferencia); cancelar anula el pago. El huésped se identifica por número de documento y nombre.
 - **Confirmación por correo o WhatsApp (RF20)**: al confirmar, el cliente recibe el comprobante por el canal que elija; en la API, `NotificacionesController` y `Servicios/ServicioCorreo.cs` envían el correo por SMTP desde la cuenta del hotel (la clave de aplicación se guarda con `dotnet user-secrets`, nunca en el repositorio).
@@ -48,9 +50,9 @@ La transacción crítica del sistema es **confirmar reserva**: verificar disponi
 </p>
 
 <p align="center">
-  <img src="docs/prototipo/habitaciones-galeria-tipos.png" width="230" alt="Galería de tipos de habitación">
+  <img src="docs/prototipo/tipos-fotos-galeria.png" width="230" alt="Galería de tipos con fotografías">
+  <img src="docs/prototipo/tipos-fotos-confirmacion.png" width="230" alt="Confirmación con la foto de la habitación y el baño">
   <img src="docs/prototipo/habitaciones-resultados-imagenes.png" width="230" alt="Resultados con imagen">
-  <img src="docs/prototipo/habitaciones-confirmacion-imagen.png" width="230" alt="Confirmación con imagen de la habitación">
 </p>
 
 <p align="center">
@@ -203,20 +205,21 @@ HotelReservas/
 │   ├── 03_datos_de_prueba.sql
 │   ├── 05_impuestos_comprobante_huesped_frecuente.sql   Impuestos, comprobante compartible, huésped frecuente
 │   ├── 06_consulta_asistente.sql     Tabla CONSULTA_ASISTENTE (IA) y contraseñas de prueba
-│   └── 07_servicio_inteligente.sql   riesgo_cancelacion, perfil CLIENTE y vistas para el servicio inteligente
+│   ├── 07_servicio_inteligente.sql   riesgo_cancelacion, perfil CLIENTE y vistas para el servicio inteligente
+│   └── 08_tipos_triple_cuadruple.sql Tipos Triple y Cuádruple (reemplaza Suite), tarifas y habitaciones x02
 ├── HotelReservas.Api/                API REST ASP.NET Core 8 (lógica de negocio, acceso a datos, servicio de IA)
 │   ├── Program.cs / appsettings.json JWT, EF Core, Swagger, configuración de Azure OpenAI
 │   ├── Controllers/                  auth, disponibilidad, reservas, huéspedes, comprobantes, asistente, notificaciones, prediccion
 │   ├── Servicios/                    ServicioReservas.cs (sp_ConfirmarReserva, ROWVERSION) y ServicioCorreo.cs (SMTP)
 │   ├── Asistente/                    Orquestador, catálogo de funciones de lectura, intérpretes (Azure OpenAI y reglas)
 │   └── Data/                         DbContext y entidades (10 tablas)
-├── HotelReservasDemo_AndroidStudio/   Proyecto Android Studio (Kotlin + WebView) que empaqueta la app v0.8 en una APK (modo conectado a la API o demostración local)
-│   └── app/src/main/assets/prototipo.html
+├── HotelReservasDemo_AndroidStudio/   Proyecto Android Studio (Kotlin + WebView) que empaqueta la app v0.9 en una APK (modo conectado a la API o demostración local)
+│   └── app/src/main/assets/          prototipo.html e img/ (fotografías de los tipos y del baño)
 ├── servicio_inteligente/             Servicio inteligente TensorFlow/Keras + FastAPI (datos, entrenamiento, API, pruebas)
 ├── docs/
 │   ├── FaseI_Documentacion_Proyecto_S7_Hotel_Reservas.pdf
 │   ├── FaseII_Documentacion_Proyecto_S8_Hotel_Reservas.pdf / .docx
-│   ├── FaseII_y_III_Documentacion_Proyecto_Hotel_Reservas.pdf / .docx   Documento maestro vigente (110 p.)
+│   ├── FaseII_y_III_Documentacion_Proyecto_Hotel_Reservas.pdf / .docx   Documento maestro vigente (114 p.)
 │   ├── Actividad4_Continuacion_Documento_Maestro.pdf / .docx
 │   ├── Cronograma_Actividades_Hotel_Reservas.xlsx / Presupuesto_Hotel_Reservas.xlsx   Formatos UMB
 │   ├── pantalla-inicio.png
@@ -233,7 +236,7 @@ HotelReservas/
 
 1. Instalar SQL Server 2025 Express o Developer (gratuitos) y SQL Server Management Studio.
 2. Conectarse a la instancia (`localhost` o `.\SQLEXPRESS`).
-3. Abrir y ejecutar, en orden, `01_crear_base_de_datos.sql`, `02_transaccion_confirmar_reserva.sql`, `03_datos_de_prueba.sql`, `05_impuestos_comprobante_huesped_frecuente.sql` y `06_consulta_asistente.sql`.
+3. Abrir y ejecutar, en orden, `01_crear_base_de_datos.sql`, `02_transaccion_confirmar_reserva.sql`, `03_datos_de_prueba.sql`, `05_impuestos_comprobante_huesped_frecuente.sql`, `06_consulta_asistente.sql`, `07_servicio_inteligente.sql` y `08_tipos_triple_cuadruple.sql`.
 4. Probar la transacción con el ejemplo incluido al final del script 02. Para la prueba de concurrencia, ejecutar la misma llamada en dos ventanas de consulta al mismo tiempo: solo una confirma.
 
 **API REST**
