@@ -1,0 +1,471 @@
+{
+ "servicio": "http://127.0.0.1:8100",
+ "pasan": 14,
+ "total": 14,
+ "pruebas": [
+  {
+   "prueba": "Catálogo",
+   "metodo": "GET",
+   "ruta": "/",
+   "solicitud": null,
+   "estado_http": 200,
+   "respuesta": {
+    "servicio": "Hotel Reservas · Servicio inteligente de seguridad de la información",
+    "normas": [
+     "Decreto 1377 de 2013",
+     "Ley 1266 de 2008",
+     "Ley 1273 de 2009",
+     "Ley 1581 de 2012",
+     "Ley 527 de 1999",
+     "Política de Seguridad de la Información (modelo DAFP v02, 2026)"
+    ],
+    "articulos": 36,
+    "recursos": [
+     "GET /normas",
+     "POST /consultar",
+     "POST /verificar-dato",
+     "POST /evaluar-contrasena",
+     "GET /politica"
+    ]
+   },
+   "resultado": "PASA"
+  },
+  {
+   "prueba": "Compartir el documento del huésped por WhatsApp con otro hotel",
+   "metodo": "POST",
+   "ruta": "/consultar",
+   "solicitud": {
+    "pregunta": "¿Puedo compartir la cédula y el celular de un huésped con otro hotel por WhatsApp?",
+    "rol": "RECEPCIONISTA"
+   },
+   "estado_http": 200,
+   "respuesta": {
+    "pregunta": "¿Puedo compartir la cédula y el celular de un huésped con otro hotel por WhatsApp?",
+    "datos_personales_retirados": [],
+    "rol": "RECEPCIONISTA",
+    "respuesta": "Según Ley 1266 de 2008, artículo 9 (Deberes de los usuarios): Guardar reserva y confidencialidad de la información suministrada; utilizarla únicamente para los fines para los que fue entregada; informar a los titulares; no divulgar la información a En Hotel Reservas: El personal usa los datos solo para la reserva; el aviso de privacidad y la política interna prohíben copiarlos o compartirlos fuera del sistema. También aplica Ley 1581 de 2012, artículo 13 (Personas a quienes se les puede suministrar la información); Ley 1581 de 2012, artículo 4 (Principios para el Tratamiento de datos personales).",
+    "fuentes": [
+     {
+      "norma": "Ley 1266 de 2008",
+      "articulo": 9,
+      "titulo": "Deberes de los usuarios",
+      "afinidad": 0.564,
+      "aplicacion": "El personal usa los datos solo para la reserva; el aviso de privacidad y la política interna prohíben copiarlos o compartirlos fuera del sistema."
+     },
+     {
+      "norma": "Ley 1581 de 2012",
+      "articulo": 13,
+      "titulo": "Personas a quienes se les puede suministrar la información",
+      "afinidad": 0.539,
+      "aplicacion": "Solo el personal autenticado accede a los datos; el perfil cliente ve únicamente los suyos; no se entregan datos a terceros salvo obligación legal."
+     },
+     {
+      "norma": "Ley 1581 de 2012",
+      "articulo": 4,
+      "titulo": "Principios para el Tratamiento de datos personales",
+      "afinidad": 0.212,
+      "aplicacion": "Finalidad: gestionar reservas y pagos. Libertad: autorización registrada en HUESPED.autorizacion_datos. Veracidad: validación de documento y correo. Acceso restringido: perfiles con token JWT. Seguridad: PBKDF2, HTTPS y bloqueo de intentos. Confidencialidad: el personal solo ve los datos necesarios y el asistente filtra documentos y contactos."
+     }
+    ],
+    "fecha": "2026-11-14T21:02:28"
+   },
+   "resultado": "PASA"
+  },
+  {
+   "prueba": "Borrar mis datos (cliente)",
+   "metodo": "POST",
+   "ruta": "/consultar",
+   "solicitud": {
+    "pregunta": "Quiero que borren mis datos personales del hotel",
+    "rol": "CLIENTE"
+   },
+   "estado_http": 200,
+   "respuesta": {
+    "pregunta": "Quiero que borren mis datos personales del hotel",
+    "datos_personales_retirados": [],
+    "rol": "CLIENTE",
+    "respuesta": "Según Ley 1581 de 2012, artículo 8 (Derechos de los Titulares): El Titular de los datos personales tendrá los siguientes derechos: a) Conocer, actualizar y rectificar sus datos personales frente a los Responsables del Tratamiento o Encargados del Tratamiento. Este derecho se podrá ejercer, entre otros frente a datos parciales, inexactos, incompletos, fraccionados, que induzcan a error, o aquellos cuyo Tratamiento esté expresamente prohibido o no haya sido autorizado; b) Solicitar prueba de la autorización otorgada al Responsable del Tratamiento salvo cuando expresamente se… En Hotel Reservas: Derechos del titular atendidos en Mis datos: consultar, actualizar, rectificar, revocar la autorización y solicitar la supresión; cada solicitud queda en AUDITORIA_SEGURIDAD. También aplica Ley 1266 de 2008, artículo 6 (Derechos de los titulares de la información); Ley 1581 de 2012, artículo 15 (Reclamos).",
+    "fuentes": [
+     {
+      "norma": "Ley 1581 de 2012",
+      "articulo": 8,
+      "titulo": "Derechos de los Titulares",
+      "afinidad": 0.272,
+      "aplicacion": "Derechos del titular atendidos en Mis datos: consultar, actualizar, rectificar, revocar la autorización y solicitar la supresión; cada solicitud queda en AUDITORIA_SEGURIDAD."
+     },
+     {
+      "norma": "Ley 1266 de 2008",
+      "articulo": 6,
+      "titulo": "Derechos de los titulares de la información",
+      "afinidad": 0.229,
+      "aplicacion": "Mis datos permite al cliente consultar gratuitamente sus datos y su historial, pedir actualización y rectificación y revocar la autorización."
+     },
+     {
+      "norma": "Ley 1581 de 2012",
+      "articulo": 15,
+      "titulo": "Reclamos",
+      "afinidad": 0.186,
+      "aplicacion": "Reclamos: la solicitud de rectificación o supresión queda registrada con fecha y se atiende en máximo quince días hábiles."
+     }
+    ],
+    "fecha": "2026-11-14T21:02:28"
+   },
+   "resultado": "PASA"
+  },
+  {
+   "prueba": "Enviar la pregunta al modelo de IA en Azure",
+   "metodo": "POST",
+   "ruta": "/consultar",
+   "solicitud": {
+    "pregunta": "¿Se pueden enviar los datos del huésped al modelo de inteligencia artificial de Azure OpenAI?"
+   },
+   "estado_http": 200,
+   "respuesta": {
+    "pregunta": "¿Se pueden enviar los datos del huésped al modelo de inteligencia artificial de Azure OpenAI?",
+    "datos_personales_retirados": [],
+    "rol": "RECEPCIONISTA",
+    "respuesta": "Según Ley 1581 de 2012, artículo 26 (Prohibición): Se prohíbe la transferencia de datos personales de cualquier tipo a países que no proporcionen niveles adecuados de protección de datos. Se entiende que un país ofrece un nivel adecuado de protección de datos cuando cumpla con los estándares fijados por la 7 EVA - Gestor Normativo Superintendencia de Industria y Comercio sobre la materia, los cuales en ningún caso podrán ser inferiores a los que la presente ley exige a sus destinatarios. Esta prohibición no regirá cuando se trate de: a) Información respecto de la… En Hotel Reservas: Está prohibida la transferencia a países sin nivel adecuado de protección salvo autorización expresa del titular; por eso el filtro de datos personales retira documentos, teléfonos y correos antes de enviar la consulta al modelo, de modo que no se transfieren datos personales. También aplica Ley 1581 de 2012, artículo 18 (Deberes de los Encargados del Tratamiento); Ley 1273 de 2009, artículo 269F (Violación de datos personales).",
+    "fuentes": [
+     {
+      "norma": "Ley 1581 de 2012",
+      "articulo": 26,
+      "titulo": "Prohibición",
+      "afinidad": 0.452,
+      "aplicacion": "Está prohibida la transferencia a países sin nivel adecuado de protección salvo autorización expresa del titular; por eso el filtro de datos personales retira documentos, teléfonos y correos antes de enviar la consulta al modelo, de modo que no se transfieren datos personales."
+     },
+     {
+      "norma": "Ley 1581 de 2012",
+      "articulo": 18,
+      "titulo": "Deberes de los Encargados del Tratamiento",
+      "afinidad": 0.33,
+      "aplicacion": "Deberes de los encargados: Azure OpenAI y el servicio inteligente solo reciben datos filtrados; no conservan ni entrenan con datos del hotel."
+     },
+     {
+      "norma": "Ley 1273 de 2009",
+      "articulo": "269F",
+      "titulo": "Violación de datos personales",
+      "afinidad": 0.323,
+      "aplicacion": "Perfiles con mínimo privilegio, enmascaramiento de documentos y teléfonos en listas, y filtro de datos personales hacia el modelo de IA."
+     }
+    ],
+    "fecha": "2026-11-14T21:02:28"
+   },
+   "resultado": "PASA"
+  },
+  {
+   "prueba": "Autorización en el registro",
+   "metodo": "POST",
+   "ruta": "/consultar",
+   "solicitud": {
+    "pregunta": "¿Necesito autorización del cliente para guardar su correo y teléfono?"
+   },
+   "estado_http": 200,
+   "respuesta": {
+    "pregunta": "¿Necesito autorización del cliente para guardar su correo y teléfono?",
+    "datos_personales_retirados": [],
+    "rol": "RECEPCIONISTA",
+    "respuesta": "Según Ley 1581 de 2012, artículo 9 (Autorización del Titular): Sin perjuicio de las excepciones previstas en la ley, en el Tratamiento se requiere la autorización previa e informada del Titular, la cual deberá ser obtenida por cualquier medio que pueda ser objeto de consulta En Hotel Reservas: La casilla \"Autorizo el tratamiento de mis datos personales\" es obligatoria en el registro de cliente y en el registro de un huésped nuevo; se guarda la fecha de autorización. También aplica Decreto 1377 de 2013, artículo 5 (Autorización); Ley 1581 de 2012, artículo 12 (Deber de informar al Titular).",
+    "fuentes": [
+     {
+      "norma": "Ley 1581 de 2012",
+      "articulo": 9,
+      "titulo": "Autorización del Titular",
+      "afinidad": 0.284,
+      "aplicacion": "La casilla \"Autorizo el tratamiento de mis datos personales\" es obligatoria en el registro de cliente y en el registro de un huésped nuevo; se guarda la fecha de autorización."
+     },
+     {
+      "norma": "Decreto 1377 de 2013",
+      "articulo": 5,
+      "titulo": "Autorización",
+      "afinidad": 0.248,
+      "aplicacion": "La casilla de autorización en la aplicación guarda fecha y hora; en la API queda en HUESPED.autorizacion_datos y fecha_autorizacion."
+     },
+     {
+      "norma": "Ley 1581 de 2012",
+      "articulo": 12,
+      "titulo": "Deber de informar al Titular",
+      "afinidad": 0.209,
+      "aplicacion": "El aviso de privacidad de la aplicación informa la finalidad, los derechos y el canal de atención (correo del hotel) antes de recoger los datos."
+     }
+    ],
+    "fecha": "2026-11-14T21:02:28"
+   },
+   "resultado": "PASA"
+  },
+  {
+   "prueba": "Menores de edad",
+   "metodo": "POST",
+   "ruta": "/consultar",
+   "solicitud": {
+    "pregunta": "Un niño con tarjeta de identidad se va a hospedar, ¿qué datos puedo registrar?"
+   },
+   "estado_http": 200,
+   "respuesta": {
+    "pregunta": "Un niño con tarjeta de identidad se va a hospedar, ¿qué datos puedo registrar?",
+    "datos_personales_retirados": [],
+    "rol": "RECEPCIONISTA",
+    "respuesta": "Según Ley 1581 de 2012, artículo 7 (Derechos de los niños, niñas y adolescentes): En el Tratamiento se asegurará el respeto a los derechos prevalentes de los niños, niñas y adolescentes. Queda proscrito el Tratamiento de datos personales de niños, niñas y adolescentes, salvo aquellos datos que sean de naturaleza pública. Es tarea del Estado y las entidades educativas de todo tipo proveer información y capacitar a los representantes legales y tutores sobre los eventuales riesgos a los que se enfrentan los niños, niñas y adolescentes respecto del Tratamiento indebido de sus datos personales, y… En Hotel Reservas: Los huéspedes menores de edad (tipo de documento TI) se registran únicamente con autorización del adulto responsable que hace la reserva, y el asistente no entrega sus datos. También aplica Ley 1581 de 2012, artículo 12 (Deber de informar al Titular); Ley 1581 de 2012, artículo 10 (Casos en que no es necesaria la autorización).",
+    "fuentes": [
+     {
+      "norma": "Ley 1581 de 2012",
+      "articulo": 7,
+      "titulo": "Derechos de los niños, niñas y adolescentes",
+      "afinidad": 0.517,
+      "aplicacion": "Los huéspedes menores de edad (tipo de documento TI) se registran únicamente con autorización del adulto responsable que hace la reserva, y el asistente no entrega sus datos."
+     },
+     {
+      "norma": "Ley 1581 de 2012",
+      "articulo": 12,
+      "titulo": "Deber de informar al Titular",
+      "afinidad": 0.117,
+      "aplicacion": "El aviso de privacidad de la aplicación informa la finalidad, los derechos y el canal de atención (correo del hotel) antes de recoger los datos."
+     },
+     {
+      "norma": "Ley 1581 de 2012",
+      "articulo": 10,
+      "titulo": "Casos en que no es necesaria la autorización",
+      "afinidad": 0.077,
+      "aplicacion": "No se requiere autorización para los datos que exige la tarjeta de registro de alojamiento ni para los reportes a Migración Colombia, que son obligaciones legales."
+     }
+    ],
+    "fecha": "2026-11-14T21:02:28"
+   },
+   "resultado": "PASA"
+  },
+  {
+   "prueba": "Intentos de acceso",
+   "metodo": "POST",
+   "ruta": "/consultar",
+   "solicitud": {
+    "pregunta": "Alguien intentó entrar varias veces con la clave de recepción, ¿qué norma aplica?"
+   },
+   "estado_http": 200,
+   "respuesta": {
+    "pregunta": "Alguien intentó entrar varias veces con la clave de recepción, ¿qué norma aplica?",
+    "datos_personales_retirados": [],
+    "rol": "RECEPCIONISTA",
+    "respuesta": "Según Ley 1273 de 2009, artículo 269A (Acceso abusivo a un sistema informático): El que sin autorización o por fuera de lo acordado acceda a un sistema informático protegido con una medida de seguridad incurrirá en pena de prisión de 48 a 96 meses y En Hotel Reservas: Autenticación con token JWT, bloqueo tras cinco intentos fallidos y registro de cada intento en AUDITORIA_SEGURIDAD. También aplica Ley 1266 de 2008, artículo 4 (Principios de la administración de datos); Ley 1581 de 2012, artículo 17 (Deberes de los Responsables del Tratamiento).",
+    "fuentes": [
+     {
+      "norma": "Ley 1273 de 2009",
+      "articulo": "269A",
+      "titulo": "Acceso abusivo a un sistema informático",
+      "afinidad": 0.299,
+      "aplicacion": "Autenticación con token JWT, bloqueo tras cinco intentos fallidos y registro de cada intento en AUDITORIA_SEGURIDAD."
+     },
+     {
+      "norma": "Ley 1266 de 2008",
+      "articulo": 4,
+      "titulo": "Principios de la administración de datos",
+      "afinidad": 0.083,
+      "aplicacion": "Seguridad y confidencialidad: contraseñas con PBKDF2, token JWT, HTTPS, bloqueo tras cinco intentos, cierre de sesión por inactividad y auditoría de accesos. Temporalidad: los datos de reservas finalizadas se conservan solo el tiempo exigido por las normas tributarias y de archivo."
+     },
+     {
+      "norma": "Ley 1581 de 2012",
+      "articulo": 17,
+      "titulo": "Deberes de los Responsables del Tratamiento",
+      "afinidad": 0.074,
+      "aplicacion": "Deberes del hotel como responsable: autorización, aviso, seguridad (cifrado de contraseñas, HTTPS, bloqueo de intentos, bitácora), atención de consultas y reclamos."
+     }
+    ],
+    "fecha": "2026-11-14T21:02:28"
+   },
+   "resultado": "PASA"
+  },
+  {
+   "prueba": "La pregunta trae datos personales: se retiran",
+   "metodo": "POST",
+   "ruta": "/consultar",
+   "solicitud": {
+    "pregunta": "¿Puedo enviar el correo laura@correo.com y la CC 1010101010 al modelo?"
+   },
+   "estado_http": 200,
+   "respuesta": {
+    "pregunta": "¿Puedo enviar el correo [correo] y la [documento] al modelo?",
+    "datos_personales_retirados": [
+     "correo electrónico",
+     "documento de identidad"
+    ],
+    "rol": "RECEPCIONISTA",
+    "respuesta": "Según Ley 1266 de 2008, artículo 8 (Deberes de las fuentes de la información): Garantizar que la información suministrada sea veraz, completa, exacta, actualizada y comprobable; reportar la información con los permisos del titular; rectificar la información; resolver los En Hotel Reservas: Los datos del huésped se validan al registrarlos (tipo y número de documento, correo con formato válido) y el recepcionista puede corregirlos con registro en bitácora. También aplica Ley 1273 de 2009, artículo 269F (Violación de datos personales); Ley 1581 de 2012, artículo 4 (Principios para el Tratamiento de datos personales).",
+    "fuentes": [
+     {
+      "norma": "Ley 1266 de 2008",
+      "articulo": 8,
+      "titulo": "Deberes de las fuentes de la información",
+      "afinidad": 0.323,
+      "aplicacion": "Los datos del huésped se validan al registrarlos (tipo y número de documento, correo con formato válido) y el recepcionista puede corregirlos con registro en bitácora."
+     },
+     {
+      "norma": "Ley 1273 de 2009",
+      "articulo": "269F",
+      "titulo": "Violación de datos personales",
+      "afinidad": 0.229,
+      "aplicacion": "Perfiles con mínimo privilegio, enmascaramiento de documentos y teléfonos en listas, y filtro de datos personales hacia el modelo de IA."
+     },
+     {
+      "norma": "Ley 1581 de 2012",
+      "articulo": 4,
+      "titulo": "Principios para el Tratamiento de datos personales",
+      "afinidad": 0.204,
+      "aplicacion": "Finalidad: gestionar reservas y pagos. Libertad: autorización registrada en HUESPED.autorizacion_datos. Veracidad: validación de documento y correo. Acceso restringido: perfiles con token JWT. Seguridad: PBKDF2, HTTPS y bloqueo de intentos. Confidencialidad: el personal solo ve los datos necesarios y el asistente filtra documentos y contactos."
+     }
+    ],
+    "fecha": "2026-11-14T21:02:28"
+   },
+   "resultado": "PASA"
+  },
+  {
+   "prueba": "Verificar un texto con teléfono",
+   "metodo": "POST",
+   "ruta": "/verificar-dato",
+   "solicitud": {
+    "texto": "Confirmar reserva de Carlos, cel 3109876543, hab 204"
+   },
+   "estado_http": 200,
+   "respuesta": {
+    "contiene_datos_personales": true,
+    "tipos": [
+     "teléfono celular"
+    ],
+    "texto_seguro": "Confirmar reserva de Carlos, cel [teléfono], hab 204",
+    "recomendacion": "El texto contiene datos personales: no debe enviarse a servicios externos ni compartirse por canales no autorizados; use la versión enmascarada. Normas: Ley 1581 de 2012, artículo 4 (Principios para el Tratamiento de datos personales); Ley 1581 de 2012, artículo 26 (Prohibición); Ley 1266 de 2008, artículo 9 (Deberes de los usuarios)"
+   },
+   "resultado": "PASA"
+  },
+  {
+   "prueba": "Verificar un texto limpio",
+   "metodo": "POST",
+   "ruta": "/verificar-dato",
+   "solicitud": {
+    "texto": "¿Qué dobles hay libres del 16 al 18?"
+   },
+   "estado_http": 200,
+   "respuesta": {
+    "contiene_datos_personales": false,
+    "tipos": [],
+    "texto_seguro": "¿Qué dobles hay libres del 16 al 18?",
+    "recomendacion": "El texto no contiene datos personales identificables; puede procesarse."
+   },
+   "resultado": "PASA"
+  },
+  {
+   "prueba": "Contraseña débil",
+   "metodo": "POST",
+   "ruta": "/evaluar-contrasena",
+   "solicitud": {
+    "contrasena": "hotel2026"
+   },
+   "estado_http": 200,
+   "respuesta": {
+    "cumple": false,
+    "puntaje": 4,
+    "de": 7,
+    "reglas": {
+     "al menos 8 caracteres": true,
+     "una mayúscula": false,
+     "una minúscula": true,
+     "un número": true,
+     "un símbolo": false,
+     "sin espacios": true,
+     "no es una clave común": false
+    },
+    "nivel": "débil",
+    "norma": "Ley 1266 de 2008, artículo 4 (principio de seguridad); Ley 1581 de 2012, artículo 4, literal g; RNF01"
+   },
+   "resultado": "PASA"
+  },
+  {
+   "prueba": "Contraseña fuerte",
+   "metodo": "POST",
+   "ruta": "/evaluar-contrasena",
+   "solicitud": {
+    "contrasena": "Recepcion#2026ok"
+   },
+   "estado_http": 200,
+   "respuesta": {
+    "cumple": true,
+    "puntaje": 7,
+    "de": 7,
+    "reglas": {
+     "al menos 8 caracteres": true,
+     "una mayúscula": true,
+     "una minúscula": true,
+     "un número": true,
+     "un símbolo": true,
+     "sin espacios": true,
+     "no es una clave común": true
+    },
+    "nivel": "fuerte",
+    "norma": "Ley 1266 de 2008, artículo 4 (principio de seguridad); Ley 1581 de 2012, artículo 4, literal g; RNF01"
+   },
+   "resultado": "PASA"
+  },
+  {
+   "prueba": "Política",
+   "metodo": "GET",
+   "ruta": "/politica",
+   "solicitud": null,
+   "estado_http": 200,
+   "respuesta": {
+    "nombre": "Política de Seguridad y Privacidad de la Información de Hotel Reservas",
+    "version": "1.0",
+    "fecha": "2026-11-14",
+    "principios": [
+     "confidencialidad",
+     "integridad",
+     "disponibilidad",
+     "protección de datos personales"
+    ],
+    "controles": [
+     "autenticación con token JWT y contraseñas PBKDF2",
+     "política de contraseñas (8 caracteres, mayúscula, minúscula, número y símbolo)",
+     "bloqueo de la cuenta durante 15 minutos tras cinco intentos fallidos",
+     "cierre de sesión automático a los 10 minutos de inactividad",
+     "autorización de tratamiento de datos con fecha, y aviso de privacidad",
+     "derechos del titular desde la pantalla Mis datos (consulta, rectificación, revocatoria, supresión)",
+     "filtro de datos personales antes del modelo de IA y catálogo de solo lectura por perfil",
+     "auditoría de seguridad (AUDITORIA_SEGURIDAD) y bitácora de reservas",
+     "enmascaramiento de documentos y teléfonos en las listas del personal",
+     "HTTPS entre la aplicación y la API; secretos fuera del código"
+    ],
+    "responsables": {
+     "responsable del tratamiento": "Hotel Reservas (administrador del hotel)",
+     "encargados": [
+      "Azure OpenAI Service",
+      "servicio inteligente de predicción"
+     ],
+     "oficial de seguridad": "administrador del hotel",
+     "canal de atención": "hotelreservas2026@gmail.com"
+    }
+   },
+   "resultado": "PASA"
+  },
+  {
+   "prueba": "Solicitud inválida (pregunta vacía) → 422",
+   "metodo": "POST",
+   "ruta": "/consultar",
+   "solicitud": {
+    "pregunta": ""
+   },
+   "estado_http": 422,
+   "respuesta": {
+    "detail": [
+     {
+      "type": "string_too_short",
+      "loc": [
+       "body",
+       "pregunta"
+      ],
+      "msg": "String should have at least 3 characters",
+      "input": "",
+      "ctx": {
+       "min_length": 3
+      }
+     }
+    ]
+   },
+   "resultado": "PASA"
+  }
+ ]
+}
