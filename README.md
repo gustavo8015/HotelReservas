@@ -14,7 +14,14 @@ Diseñar y construir un sistema transaccional, implementado como aplicación mó
 
 La transacción crítica del sistema es **confirmar reserva**: verificar disponibilidad, bloquear la habitación para el rango de fechas, registrar el huésped y el pago, y emitir el comprobante, todo como una única unidad de trabajo con propiedades ACID. Si alguna parte falla, no queda ningún cambio a medias.
 
-## Estado actual: Entrega S15 (APK v0.9.3: seguridad de la información y protección de datos, servicio inteligente de seguridad, datos de demostración ampliados)
+## Estado actual: Entrega S15 (APK v0.9.4: pruebas de software en Kiwi TCMS, seguridad de la información y protección de datos, servicio inteligente de seguridad, datos de demostración ampliados)
+
+### Pruebas de software (Kiwi TCMS) · `docs/pruebas/`
+
+- **Informe de pruebas** (`docs/pruebas/Informe_de_Pruebas_Hotel_Reservas.pdf`): plan, 55 casos (41 de la APK y 14 del servicio inteligente de seguridad), tres corridas, defectos, trazabilidad con los casos de uso y las normas, y capturas de Kiwi TCMS 12.4.
+- **Resultados**: corrida 1 sobre la APK 0.9.3 40/41 (defecto DEF-01: el cierre por inactividad se auditaba como LOGOUT), corrida 2 sobre la APK 0.9.4 41/41 tras la corrección, corrida 3 del servicio de seguridad 14/14.
+- **Automatización reproducible**: `ejecutar_pruebas_apk.js` (Playwright, una captura por caso), `probar_servicio.py`, `kiwi_cargar.py` (carga planes, casos y corridas en Kiwi TCMS por XML-RPC) y `casos_de_prueba.csv` importable en otras herramientas. Evidencias en `docs/pruebas/evidencias/`.
+- **APK v0.9.4**: corrige DEF-01 en `prototipo.html` (el envoltorio del modo conectado ahora reenvía el parámetro `porInactividad` a `logout`); `versionName` 0.9.4.
 
 ### Qué se agregó en la entrega S15: normas de seguridad de la información (Ley 1266 de 2008, Ley 1581 de 2012) y servicio inteligente de seguridad
 
