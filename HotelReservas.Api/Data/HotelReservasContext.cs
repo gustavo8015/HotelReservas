@@ -21,6 +21,8 @@ public class HotelReservasContext : DbContext
     public DbSet<Comprobante> Comprobantes => Set<Comprobante>();
     public DbSet<BitacoraReserva> Bitacora => Set<BitacoraReserva>();
     public DbSet<ConsultaAsistente> ConsultasAsistente => Set<ConsultaAsistente>();
+    public DbSet<EventoSeguridad> EventosSeguridad => Set<EventoSeguridad>();
+    public DbSet<SolicitudHabeasData> SolicitudesHabeasData => Set<SolicitudHabeasData>();
 
     protected override void OnModelCreating(ModelBuilder mb)
     {
@@ -33,6 +35,11 @@ public class HotelReservasContext : DbContext
             e.Property(x => x.ClaveHash).HasColumnName("clave_hash");
             e.Property(x => x.Rol).HasColumnName("rol");
             e.Property(x => x.Activo).HasColumnName("activo");
+            e.Property(x => x.IdHuesped).HasColumnName("id_huesped");
+            e.Property(x => x.IntentosFallidos).HasColumnName("intentos_fallidos");
+            e.Property(x => x.BloqueadoHasta).HasColumnName("bloqueado_hasta");
+            e.Property(x => x.UltimoAcceso).HasColumnName("ultimo_acceso");
+            e.Property(x => x.ClaveActualizada).HasColumnName("clave_actualizada");
         });
 
         mb.Entity<Huesped>(e =>
@@ -46,6 +53,9 @@ public class HotelReservasContext : DbContext
             e.Property(x => x.Telefono).HasColumnName("telefono");
             e.Property(x => x.Correo).HasColumnName("correo");
             e.Property(x => x.ExtranjeroNoResidente).HasColumnName("extranjero_no_residente");
+            e.Property(x => x.AutorizacionDatos).HasColumnName("autorizacion_datos");
+            e.Property(x => x.FechaAutorizacion).HasColumnName("fecha_autorizacion");
+            e.Property(x => x.FechaRevocatoria).HasColumnName("fecha_revocatoria");
             e.HasMany(x => x.Reservas).WithOne(r => r.Huesped).HasForeignKey(r => r.IdHuesped);
         });
 
@@ -151,6 +161,26 @@ public class HotelReservasContext : DbContext
             e.Property(x => x.Interprete).HasColumnName("interprete");
             e.Property(x => x.Exitosa).HasColumnName("exitosa");
             e.Property(x => x.DuracionMs).HasColumnName("duracion_ms");
+        });
+
+        // Script 09: auditoría de seguridad y solicitudes de habeas data
+        mb.Entity<EventoSeguridad>(e =>
+        {
+            e.ToTable("AUDITORIA_SEGURIDAD"); e.HasKey(x => x.IdEvento);
+            e.Property(x => x.IdEvento).HasColumnName("id_evento"); e.Property(x => x.Fecha).HasColumnName("fecha");
+            e.Property(x => x.Tipo).HasColumnName("tipo"); e.Property(x => x.IdUsuario).HasColumnName("id_usuario");
+            e.Property(x => x.Correo).HasColumnName("correo"); e.Property(x => x.IdHuesped).HasColumnName("id_huesped");
+            e.Property(x => x.Detalle).HasColumnName("detalle"); e.Property(x => x.DireccionIp).HasColumnName("direccion_ip");
+            e.Property(x => x.Estado).HasColumnName("estado");
+        });
+        mb.Entity<SolicitudHabeasData>(e =>
+        {
+            e.ToTable("SOLICITUD_HABEAS_DATA"); e.HasKey(x => x.IdSolicitud);
+            e.Property(x => x.IdSolicitud).HasColumnName("id_solicitud"); e.Property(x => x.IdHuesped).HasColumnName("id_huesped");
+            e.Property(x => x.Tipo).HasColumnName("tipo"); e.Property(x => x.FechaSolicitud).HasColumnName("fecha_solicitud");
+            e.Property(x => x.Detalle).HasColumnName("detalle"); e.Property(x => x.Estado).HasColumnName("estado");
+            e.Property(x => x.FechaRespuesta).HasColumnName("fecha_respuesta"); e.Property(x => x.Respuesta).HasColumnName("respuesta");
+            e.Property(x => x.IdUsuarioResuelve).HasColumnName("id_usuario_resuelve");
         });
     }
 }

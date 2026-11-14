@@ -11,6 +11,13 @@ public class Usuario
     public string ClaveHash { get; set; } = "";
     public string Rol { get; set; } = "RECEPCIONISTA";
     public bool Activo { get; set; } = true;
+    /// <summary>Huésped asociado cuando el usuario tiene perfil CLIENTE (USUARIO.id_huesped, script 07).</summary>
+    public int? IdHuesped { get; set; }
+    // Script 09: control de intentos de acceso y vigencia de la contraseña (política de seguridad 9.1)
+    public byte IntentosFallidos { get; set; }
+    public DateTime? BloqueadoHasta { get; set; }
+    public DateTime? UltimoAcceso { get; set; }
+    public DateTime? ClaveActualizada { get; set; }
 }
 
 public class Huesped
@@ -23,6 +30,10 @@ public class Huesped
     public string? Telefono { get; set; }
     public string? Correo { get; set; }
     public bool ExtranjeroNoResidente { get; set; }
+    // Script 09: autorización de tratamiento de datos (Ley 1581 de 2012 art. 9; Decreto 1377 de 2013 arts. 5 y 9)
+    public bool AutorizacionDatos { get; set; }
+    public DateTime? FechaAutorizacion { get; set; }
+    public DateTime? FechaRevocatoria { get; set; }
     public List<Reserva> Reservas { get; set; } = new();
 }
 
