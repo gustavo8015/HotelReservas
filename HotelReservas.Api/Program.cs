@@ -10,7 +10,7 @@ using Microsoft.OpenApi.Models;
 
 // Hotel Reservas - API REST (ASP.NET Core 8). Capa de lógica de negocio y de acceso a datos de la
 // arquitectura en capas (sección 4): la app .NET MAUI solo habla con esta API por HTTPS + JWT y la
-// API es el único punto que toca la base de datos SQL Server.
+// API es el único punto que toca la base de datos SQL Server. La aplicación móvil final es la de Android Studio (Kotlin + WebView).
 var builder = WebApplication.CreateBuilder(args);
 
 // Capa de acceso a datos
@@ -31,6 +31,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 });
 builder.Services.AddAuthorization();
 builder.Services.AddScoped<ServicioToken>();
+// Seguridad de la información (script 09, política v1.0): control de intentos, auditoría y puente al servicio inteligente de seguridad
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ControlIntentos>();
+builder.Services.AddScoped<AuditoriaSeguridad>();
+builder.Services.AddHttpClient("seguridad_ia", c => { c.BaseAddress = new Uri(builder.Configuration["SeguridadIA:Url"] ?? "http://127.0.0.1:8100"); c.Timeout = TimeSpan.FromSeconds(10); });
 
 // Lógica de negocio
 builder.Services.AddScoped<ServicioReservas>();
@@ -56,6 +61,7 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 app.UseCors();
+app.UseMiddleware<CabecerasSeguridad>();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
