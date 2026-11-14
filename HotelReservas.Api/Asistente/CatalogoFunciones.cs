@@ -45,9 +45,20 @@ public class CatalogoFunciones
         new("consultarReservasConfirmadas",
             "Cuenta las reservas por estado (confirmadas, en casa, finalizadas, canceladas) y la ocupación actual de las habitaciones.",
             new { type = "object", properties = new { } }),
+        new("consultarMisReservas",
+            "Lista las reservas del huésped autenticado (perfil CLIENTE) con su estado, fechas y valor. No recibe parámetros: el huésped se toma del token.",
+            new { type = "object", properties = new { } }),
     };
 
-    public async Task<ResultadoFuncion> EjecutarAsync(string funcion, JsonElement? p, CancellationToken ct)
+    /// <summary>Funciones del catálogo que puede usar cada perfil. El personal usa todas menos la del cliente; el cliente solo disponibilidad, tarifa y sus reservas.</summary>
+    private static readonly string[] FuncionesCliente = { "consultarDisponibilidad", "consultarTarifa", "consultarMisReservas" };
+    public static IReadOnlyList<DescripcionFuncion> ParaRol(string rol) => rol == "CLIENTE"
+        ? Descripciones.Where(d => FuncionesCliente.Contains(d.Nombre)).ToList()
+        : Descripciones.Where(d => d.Nombre != "consultarMisReservas").ToList();
+
+    public Task<ResultadoFuncion> EjecutarAsync(string funcion, JsonElement? p, CancellationToken ct) => EjecutarAsync(funcion, p, ct, 0);
+
+    public async Task<ResultadoFuncion> EjecutarAsync(string funcion, JsonElement? p, CancellationToken ct, int idUsuario)
     {
         string S(string k, string? def = null) => p.HasValue && p.Value.ValueKind == JsonValueKind.Object && p.Value.TryGetProperty(k, out var v) && v.ValueKind != JsonValueKind.Null ? v.ToString() : def ?? "";
         int I(string k, int def) => int.TryParse(S(k), out var n) ? n : def;
@@ -104,6 +115,17 @@ public class CatalogoFunciones
                 int N(string e) => porEstado.FirstOrDefault(x => x.estado == e)?.total ?? 0;
                 return new(funcion, new { reservas = porEstado, habitaciones = habs },
                     $"Reservas: {N("CONFIRMADA")} confirmadas, {N("EN_CASA")} en casa, {N("FINALIZADA")} finalizadas, {N("CANCELADA")} canceladas. Habitaciones: {string.Join(", ", habs.Select(h => h.total + " " + h.estado.ToLower()))}.");
+            }
+            case "consultarMisReservas":
+            {
+                var u = await _db.Usuarios.AsNoTracking().FirstOrDefaultAsync(x => x.IdUsuario == idUsuario, ct);
+                if (u?.IdHuesped == null) return new(funcion, new { total = 0, reservas = Array.Empty<object>() }, "El usuario autenticado no tiene un huésped asociado; no hay reservas que mostrar.");
+                var mias = await _db.Reservas.Include(x => x.Habitacion).ThenInclude(h => h.Tipo).AsNoTracking()
+                    .Where(x => x.IdHuesped == u.IdHuesped && x.Estado != "ELIMINADA").OrderByDescending(x => x.FechaEntrada)
+                    .Select(x => new { x.Codigo, estado = x.Estado, habitacion = x.Habitacion.Numero, tipo = x.Habitacion.Tipo.Nombre, entrada = x.FechaEntrada, salida = x.FechaSalida, precioNeto = x.ValorTotal }).ToListAsync(ct);
+                return new(funcion, new { total = mias.Count, reservas = mias },
+                    mias.Count == 0 ? "El huésped aún no tiene reservas." :
+                    $"El huésped tiene {mias.Count} reserva(s): {string.Join("; ", mias.Select(r => $"{r.Codigo} hab. {r.habitacion} ({r.tipo}) del {r.entrada:yyyy-MM-dd} al {r.salida:yyyy-MM-dd}, {Moneda(r.precioNeto)}, estado {r.estado}"))}.");
             }
             default:
                 throw new ErrorNegocio(50020, $"La función '{funcion}' no está en el catálogo de solo lectura.");

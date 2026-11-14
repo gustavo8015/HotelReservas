@@ -25,6 +25,8 @@ public class InterpreteReglas : IInterpreteConsultas
         if (Regex.IsMatch(s, @"\b(reserv(a|e|ar|ame|eme)\s+la|crea|confirma|modifica|cancela|registra|check\s*-?\s*in|check\s*-?\s*out|paga)\b") && !Regex.IsMatch(s, @"\bcuant"))
             return Task.FromResult(Interpretacion.Aclaracion("No puedo crear, modificar ni cancelar reservas desde el asistente. Para confirmarla con verificación de disponibilidad y comprobante, use la pantalla Reservas."));
 
+        if (catalogo.Any(d => d.Nombre == "consultarMisReservas") && Regex.IsMatch(s, @"\b(mis?\s+reservas?|mis estad|reservas?\s+(tengo|hice)|estado de (mi|la) reserva|comprobante|plazo|pagar)\b"))
+            return Task.FromResult(Llamar("consultarMisReservas", new { }));
         var codigo = Regex.Match(s, @"rsv\s*\d{6,9}");
         if (codigo.Success)
             return Task.FromResult(Llamar("consultarReserva", new { codigo = Regex.Replace(codigo.Value, @"\s", "").ToUpperInvariant() }));

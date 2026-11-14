@@ -36,8 +36,12 @@ public class OrquestadorAsistente
     public OrquestadorAsistente(CatalogoFunciones catalogo, InterpreteAzureOpenAI ia, InterpreteReglas reglas, HotelReservasContext db, ILogger<OrquestadorAsistente> log)
     { _catalogo = catalogo; _ia = ia; _reglas = reglas; _db = db; _log = log; }
 
-    public async Task<RespuestaAsistente> ProcesarAsync(string consulta, int idUsuario, CancellationToken ct)
+    public Task<RespuestaAsistente> ProcesarAsync(string consulta, int idUsuario, CancellationToken ct) => ProcesarAsync(consulta, idUsuario, "RECEPCIONISTA", ct);
+
+    /// <summary>Regla 2 (perfil CLIENTE): el huésped que se registra desde la app solo dispone de disponibilidad, tarifas y sus propias reservas; nunca cifras del hotel ni datos de otros huéspedes.</summary>
+    public async Task<RespuestaAsistente> ProcesarAsync(string consulta, int idUsuario, string rol, CancellationToken ct)
     {
+        var catalogo = CatalogoFunciones.ParaRol(rol);
         var reloj = Stopwatch.StartNew();
         consulta = (consulta ?? "").Trim();
         if (consulta.Length == 0) return new RespuestaAsistente("Escriba su consulta.", null, null, "NINGUNO", false, 0);
@@ -48,13 +52,13 @@ public class OrquestadorAsistente
         Interpretacion interp;
         try
         {
-            interp = await interprete.InterpretarAsync(consultaFiltrada, CatalogoFunciones.Descripciones, ct);
+            interp = await interprete.InterpretarAsync(consultaFiltrada, catalogo, ct);
         }
         catch (Exception ex) when (interprete == _ia)
         {
             _log.LogWarning(ex, "Azure OpenAI no disponible; se usa el intérprete de reglas.");
             interprete = _reglas;
-            interp = await _reglas.InterpretarAsync(consultaFiltrada, CatalogoFunciones.Descripciones, ct);
+            interp = await _reglas.InterpretarAsync(consultaFiltrada, catalogo, ct);
         }
 
         string? funcion = interp.Funcion; string respuesta; bool exitosa = true; object? datos = null;
@@ -62,18 +66,20 @@ public class OrquestadorAsistente
         {
             respuesta = interp.MensajeDirecto ?? "¿Podría precisar su consulta?";
         }
-        else if (CatalogoFunciones.Descripciones.All(d => d.Nombre != funcion))
+        else if (catalogo.All(d => d.Nombre != funcion))
         {
-            // Regla 1: solo funciones de lectura del catálogo. Cualquier otra cosa se rechaza.
-            _log.LogWarning("El intérprete devolvió una función fuera del catálogo: {Funcion}", funcion);
-            respuesta = "Esa operación no está disponible desde el asistente. Use la pantalla Reservas.";
+            // Regla 1: solo funciones de lectura del catálogo del perfil. Cualquier otra cosa se rechaza.
+            _log.LogWarning("El intérprete devolvió una función fuera del catálogo del perfil {Rol}: {Funcion}", rol, funcion);
+            respuesta = rol == "CLIENTE"
+                ? "Como cliente solo puedo consultar disponibilidad, tarifas y sus propias reservas; las cifras del hotel y los datos de otros huéspedes no están disponibles en este perfil."
+                : "Esa operación no está disponible desde el asistente. Use la pantalla Reservas.";
             exitosa = false;
         }
         else
         {
             try
             {
-                var resultado = await _catalogo.EjecutarAsync(funcion, interp.Parametros, ct);
+                var resultado = await _catalogo.EjecutarAsync(funcion, interp.Parametros, ct, idUsuario);
                 datos = resultado.Datos;
                 try { respuesta = await interprete.RedactarAsync(consultaFiltrada, resultado, ct); }
                 catch (Exception ex) { _log.LogWarning(ex, "Fallo al redactar con IA; se devuelve el resumen de la función."); respuesta = resultado.ResumenParaModelo; }
