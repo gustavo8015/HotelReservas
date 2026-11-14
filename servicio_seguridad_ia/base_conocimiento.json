@@ -1,0 +1,326 @@
+[
+ {
+  "norma": "Ley 1581 de 2012",
+  "articulo": 1,
+  "titulo": "Objeto",
+  "texto": "La presente ley tiene por objeto desarrollar el derecho constitucional que tienen todas las personas a conocer, actualizar y rectificar las informaciones que se hayan recogido sobre ellas en bases de datos o archivos, y los demás derechos, libertades y garantías constitucionales a que se refiere el artículo 15 de la Constitución Política; así como el derecho a la información consagrado en el artículo 20 de la misma.",
+  "aplicacion": "El sistema reconoce al huésped el derecho a conocer, actualizar y rectificar sus datos: la pantalla Mis datos del perfil cliente y el recurso /api/habeasdata lo permiten.",
+  "id": 1,
+  "temas": ""
+ },
+ {
+  "norma": "Ley 1581 de 2012",
+  "articulo": 2,
+  "titulo": "Ámbito de aplicación",
+  "texto": "Los principios y disposiciones contenidas en la presente ley serán aplicables a los datos personales registrados en cualquier base de datos que los haga susceptibles de tratamiento por entidades de naturaleza pública o privada. La presente ley aplicará al tratamiento de datos personales efectuado en territorio colombiano o cuando al Responsable del Tratamiento o Encargado del Tratamiento no establecido en territorio nacional le sea aplicable la legislación colombiana en virtud de normas y tratados internacionales. El régimen de protección de datos personales que se establece en la presente ley no será de aplicación: a) A las bases de datos o archivos mantenidos en un ámbito exclusivamente personal o doméstico. Cuando estas bases de datos o archivos vayan a ser suministrados a terceros se deberá, de manera previa, informar al Titular y solicitar su autorización. En este caso los Responsables y Encargados de las bases de datos y archivos quedarán sujetos a las disposiciones contenidas en la presente ley; b) A las bases de datos y archivos que tengan por finalidad la seguridad y defensa nacional, así como la prevención, detección, monitoreo y control del lavado de activos y el financiamiento del terrorismo; c) A las Bases de datos que tengan como fin y contengan información de inteligencia y contrainteligencia; d) A las bases de datos y archivos de información periodística y otros contenidos editoriales; e) A las bases de datos y archivos regulados por la Ley 1266 de 2008; f) A las bases de datos y archivos regulados por la Ley 79 de 1993. Parágrafo. Los principios sobre protección de datos serán aplicables a todas las bases de datos, incluidas las exceptuadas en el presente artículo, con los límites dispuestos en la presente ley y sin reñir con los datos que tienen caract",
+  "aplicacion": "Aplica a la base de datos HotelReservas (SQL Server) y a toda copia del prototipo que contenga datos de huéspedes.",
+  "id": 2,
+  "temas": ""
+ },
+ {
+  "norma": "Ley 1581 de 2012",
+  "articulo": 4,
+  "titulo": "Principios para el Tratamiento de datos personales",
+  "texto": "En el desarrollo, interpretación y aplicación de la presente ley, se aplicarán, de manera armónica e integral, los siguientes principios: a) Principio de legalidad en materia de Tratamiento de datos: El Tratamiento a que se refiere la presente ley es una actividad reglada que debe sujetarse a lo establecido en ella y en las demás disposiciones que la desarrollen; b) Principio de finalidad: El Tratamiento debe obedecer a una finalidad legítima de acuerdo con la Constitución y la Ley, la cual debe ser informada al Titular; c) Principio de libertad: El Tratamiento sólo puede ejercerse con el consentimiento, previo, expreso e informado del Titular. Los datos personales no podrán ser obtenidos o divulgados sin previa autorización, o en ausencia de mandato legal o judicial que releve el consentimiento; d) Principio de veracidad o calidad: La información sujeta a Tratamiento debe ser veraz, completa, exacta, actualizada, comprobable y comprensible. Se prohíbe el Tratamiento de datos parciales, incompletos, fraccionados o que induzcan a error; e) Principio de transparencia: En el Tratamiento debe garantizarse el derecho del Titular a obtener del Responsable del Tratamiento o del Encargado del Tratamiento, en cualquier momento y sin restricciones, información acerca de la existencia de datos que le conciernan; f) Principio de acceso y circulación restringida: El Tratamiento se sujeta a los límites que se derivan de la naturaleza de los datos personales, de las disposiciones de la presente ley y la Constitución. En este sentido, el Tratamiento sólo podrá hacerse por personas autorizadas por el Titular y/o por las personas previstas en la presente ley; Los datos personales, salvo la información pública, no podrán estar disponible",
+  "aplicacion": "Finalidad: gestionar reservas y pagos. Libertad: autorización registrada en HUESPED.autorizacion_datos. Veracidad: validación de documento y correo. Acceso restringido: perfiles con token JWT. Seguridad: PBKDF2, HTTPS y bloqueo de intentos. Confidencialidad: el personal solo ve los datos necesarios y el asistente filtra documentos y contactos.",
+  "id": 3,
+  "temas": "principios finalidad libertad veracidad transparencia acceso circulacion restringida seguridad confidencialidad compartir divulgar"
+ },
+ {
+  "norma": "Ley 1581 de 2012",
+  "articulo": 5,
+  "titulo": "Datos sensibles",
+  "texto": "Para los propósitos de la presente ley, se entiende por datos sensibles aquellos que afectan la intimidad del Titular o cuyo uso indebido puede generar su discriminación, tales como aquellos que revelen el origen racial o étnico, la orientación política, las convicciones religiosas o filosóficas, la pertenencia a sindicatos, organizaciones sociales, de derechos humanos o que promueva intereses de cualquier partido político o que garanticen los derechos y garantías de partidos políticos de oposición así como los datos relativos a la salud, a la vida sexual y los datos biométricos. 2 EVA - Gestor Normativo Artículo 6°. Tratamiento de datos sensibles. Se prohíbe el Tratamiento de datos sensibles, excepto cuando: a) El Titular haya dado su autorización explícita a dicho Tratamiento, salvo en los casos que por ley no sea requerido el otorgamiento de dicha autorización; b) El Tratamiento sea necesario para salvaguardar el interés vital del Titular y este se encuentre física o jurídicamente incapacitado. En estos eventos, los representantes legales deberán otorgar su autorización; c) El Tratamiento sea efectuado en el curso de las actividades legítimas y con las debidas garantías por parte de una fundación, ONG, asociación o cualquier otro organismo sin ánimo de lucro, cuya finalidad sea política, filosófica, religiosa o sindical, siempre que se refieran exclusivamente a sus miembros o a las personas que mantengan contactos regulares por razón de su finalidad. En estos eventos, los datos no se podrán suministrar a terceros sin la autorización del Titular; d) El Tratamiento se refiera a datos que sean necesarios para el reconocimiento, ejercicio o defensa de un derecho en un proceso judicial; e) El Tratamiento tenga una finalidad histórica, estadística o científica. En este eve",
+  "aplicacion": "El sistema no recoge datos sensibles: no pide salud, origen, creencias ni biometría. Solo documento, nombre, teléfono y correo.",
+  "id": 4,
+  "temas": "datos sensibles salud origen religion biometria foto"
+ },
+ {
+  "norma": "Ley 1581 de 2012",
+  "articulo": 7,
+  "titulo": "Derechos de los niños, niñas y adolescentes",
+  "texto": "En el Tratamiento se asegurará el respeto a los derechos prevalentes de los niños, niñas y adolescentes. Queda proscrito el Tratamiento de datos personales de niños, niñas y adolescentes, salvo aquellos datos que sean de naturaleza pública. Es tarea del Estado y las entidades educativas de todo tipo proveer información y capacitar a los representantes legales y tutores sobre los eventuales riesgos a los que se enfrentan los niños, niñas y adolescentes respecto del Tratamiento indebido de sus datos personales, y proveer de conocimiento acerca del uso responsable y seguro por parte de niños, niñas y adolescentes de sus datos personales, su derecho a la privacidad y protección de su información personal y la de los demás. El Gobierno Nacional reglamentará la materia, dentro de los seis (6) meses siguientes a la promulgación de esta ley. TÍTULO IV DERECHOS Y CONDICIONES DE LEGALIDAD PARA EL TRATAMIENTO DE DATOS",
+  "aplicacion": "Los huéspedes menores de edad (tipo de documento TI) se registran únicamente con autorización del adulto responsable que hace la reserva, y el asistente no entrega sus datos.",
+  "id": 5,
+  "temas": "menor edad nino nina adolescente tarjeta identidad"
+ },
+ {
+  "norma": "Ley 1581 de 2012",
+  "articulo": 8,
+  "titulo": "Derechos de los Titulares",
+  "texto": "El Titular de los datos personales tendrá los siguientes derechos: a) Conocer, actualizar y rectificar sus datos personales frente a los Responsables del Tratamiento o Encargados del Tratamiento. Este derecho se podrá ejercer, entre otros frente a datos parciales, inexactos, incompletos, fraccionados, que induzcan a error, o aquellos cuyo Tratamiento esté expresamente prohibido o no haya sido autorizado; b) Solicitar prueba de la autorización otorgada al Responsable del Tratamiento salvo cuando expresamente se exceptúe como requisito para el Tratamiento, de conformidad con lo previsto en el artículo 10 de la presente ley; c) Ser informado por el Responsable del Tratamiento o el Encargado del Tratamiento, previa solicitud, respecto del uso que le ha dado a sus datos personales; d) Presentar ante la Superintendencia de Industria y Comercio quejas por infracciones a lo dispuesto en la presente ley y las demás normas que la modifiquen, adicionen o complementen; e) Revocar la autorización y/o solicitar la supresión del dato cuando en el Tratamiento no se respeten los principios, derechos y garantías constitucionales y legales. La revocatoria y/o supresión procederá cuando la Superintendencia de Industria y Comercio haya determinado que en el Tratamiento el Responsable o Encargado han incurrido en conductas contrarias a esta ley y a la Constitución; f) Acceder en forma gratuita a sus datos personales que hayan sido objeto de Tratamiento.",
+  "aplicacion": "Derechos del titular atendidos en Mis datos: consultar, actualizar, rectificar, revocar la autorización y solicitar la supresión; cada solicitud queda en AUDITORIA_SEGURIDAD.",
+  "id": 6,
+  "temas": "derechos titular conocer actualizar rectificar suprimir borrar eliminar revocar autorizacion acceso gratuito reclamo"
+ },
+ {
+  "norma": "Ley 1581 de 2012",
+  "articulo": 9,
+  "titulo": "Autorización del Titular",
+  "texto": "Sin perjuicio de las excepciones previstas en la ley, en el Tratamiento se requiere la autorización previa e informada del Titular, la cual deberá ser obtenida por cualquier medio que pueda ser objeto de consulta posterior.",
+  "aplicacion": "La casilla \"Autorizo el tratamiento de mis datos personales\" es obligatoria en el registro de cliente y en el registro de un huésped nuevo; se guarda la fecha de autorización.",
+  "id": 7,
+  "temas": "autorizacion previa consentimiento casilla registro guardar datos"
+ },
+ {
+  "norma": "Ley 1581 de 2012",
+  "articulo": 10,
+  "titulo": "Casos en que no es necesaria la autorización",
+  "texto": "La autorización del Titular no será necesaria cuando se trate de: a) Información requerida por una entidad pública o administrativa en ejercicio de sus funciones legales o por orden judicial; b) Datos de naturaleza pública; c) Casos de urgencia médica o sanitaria; d) Tratamiento de información autorizado por la ley para fines históricos, estadísticos o científicos; e) Datos relacionados con el Registro Civil de las Personas. 3 EVA - Gestor Normativo Quien acceda a los datos personales sin que medie autorización previa deberá en todo caso cumplir con las disposiciones contenidas en la presente ley.",
+  "aplicacion": "No se requiere autorización para los datos que exige la tarjeta de registro de alojamiento ni para los reportes a Migración Colombia, que son obligaciones legales.",
+  "id": 8,
+  "temas": ""
+ },
+ {
+  "norma": "Ley 1581 de 2012",
+  "articulo": 12,
+  "titulo": "Deber de informar al Titular",
+  "texto": "El Responsable del Tratamiento, al momento de solicitar al Titular la autorización, deberá informarle de manera clara y expresa lo siguiente: a) El Tratamiento al cual serán sometidos sus datos personales y la finalidad del mismo; b) El carácter facultativo de la respuesta a las preguntas que le sean hechas, cuando estas versen sobre datos sensibles o sobre los datos de las niñas, niños y adolescentes; c) Los derechos que le asisten como Titular; d) La identificación, dirección física o electrónica y teléfono del Responsable del Tratamiento. Parágrafo. El Responsable del Tratamiento deberá conservar prueba del cumplimiento de lo previsto en el presente artículo y, cuando el Titular lo solicite, entregarle copia de esta.",
+  "aplicacion": "El aviso de privacidad de la aplicación informa la finalidad, los derechos y el canal de atención (correo del hotel) antes de recoger los datos.",
+  "id": 9,
+  "temas": "informar aviso privacidad finalidad derechos canal"
+ },
+ {
+  "norma": "Ley 1581 de 2012",
+  "articulo": 13,
+  "titulo": "Personas a quienes se les puede suministrar la información",
+  "texto": "La información que reúna las condiciones establecidas en la presente ley podrá suministrarse a las siguientes personas: a) A los Titulares, sus causahabientes o sus representantes legales; b) A las entidades públicas o administrativas en ejercicio de sus funciones legales o por orden judicial; c) A los terceros autorizados por el Titular o por la ley. TÍTULO V PROCEDIMIENTOS",
+  "aplicacion": "Solo el personal autenticado accede a los datos; el perfil cliente ve únicamente los suyos; no se entregan datos a terceros salvo obligación legal.",
+  "id": 10,
+  "temas": "suministrar entregar compartir terceros otro hotel personas autorizadas divulgar whatsapp"
+ },
+ {
+  "norma": "Ley 1581 de 2012",
+  "articulo": 14,
+  "titulo": "Consultas",
+  "texto": "Los Titulares o sus causahabientes podrán consultar la información personal del Titular que repose en cualquier base de datos, sea esta del sector público o privado. El Responsable del Tratamiento o Encargado del Tratamiento deberán suministrar a estos toda la información contenida en el registro individual o que esté vinculada con la identificación del Titular. La consulta se formulará por el medio habilitado por el Responsable del Tratamiento o Encargado del Tratamiento, siempre y cuando se pueda mantener prueba de esta. La consulta será atendida en un término máximo de diez (10) días hábiles contados a partir de la fecha de recibo de la misma. Cuando no fuere posible atender la consulta dentro de dicho término, se informará al interesado, expresando los motivos de la demora y señalando la fecha en que se atenderá su consulta, la cual en ningún caso podrá superar los cinco (5) días hábiles siguientes al vencimiento del primer término. Parágrafo. Las disposiciones contenidas en leyes especiales o los reglamentos expedidos por el Gobierno Nacional podrán establecer términos inferiores, atendiendo a la naturaleza del dato personal.",
+  "aplicacion": "Consultas del titular: desde Mis datos o por el correo del hotel; respuesta en máximo diez días hábiles.",
+  "id": 11,
+  "temas": ""
+ },
+ {
+  "norma": "Ley 1581 de 2012",
+  "articulo": 15,
+  "titulo": "Reclamos",
+  "texto": "El Titular o sus causahabientes que consideren que la información contenida en una base de datos debe ser objeto de corrección, actualización o supresión, o cuando adviertan el presunto incumplimiento de cualquiera de los deberes contenidos en esta ley, podrán presentar un reclamo ante el Responsable del Tratamiento o el Encargado del Tratamiento el cual será tramitado bajo las siguientes reglas: 1. El reclamo se formulará mediante solicitud dirigida al Responsable del Tratamiento o al Encargado del Tratamiento, con la identificación del Titular, la descripción de los hechos que dan lugar al reclamo, la dirección, y acompañando los documentos que se quiera hacer valer. Si el reclamo resulta incompleto, se requerirá al interesado dentro de los cinco (5) días siguientes a la recepción del reclamo para que subsane las fallas. Transcurridos dos (2) meses desde la fecha del requerimiento, sin que el solicitante presente la información requerida, se entenderá que ha desistido del reclamo. En caso de que quien reciba el reclamo no sea competente para resolverlo, dará traslado a quien corresponda en un término máximo de dos (2) días hábiles e informará de la situación al interesado. 2. Una vez recibido el reclamo completo, se incluirá en la base de datos una leyenda que diga \"reclamo en trámite\" y el motivo del mismo, en un 4 EVA - Gestor Normativo término no mayor a dos (2) días hábiles. Dicha leyenda deberá mantenerse hasta que el reclamo sea decidido. 3. El término máximo para atender el reclamo será de quince (15) días hábiles contados a partir del día siguiente a la fecha de su recibo. Cuando no fuere posible atender el reclamo dentro de dicho término, se informará al interesado los motivos de la demora y la fecha en que se atenderá su reclamo, la cual en ningún caso podrá",
+  "aplicacion": "Reclamos: la solicitud de rectificación o supresión queda registrada con fecha y se atiende en máximo quince días hábiles.",
+  "id": 12,
+  "temas": "reclamos supresion borrar eliminar corregir rectificar quince dias"
+ },
+ {
+  "norma": "Ley 1581 de 2012",
+  "articulo": 17,
+  "titulo": "Deberes de los Responsables del Tratamiento",
+  "texto": "Los Responsables del Tratamiento deberán cumplir los siguientes deberes, sin perjuicio de las demás disposiciones previstas en la presente ley y en otras que rijan su actividad: a) Garantizar al Titular, en todo tiempo, el pleno y efectivo ejercicio del derecho de hábeas data; b) Solicitar y conservar, en las condiciones previstas en la presente ley, copia de la respectiva autorización otorgada por el Titular; c) Informar debidamente al Titular sobre la finalidad de la recolección y los derechos que le asisten por virtud de la autorización otorgada; d) Conservar la información bajo las condiciones de seguridad necesarias para impedir su adulteración, pérdida, consulta, uso o acceso no autorizado o fraudulento; e) Garantizar que la información que se suministre al Encargado del Tratamiento sea veraz, completa, exacta, actualizada, comprobable y comprensible; f) Actualizar la información, comunicando de forma oportuna al Encargado del Tratamiento, todas las novedades respecto de los datos que previamente le haya suministrado y adoptar las demás medidas necesarias para que la información suministrada a este se mantenga actualizada; g) Rectificar la información cuando sea incorrecta y comunicar lo pertinente al Encargado del Tratamiento; h) Suministrar al Encargado del Tratamiento, según el caso, únicamente datos cuyo Tratamiento esté previamente autorizado de conformidad con lo previsto en la presente ley; i) Exigir al Encargado del Tratamiento en todo momento, el respeto a las condiciones de seguridad y privacidad de la información del Titular; j) Tramitar las consultas y reclamos formulados en los términos señalados en la presente ley; k) Adoptar un manual interno de políticas y procedimientos para garantizar el adecuado cumplimiento de la presente ley y en especial, par",
+  "aplicacion": "Deberes del hotel como responsable: autorización, aviso, seguridad (cifrado de contraseñas, HTTPS, bloqueo de intentos, bitácora), atención de consultas y reclamos.",
+  "id": 13,
+  "temas": "deberes responsable seguridad conservar evitar adulteracion perdida consulta uso no autorizado"
+ },
+ {
+  "norma": "Ley 1581 de 2012",
+  "articulo": 18,
+  "titulo": "Deberes de los Encargados del Tratamiento",
+  "texto": "Los Encargados del Tratamiento deberán cumplir los siguientes deberes, sin perjuicio de las demás disposiciones previstas en la presente ley y en otras que rijan su actividad: a) Garantizar al Titular, en todo tiempo, el pleno y efectivo ejercicio del derecho de hábeas data; b) Conservar la información bajo las condiciones de seguridad necesarias para impedir su adulteración, pérdida, consulta, uso o acceso no autorizado o fraudulento; c) Realizar oportunamente la actualización, rectificación o supresión de los datos en los términos de la presente ley; d) Actualizar la información reportada por los Responsables del Tratamiento dentro de los cinco (5) días hábiles contados a partir de su recibo; e) Tramitar las consultas y los reclamos formulados por los Titulares en los términos señalados en la presente ley; f) Adoptar un manual interno de políticas y procedimientos para garantizar el adecuado cumplimiento de la presente ley y, en especial, para la atención de consultas y reclamos por parte de los Titulares; 5 EVA - Gestor Normativo g) Registrar en la base de datos las leyenda \"reclamo en trámite\" en la forma en que se regula en la presente ley; h) Insertar en la base de datos la leyenda \"información en discusión judicial\" una vez notificado por parte de la autoridad competente sobre procesos judiciales relacionados con la calidad del dato personal; i) Abstenerse de circular información que esté siendo controvertida por el Titular y cuyo bloqueo haya sido ordenado por la Superintendencia de Industria y Comercio; j) Permitir el acceso a la información únicamente a las personas que pueden tener acceso a ella; k) Informar a la Superintendencia de Industria y Comercio cuando se presenten violaciones a los códigos de seguridad y existan riesgos en la administración de la inf",
+  "aplicacion": "Deberes de los encargados: Azure OpenAI y el servicio inteligente solo reciben datos filtrados; no conservan ni entrenan con datos del hotel.",
+  "id": 14,
+  "temas": "deberes encargado proveedor servicio externo inteligencia artificial azure"
+ },
+ {
+  "norma": "Ley 1581 de 2012",
+  "articulo": 19,
+  "titulo": "Autoridad de Protección de Datos",
+  "texto": "La Superintendencia de Industria y Comercio, a través de una Delegatura para la Protección de Datos Personales, ejercerá la vigilancia para garantizar que en el Tratamiento de datos personales se respeten los principios, derechos, garantías y procedimientos previstos en la presente ley. Parágrafo 1°. El Gobierno Nacional en el plazo de seis (6) meses contados a partir de la fecha de entrada en vigencia de la presente ley incorporará dentro de la estructura de la Superintendencia de Industria y Comercio un despacho de Superintendente Delegado para ejercer las funciones de Autoridad de Protección de Datos. Parágrafo 2°. La vigilancia del tratamiento de los datos personales regulados en la Ley 1266 de 2008 se sujetará a lo previsto en dicha norma.",
+  "aplicacion": "La Superintendencia de Industria y Comercio es la autoridad; el hotel debe inscribir la base de datos en el Registro Nacional de Bases de Datos si supera los umbrales del Decreto 886 de 2014.",
+  "id": 15,
+  "temas": ""
+ },
+ {
+  "norma": "Ley 1581 de 2012",
+  "articulo": 21,
+  "titulo": "Funciones",
+  "texto": "La Superintendencia de Industria y Comercio ejercerá las siguientes funciones: a) Velar por el cumplimiento de la legislación en materia de protección de datos personales; b) Adelantar las investigaciones del caso, de oficio o a petición de parte y, como resultado de ellas, ordenar las medidas que sean necesarias para hacer efectivo el derecho de hábeas data. Para el efecto, siempre que se desconozca el derecho, podrá disponer que se conceda el acceso y suministro de los datos, la rectificación, actualización o supresión de los mismos; c) Disponer el bloqueo temporal de los datos cuando, de la solicitud y de las pruebas aportadas por el Titular, se identifique un riesgo cierto de vulneración de sus derechos fundamentales, y dicho bloqueo sea necesario para protegerlos mientras se adopta una decisión definitiva; d) Promover y divulgar los derechos de las personas en relación con el Tratamiento de datos personales e implementará campañas pedagógicas para capacitar e informar a los ciudadanos acerca del ejercicio y garantía del derecho fundamental a la protección de datos; e) Impartir instrucciones sobre las medidas y procedimientos necesarios para la adecuación de las operaciones de los Responsables del Tratamiento y Encargados del Tratamiento a las disposiciones previstas en la presente ley; f) Solicitar a los Responsables del Tratamiento y Encargados del Tratamiento la información que sea necesaria para el ejercicio efectivo de sus funciones. g) Proferir las declaraciones de conformidad sobre las transferencias internacionales de datos; h) Administrar el Registro Nacional Público de Bases de Datos y emitir las órdenes y los actos necesarios para su administración y funcionamiento; i) Sugerir o recomendar los ajustes, correctivos o adecuaciones a la normatividad que resu",
+  "aplicacion": "La SIC puede investigar e imponer sanciones; por ello la bitácora y la auditoría de seguridad conservan evidencia del cumplimiento.",
+  "id": 16,
+  "temas": ""
+ },
+ {
+  "norma": "Ley 1581 de 2012",
+  "articulo": 23,
+  "titulo": "Sanciones",
+  "texto": "La Superintendencia de Industria y Comercio podrá imponer a los Responsables del Tratamiento y Encargados del Tratamiento las siguientes sanciones: a) Multas de carácter personal e institucional hasta por el equivalente de dos mil (2.000) salarios mínimos mensuales legales vigentes al momento de la imposición de la sanción. Las multas podrán ser sucesivas mientras subsista el incumplimiento que las originó; b) Suspensión de las actividades relacionadas con el Tratamiento hasta por un término de seis (6) meses. En el acto de suspensión se indicarán los correctivos que se deberán adoptar; c) Cierre temporal de las operaciones relacionadas con el Tratamiento una vez transcurrido el término de suspensión sin que se hubieren adoptado los correctivos ordenados por la Superintendencia de Industria y Comercio; d) Cierre inmediato y definitivo de la operación que involucre el Tratamiento de datos sensibles; Parágrafo. Las sanciones indicadas en el presente artículo sólo aplican para las personas de naturaleza privada. En el evento en el cual la Superintendencia de Industria y Comercio advierta un presunto incumplimiento de una autoridad pública a las disposiciones de la presente ley, remitirá la actuación a la Procuraduría General de la Nación para que adelante la investigación respectiva.",
+  "aplicacion": "Las sanciones van hasta multas de dos mil salarios mínimos y suspensión de actividades; el cumplimiento documentado reduce el riesgo.",
+  "id": 17,
+  "temas": ""
+ },
+ {
+  "norma": "Ley 1581 de 2012",
+  "articulo": 25,
+  "titulo": "Registro Nacional de Bases de Datos",
+  "texto": "Reglamentado por el Decreto Nacional 886 de 2014 El Registro Nacional de Bases de Datos es el directorio público de las bases de datos sujetas a Tratamiento que operan en el país. El registro será administrado por la Superintendencia de Industria y Comercio y será de libre consulta para los ciudadanos. Para realizar el registro de bases de datos, los interesados deberán aportar a la Superintendencia de Industria y Comercio las políticas de tratamiento de la información, las cuales obligarán a los responsables y encargados del mismo, y cuyo incumplimiento acarreará las sanciones correspondientes. Las políticas de Tratamiento en ningún caso podrán ser inferiores a los deberes contenidos en la presente ley. Parágrafo. El Gobierno Nacional reglamentará, dentro del año siguiente a la promulgación de la presente ley, la información mínima que debe contener el Registro, y los términos y condiciones bajo los cuales se deben inscribir en este los Responsables del Tratamiento. TÍTULO VIII TRANSFERENCIA DE DATOS A TERCEROS PAÍSES",
+  "aplicacion": "La transferencia a Azure OpenAI (servidores fuera de Colombia) es una transferencia internacional.",
+  "id": 18,
+  "temas": "registro nacional bases de datos directorio superintendencia inscribir"
+ },
+ {
+  "norma": "Ley 1581 de 2012",
+  "articulo": 26,
+  "titulo": "Prohibición",
+  "texto": "Se prohíbe la transferencia de datos personales de cualquier tipo a países que no proporcionen niveles adecuados de protección de datos. Se entiende que un país ofrece un nivel adecuado de protección de datos cuando cumpla con los estándares fijados por la 7 EVA - Gestor Normativo Superintendencia de Industria y Comercio sobre la materia, los cuales en ningún caso podrán ser inferiores a los que la presente ley exige a sus destinatarios. Esta prohibición no regirá cuando se trate de: a) Información respecto de la cual el Titular haya otorgado su autorización expresa e inequívoca para la transferencia; b) Intercambio de datos de carácter médico, cuando así lo exija el Tratamiento del Titular por razones de salud o higiene pública; c) Transferencias bancarias o bursátiles, conforme a la legislación que les resulte aplicable; d) Transferencias acordadas en el marco de tratados internacionales en los cuales la República de Colombia sea parte, con fundamento en el principio de reciprocidad; e) Transferencias necesarias para la ejecución de un contrato entre el Titular y el Responsable del Tratamiento, o para la ejecución de medidas precontractuales siempre y cuando se cuente con la autorización del Titular; f) Transferencias legalmente exigidas para la salvaguardia del interés público, o para el reconocimiento, ejercicio o defensa de un derecho en un proceso judicial. Parágrafo 1°. En los casos no contemplados como excepción en el presente artículo, corresponderá a la Superintendencia de Industria y Comercio, proferir la declaración de conformidad relativa a la transferencia internacional de datos personales. Para el efecto, el Superintendente queda facultado para requerir información y adelantar las diligencias tendientes a establecer el cumplimiento de los presupuestos que",
+  "aplicacion": "Está prohibida la transferencia a países sin nivel adecuado de protección salvo autorización expresa del titular; por eso el filtro de datos personales retira documentos, teléfonos y correos antes de enviar la consulta al modelo, de modo que no se transfieren datos personales.",
+  "id": 19,
+  "temas": "transferencia internacional paises nivel adecuado proteccion enviar datos exterior azure openai modelo inteligencia artificial nube"
+ },
+ {
+  "norma": "Ley 1581 de 2012",
+  "articulo": 3,
+  "titulo": "Definiciones",
+  "texto": "Definiciones. Para los efectos de la presente ley, se entiende por: a) Autorización: Consentimiento previo, expreso e informado del Titular para llevar a cabo el Tratamiento de datos personales; b) Base de Datos: Conjunto organizado de datos personales que sea objeto de Tratamiento; c) Dato personal: Cualquier información vinculada o que pueda asociarse a una o varias personas naturales determinadas o determinables; d) Encargado del Tratamiento: Persona natural o jurídica, pública o privada, que por sí misma o en asocio con otros, realice el Tratamiento de datos personales por cuenta del Responsable del Tratamiento; e) Responsable del Tratamiento: Persona natural o jurídica, pública o privada, que por sí misma o en asocio con otros, decida sobre la base de datos y/o el Tratamiento de los datos; f) Titular: Persona natural cuyos datos personales sean objeto de Tratamiento; g) Tratamiento: Cualquier operación o conjunto de operaciones sobre datos personales, tales como la recolección, almacenamiento, uso, circulación o supresión. TÍTULO II PRINCIPIOS RECTORES",
+  "aplicacion": "Hotel Reservas es Responsable del Tratamiento; el servicio de Azure OpenAI y el servicio inteligente son Encargados; el huésped es el Titular; la tabla HUESPED es la base de datos.",
+  "id": 20,
+  "temas": ""
+ },
+ {
+  "norma": "Ley 1581 de 2012",
+  "articulo": 6,
+  "titulo": "Tratamiento de datos sensibles",
+  "texto": "Tratamiento de datos sensibles. Se prohíbe el Tratamiento de datos sensibles, excepto cuando: a) El Titular haya dado su autorización explícita a dicho Tratamiento, salvo en los casos que por ley no sea requerido el otorgamiento de dicha autorización; b) El Tratamiento sea necesario para salvaguardar el interés vital del Titular y este se encuentre física o jurídicamente incapacitado. En estos eventos, los representantes legales deberán otorgar su autorización; c) El Tratamiento sea efectuado en el curso de las actividades legítimas y con las debidas garantías por parte de una fundación, ONG, asociación o cualquier otro organismo sin ánimo de lucro, cuya finalidad sea política, filosófica, religiosa o sindical, siempre que se refieran exclusivamente a sus miembros o a las personas que mantengan contactos regulares por razón de su finalidad. En estos eventos, los datos no se podrán suministrar a terceros sin la autorización del Titular; d) El Tratamiento se refiera a datos que sean necesarios para el reconocimiento, ejercicio o defensa de un derecho en un proceso judicial; e) El Tratamiento tenga una finalidad histórica, estadística o científica. En este evento deberán adoptarse las",
+  "aplicacion": "Si un huésped indicara un dato sensible en un campo libre, no se almacena; los campos del formulario no lo admiten.",
+  "id": 21,
+  "temas": ""
+ },
+ {
+  "norma": "Ley 1266 de 2008",
+  "articulo": 1,
+  "titulo": "Objeto",
+  "texto": "Desarrolla el derecho constitucional a conocer, actualizar y rectificar las informaciones recogidas en bancos de datos, en particular la información financiera, crediticia, comercial, de servicios y la proveniente de terceros países.",
+  "aplicacion": "El historial de reservas y pagos del huésped es información comercial y de servicios; el huésped puede consultarla y pedir su corrección.",
+  "id": 22,
+  "temas": ""
+ },
+ {
+  "norma": "Ley 1266 de 2008",
+  "articulo": 3,
+  "titulo": "Definiciones",
+  "texto": "Titular de la información: persona a quien se refiere la información. Fuente de información: quien recibe o conoce datos del titular por una relación comercial o de servicio. Operador de información: quien administra el banco de datos. Usuario: quien accede a la información. Dato personal, dato público, dato semiprivado y dato privado.",
+  "aplicacion": "El hotel es fuente y operador de su propio banco de datos de huéspedes; el personal y el cliente son usuarios con permisos distintos.",
+  "id": 23,
+  "temas": ""
+ },
+ {
+  "norma": "Ley 1266 de 2008",
+  "articulo": 4,
+  "titulo": "Principios de la administración de datos",
+  "texto": "Veracidad o calidad de los registros; finalidad; circulación restringida; temporalidad de la información; interpretación integral de derechos constitucionales; seguridad: la información debe manejarse con las medidas técnicas necesarias para garantizar su seguridad y evitar su adulteración, pérdida, consulta o uso no autorizado; confidencialidad.",
+  "aplicacion": "Seguridad y confidencialidad: contraseñas con PBKDF2, token JWT, HTTPS, bloqueo tras cinco intentos, cierre de sesión por inactividad y auditoría de accesos. Temporalidad: los datos de reservas finalizadas se conservan solo el tiempo exigido por las normas tributarias y de archivo.",
+  "id": 24,
+  "temas": "principios seguridad confidencialidad circulacion restringida temporalidad calidad"
+ },
+ {
+  "norma": "Ley 1266 de 2008",
+  "articulo": 6,
+  "titulo": "Derechos de los titulares de la información",
+  "texto": "Frente a los operadores: ejercer el derecho fundamental al hábeas data, conocer la información, solicitar actualización y rectificación, presentar peticiones y reclamos, y acceder gratuitamente a la información personal en bases de datos. Frente a las fuentes: conocer la información que la fuente suministra y solicitar actualización o rectificación.",
+  "aplicacion": "Mis datos permite al cliente consultar gratuitamente sus datos y su historial, pedir actualización y rectificación y revocar la autorización.",
+  "id": 25,
+  "temas": "derechos titular conocer actualizar rectificar reclamo gratuito"
+ },
+ {
+  "norma": "Ley 1266 de 2008",
+  "articulo": 7,
+  "titulo": "Deberes de los operadores de los bancos de datos",
+  "texto": "Garantizar la calidad de la información; conservar las medidas de seguridad; realizar las actualizaciones y rectificaciones; tramitar las consultas y reclamos; permitir el acceso del titular; registrar la información.",
+  "aplicacion": "La API registra toda modificación de datos de huéspedes en AUDITORIA_SEGURIDAD y atiende consultas y reclamos por /api/habeasdata.",
+  "id": 26,
+  "temas": ""
+ },
+ {
+  "norma": "Ley 1266 de 2008",
+  "articulo": 8,
+  "titulo": "Deberes de las fuentes de la información",
+  "texto": "Garantizar que la información suministrada sea veraz, completa, exacta, actualizada y comprobable; reportar la información con los permisos del titular; rectificar la información; resolver los reclamos.",
+  "aplicacion": "Los datos del huésped se validan al registrarlos (tipo y número de documento, correo con formato válido) y el recepcionista puede corregirlos con registro en bitácora.",
+  "id": 27,
+  "temas": ""
+ },
+ {
+  "norma": "Ley 1266 de 2008",
+  "articulo": 9,
+  "titulo": "Deberes de los usuarios",
+  "texto": "Guardar reserva y confidencialidad de la información suministrada; utilizarla únicamente para los fines para los que fue entregada; informar a los titulares; no divulgar la información a terceros.",
+  "aplicacion": "El personal usa los datos solo para la reserva; el aviso de privacidad y la política interna prohíben copiarlos o compartirlos fuera del sistema.",
+  "id": 28,
+  "temas": "usuarios reserva confidencialidad no divulgar terceros compartir whatsapp otro hotel"
+ },
+ {
+  "norma": "Decreto 1377 de 2013",
+  "articulo": 5,
+  "titulo": "Autorización",
+  "texto": "La autorización del titular puede constar en un documento físico, electrónico o en cualquier formato que permita garantizar su posterior consulta, o mediante un mecanismo técnico que permita concluir de manera inequívoca que el titular la otorgó.",
+  "aplicacion": "La casilla de autorización en la aplicación guarda fecha y hora; en la API queda en HUESPED.autorizacion_datos y fecha_autorizacion.",
+  "id": 29,
+  "temas": ""
+ },
+ {
+  "norma": "Decreto 1377 de 2013",
+  "articulo": 9,
+  "titulo": "Revocatoria de la autorización",
+  "texto": "El titular puede revocar la autorización en cualquier momento, siempre que no lo impida una disposición legal o contractual.",
+  "aplicacion": "Mis datos incluye \"Revocar autorización\"; las reservas vigentes se mantienen por la obligación contractual y legal de conservar la información tributaria.",
+  "id": 30,
+  "temas": ""
+ },
+ {
+  "norma": "Decreto 1377 de 2013",
+  "articulo": 13,
+  "titulo": "Política de tratamiento de la información",
+  "texto": "El responsable debe desarrollar una política de tratamiento con nombre, finalidad, derechos del titular, procedimientos y fecha de vigencia.",
+  "aplicacion": "docs/seguridad/Politica_Seguridad_Informacion_Hotel_Reservas.pdf contiene la política y el aviso de privacidad que muestra la aplicación.",
+  "id": 31,
+  "temas": ""
+ },
+ {
+  "norma": "Ley 1273 de 2009",
+  "articulo": "269A",
+  "titulo": "Acceso abusivo a un sistema informático",
+  "texto": "El que sin autorización o por fuera de lo acordado acceda a un sistema informático protegido con una medida de seguridad incurrirá en pena de prisión de 48 a 96 meses y multa.",
+  "aplicacion": "Autenticación con token JWT, bloqueo tras cinco intentos fallidos y registro de cada intento en AUDITORIA_SEGURIDAD.",
+  "id": 32,
+  "temas": "acceso abusivo intentos clave contrasena hackeo bloqueo"
+ },
+ {
+  "norma": "Ley 1273 de 2009",
+  "articulo": "269F",
+  "titulo": "Violación de datos personales",
+  "texto": "El que sin estar facultado obtenga, compile, sustraiga, ofrezca, venda, intercambie, envíe, compre, intercepte, divulgue, modifique o emplee datos personales incurrirá en pena de prisión de 48 a 96 meses y multa.",
+  "aplicacion": "Perfiles con mínimo privilegio, enmascaramiento de documentos y teléfonos en listas, y filtro de datos personales hacia el modelo de IA.",
+  "id": 33,
+  "temas": "violacion datos personales divulgar vender enviar interceptar"
+ },
+ {
+  "norma": "Política de Seguridad de la Información (modelo DAFP v02, 2026)",
+  "articulo": 8,
+  "titulo": "Política general",
+  "texto": "Compromiso con los principios de confidencialidad, integridad y disponibilidad mediante la gestión de riesgos, controles técnicos y procedimentales, cumplimiento legal y protección de datos personales, con auditorías que permitan la mejora continua.",
+  "aplicacion": "Hotel Reservas adopta la política general adaptada: confidencialidad por perfiles y filtro de datos, integridad por la transacción con bloqueo y ROWVERSION, disponibilidad por el modo demostración sin servidor.",
+  "id": 34,
+  "temas": ""
+ },
+ {
+  "norma": "Política de Seguridad de la Información (modelo DAFP v02, 2026)",
+  "articulo": 12,
+  "titulo": "Sanciones",
+  "texto": "El incumplimiento de la política conlleva las consecuencias legales, disciplinarias y administrativas de la normativa vigente.",
+  "aplicacion": "Los usuarios que incumplan se desactivan desde Administración; los hechos quedan en la auditoría de seguridad.",
+  "id": 35,
+  "temas": ""
+ },
+ {
+  "norma": "Ley 527 de 1999",
+  "articulo": 10,
+  "titulo": "Admisibilidad y fuerza probatoria de los mensajes de datos",
+  "texto": "Los mensajes de datos serán admisibles como medios de prueba y su fuerza probatoria es la otorgada en el Código de Procedimiento Civil.",
+  "aplicacion": "El comprobante, la bitácora y la auditoría de seguridad son mensajes de datos con valor probatorio.",
+  "id": 36,
+  "temas": ""
+ }
+]
