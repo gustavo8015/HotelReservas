@@ -11,8 +11,8 @@ android {
         applicationId = "com.umb.hotelreservas.demo"
         minSdk = 24
         targetSdk = 34
-        versionCode = 2
-        versionName = "0.2"
+        versionCode = 11
+        versionName = "0.9.3"
     }
 
     buildTypes {
