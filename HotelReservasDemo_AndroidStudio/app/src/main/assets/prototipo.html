@@ -769,7 +769,7 @@ login=async function(){apiCfgSave();if(!API.on)return _loginLocal();
   act('SESION','Inicio de sesión (API)');document.getElementById('sesInfo').innerHTML=`<b>${sesion.nombre}</b> · token JWT válido hasta ${new Date(r.data.expira).toLocaleTimeString()} · perfil <b>${sesion.rol}</b> · <span class="tag">API + SQL Server</span>`;
   document.getElementById('modAdmin').style.display=sesion.rol==='ADMINISTRADOR'?'':'none';tabsPorRol(sesion.rol);chatPorRol();out.innerHTML='';go(vistaInicial);vistaInicial='inicio'}
  catch(e){out.innerHTML=`<div class="err">${e.message}</div>`}}
-const _logoutLocal=logout;logout=function(){API.token=null;_logoutLocal()}
+const _logoutLocal=logout;logout=function(porInactividad){API.token=null;_logoutLocal(porInactividad)}
 // ---- disponibilidad (CU-03) ----
 const _buscarLocal=buscar;
 buscar=async function(){if(!API.on)return _buscarLocal();
