@@ -5,6 +5,7 @@
 Universidad Manuela Beltrán · Ingeniería de Sistemas · Asignatura: Sistemas Transaccionales (7.° semestre)
 Docente: Jamilton Fernando Benvides
 Integrantes: Gustavo Adolfo Cardona Bayona · Jonathan Soler Guevara · Hugo Andrés Forero Angel
+| Gustavo Adolfo Cardona Bayona | [gustavo8015](https://github.com/gustavo8015) | Arquitectura, API REST, base de datos SQL Server y servicios de IA |
 
 ---
 
